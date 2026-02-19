@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Daily Tracker">
+<title>Daily Performance Tracker</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  :root {
+    --bg: #0a0a0f;
+    --card: #13131a;
+    --card2: #1a1a24;
+    --accent: #f97316;
+    --accent2: #3b82f6;
+    --green: #22c55e;
+    --text: #f1f5f9;
+    --muted: #64748b;
+    --border: #1e1e2e;
+  }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  .nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(13,13,20,0.97); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
+  .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 0; cursor: pointer; color: var(--muted); font-size: 10px; transition: color 0.2s; border: none; background: none; }
+  .nav-btn.active { color: var(--accent); }
+  .nav-btn svg { width: 22px; height: 22px; }
+  .page { display: none; padding: 0 0 90px 0; min-height: 100vh; }
+  .page.active { display: block; }
+  .header { padding: 56px 20px 16px; background: linear-gradient(180deg, #0f0f1a 0%, var(--bg) 100%); position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); }
+  .header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+  .header .date { color: var(--muted); font-size: 13px; margin-top: 2px; }
+  .header .score-pill { display: inline-flex; align-items: center; gap: 6px; background: var(--card2); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; font-size: 13px; font-weight: 600; margin-top: 10px; }
+  .score-pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+  .section { padding: 0 16px; margin-bottom: 8px; }
+  .section-header { display: flex; align-items: center; gap: 8px; padding: 14px 4px 8px; }
+  .section-header h2 { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+  .section-time { font-size: 12px; color: var(--accent); background: rgba(249,115,22,0.1); border-radius: 8px; padding: 2px 8px; margin-left: auto; }
+  .task { display: flex; align-items: flex-start; gap: 12px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; }
+  .task.done { opacity: 0.5; }
+  .task.done .task-title { text-decoration: line-through; color: var(--muted); }
+  .checkbox { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; margin-top: 1px; }
+  .task.done .checkbox { background: var(--green); border-color: var(--green); }
+  .checkbox svg { opacity: 0; transition: opacity 0.2s; }
+  .task.done .checkbox svg { opacity: 1; }
+  .task-content { flex: 1; }
+  .task-title { font-size: 15px; font-weight: 500; line-height: 1.3; }
+  .task-sub { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.4; }
+  .task-tag { display: inline-block; font-size: 10px; font-weight: 600; border-radius: 6px; padding: 2px 7px; margin-top: 5px; }
+  .tag-recovery { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .tag-nutrition { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .tag-fitness { background: rgba(249,115,22,0.15); color: #fb923c; }
+  .tag-mindset { background: rgba(168,85,247,0.15); color: #c084fc; }
+  .tag-energy { background: rgba(234,179,8,0.15); color: #facc15; }
+  .progress-section { padding: 20px 16px 0; }
+  .progress-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 24px; display: flex; align-items: center; gap: 20px; }
+  .ring-wrap { position: relative; width: 90px; height: 90px; flex-shrink: 0; }
+  .ring-wrap svg { transform: rotate(-90deg); }
+  .ring-bg { fill: none; stroke: var(--border); stroke-width: 8; }
+  .ring-fill { fill: none; stroke: var(--accent); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.5s ease; }
+  .ring-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .ring-pct { font-size: 22px; font-weight: 700; }
+  .ring-label { font-size: 9px; color: var(--muted); margin-top: -2px; }
+  .progress-stats { flex: 1; }
+  .progress-stats h3 { font-size: 20px; font-weight: 700; }
+  .progress-stats p { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .grade { display: inline-block; padding: 4px 12px; border-radius: 10px; font-size: 13px; font-weight: 700; margin-top: 10px; }
+  .grade-elite { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .grade-good { background: rgba(249,115,22,0.15); color: #fb923c; }
+  .grade-ok { background: rgba(234,179,8,0.15); color: #facc15; }
+  .grade-low { background: rgba(239,68,68,0.15); color: #f87171; }
+  .score-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 16px; }
+  .score-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; }
+  .score-card-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .score-card-val { font-size: 28px; font-weight: 700; margin-top: 4px; }
+  .score-card-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .weekly-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin: 0 16px 12px; }
+  .weekly-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 16px; }
+  .week-bars { display: flex; gap: 8px; align-items: flex-end; height: 80px; }
+  .week-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; }
+  .week-bar-bg { flex: 1; width: 100%; background: var(--border); border-radius: 6px; overflow: hidden; display: flex; align-items: flex-end; }
+  .week-bar-fill { width: 100%; background: var(--accent); border-radius: 6px; transition: height 0.4s ease; }
+  .week-bar-day { font-size: 10px; color: var(--muted); }
+  .week-bar-wrap.today .week-bar-day { color: var(--accent); font-weight: 700; }
+  .habit-row { display: flex; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; margin: 0 16px 8px; gap: 12px; }
+  .habit-icon { font-size: 20px; width: 36px; text-align: center; }
+  .habit-info { flex: 1; }
+  .habit-name { font-size: 14px; font-weight: 500; }
+  .habit-target { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .habit-check { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: all 0.2s; }
+  .habit-check.done { background: var(--green); border-color: var(--green); }
+  .reset-btn { display: block; margin: 20px 16px; padding: 16px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 14px; color: #f87171; font-size: 15px; font-weight: 600; text-align: center; cursor: pointer; }
+  .task:active { transform: scale(0.98); }
+</style>
+</head>
+<body>
+
+<div id="page-today" class="page active">
+  <div class="header">
+    <h1>Daily Tracker 🔥</h1>
+    <div class="date" id="today-date"></div>
+    <div class="score-pill"><span class="dot" id="score-dot"></span><span id="header-score">0/23 tasks</span></div>
+  </div>
+  <div class="progress-section">
+    <div class="progress-card">
+      <div class="ring-wrap">
+        <svg viewBox="0 0 90 90" width="90" height="90">
+          <circle class="ring-bg" cx="45" cy="45" r="37"/>
+          <circle class="ring-fill" id="ring" cx="45" cy="45" r="37" stroke-dasharray="232.5" stroke-dashoffset="232.5"/>
+        </svg>
+        <div class="ring-text"><span class="ring-pct" id="ring-pct">0%</span><span class="ring-label">TODAY</span></div>
+      </div>
+      <div class="progress-stats">
+        <h3 id="prog-fraction">0 / 23</h3>
+        <p>tasks completed</p>
+        <div class="grade" id="grade-badge">Keep going 💪</div>
+      </div>
+    </div>
+  </div>
+  <div id="tasks-container"></div>
+</div>
+
+<div id="page-habits" class="page">
+  <div class="header"><h1>Habit Score 📊</h1><div class="date" id="habits-date"></div></div>
+  <div style="height:12px"></div>
+  <div id="habits-container"></div>
+</div>
+
+<div id="page-stats" class="page">
+  <div class="header"><h1>Weekly Stats 📈</h1><div class="date" id="stats-date"></div></div>
+  <div style="height:12px"></div>
+  <div class="score-grid" id="score-grid"></div>
+  <div style="height:16px"></div>
+  <div class="weekly-card">
+    <h3>This Week's Progress</h3>
+    <div class="week-bars" id="week-bars"></div>
+  </div>
+</div>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="showPage('today',this)">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    Today
+  </button>
+  <button class="nav-btn" onclick="showPage('habits',this)">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+    Habits
+  </button>
+  <button class="nav-btn" onclick="showPage('stats',this)">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    Stats
+  </button>
+</nav>
+
+<script>
+const TASKS = [
+  // 4:30 AM
+  { id:'t1', time:'4:30 AM', section:'🌅 Wake Up Protocol', title:'Alarm up — no phone scrolling', sub:'First 15 min phone-free. No exceptions.', tag:'mindset' },
+  { id:'t2', time:'4:30 AM', section:'🌅 Wake Up Protocol', title:'500ml water + pinch of Himalayan salt', sub:'Replenish electrolytes after overnight fast', tag:'nutrition' },
+  { id:'t3', time:'4:30 AM', section:'🌅 Wake Up Protocol', title:'Morning supplements', sub:'Vitamin D3 (5,000 IU) + Magnesium + Creatine (5g) + Fish Oil', tag:'nutrition' },
+  // 5:00 AM
+  { id:'t4', time:'5:00 AM', section:'🏋️ Workout — N1 Motion / Home Gym', title:'Complete workout session', sub:'Push hard. Rate intensity 1–10 after.', tag:'fitness' },
+  { id:'t5', time:'5:00 AM', section:'🏋️ Workout — N1 Motion / Home Gym', title:'Post-workout protein shake within 20 min', sub:'40–50g whey + fast carb (banana or dextrose)', tag:'nutrition' },
+  // 6:00 AM
+  { id:'t6', time:'6:00 AM', section:'🧊 Recovery Stack', title:'Infrared sauna — 20 min at 140–160°F', sub:'Listen to a podcast, audiobook, or breathe deeply', tag:'recovery' },
+  { id:'t7', time:'6:00 AM', section:'🧊 Recovery Stack', title:'Drink 250ml water inside sauna', sub:'Stay hydrated during heat exposure', tag:'nutrition' },
+  { id:'t8', time:'6:00 AM', section:'🧊 Recovery Stack', title:'Cold tub — 3–5 min at 50–55°F', sub:'Controlled breathing. Don\'t fight the cold.', tag:'recovery' },
+  // 6:45 AM
+  { id:'t9', time:'6:45 AM', section:'🍳 Breakfast', title:'Hit 45–55g protein at breakfast', sub:'Non-negotiable. Protein first.', tag:'nutrition' },
+  // 8:00 AM
+  { id:'t10', time:'8:00 AM', section:'☀️ Peak Performance Work Block', title:'500ml water by 10 AM', sub:'Dehydration kills cognitive function and energy', tag:'energy' },
+  { id:'t11', time:'8:00 AM', section:'☀️ Peak Performance Work Block', title:'Power Hour — hardest task first', sub:'Dopamine & testosterone peak post-workout. Use it.', tag:'energy' },
+  { id:'t12', time:'8:00 AM', section:'☀️ Peak Performance Work Block', title:'Movement break every 60–90 min', sub:'Stand, walk, 10 air squats, or a lap', tag:'fitness' },
+  { id:'t13', time:'8:00 AM', section:'☀️ Peak Performance Work Block', title:'Sunlight exposure within 1 hr of waking', sub:'Even 5 min outside in Minneapolis winter counts', tag:'energy' },
+  // 12:00 PM
+  { id:'t14', time:'12:00 PM', section:'🥗 Lunch & Midday Reset', title:'Pre-planned lunch — no improvising', sub:'This is where most people lose their calories', tag:'nutrition' },
+  { id:'t15', time:'12:00 PM', section:'🥗 Lunch & Midday Reset', title:'Hit 50–60g protein at lunch', sub:'Log immediately after eating', tag:'nutrition' },
+  { id:'t16', time:'12:00 PM', section:'🥗 Lunch & Midday Reset', title:'10–15 min walk post-lunch', sub:'Lowers blood sugar spike, resets mental focus', tag:'fitness' },
+  // 2:00 PM
+  { id:'t17', time:'2:00 PM', section:'🌆 Afternoon Energy', title:'High-protein snack only if hunger is 7+/10', sub:'Log it. Prevents the 3 PM crash.', tag:'nutrition' },
+  { id:'t18', time:'2:00 PM', section:'🌆 Afternoon Energy', title:'No caffeine after 1 PM', sub:'Protects your 4:30 AM wake-up sleep quality', tag:'energy' },
+  { id:'t18b', time:'2:00 PM', section:'🌆 Afternoon Energy', title:'Hit 6,000–8,000 steps today', sub:'Check your phone or watch — build movement throughout the day', tag:'fitness' },
+
+  // 6:30 PM
+  { id:'t20', time:'6:30 PM', section:'🍽️ Dinner', title:'Dinner by 7:00 PM — hard cutoff', sub:'Hit 50–60g protein. Stop eating after.', tag:'nutrition' },
+  // 7:30 PM
+  { id:'t21', time:'7:30 PM', section:'🌙 Wind-Down', title:'Evening supplements', sub:'Magnesium Glycinate (400mg) + Zinc + Ashwagandha', tag:'recovery' },
+  { id:'t22', time:'7:30 PM', section:'🌙 Wind-Down', title:'Blue light glasses / Night Shift on by 8 PM', sub:'Protects melatonin production for deep sleep', tag:'recovery' },
+  { id:'t23', time:'7:30 PM', section:'🌙 Wind-Down', title:'No screens by 9:00 PM', sub:'Read, stretch, or light mobility instead', tag:'mindset' },
+  { id:'t24', time:'7:30 PM', section:'🌙 Wind-Down', title:'Tomorrow prep — 10 min', sub:'Pre-log meals, set out gym clothes, review workout', tag:'mindset' },
+  { id:'t25', time:'9:30 PM', section:'🌙 Wind-Down', title:'Lights out by 9:30 PM', sub:'7+ hrs before 4:30 AM. Sleep is your #1 performance tool.', tag:'recovery' },
+];
+
+const HABITS = [
+  { id:'h1', icon:'😴', name:'Sleep 7+ hours', target:'Lights out by 9:30 PM' },
+  { id:'h2', icon:'💧', name:'Water — 3–3.5L', target:'Hit daily water goal' },
+  { id:'h3', icon:'🥩', name:'Protein — 190–220g', target:'Daily protein target' },
+  { id:'h4', icon:'🔥', name:'Calorie target met', target:'2,200–2,400 cal' },
+  { id:'h5', icon:'🏋️', name:'Workout completed', target:'5:00 AM session done' },
+  { id:'h6', icon:'📱', name:'Meals logged', target:'All 3 meals tracked' },
+  { id:'h7', icon:'👟', name:'8,000–10,000 steps', target:'Daily step goal' },
+  { id:'h8', icon:'🧊', name:'Cold tub done', target:'3–5 min session' },
+  { id:'h9', icon:'🌡️', name:'Sauna done', target:'15–20 min session' },
+  { id:'h10', icon:'🚫', name:'No eating after 7 PM', target:'Hard cutoff maintained' },
+  { id:'h11', icon:'💊', name:'Supplements taken', target:'AM + PM stack' },
+  { id:'h12', icon:'⚡', name:'Energy managed', target:'No major afternoon crash' },
+];
+
+let state = JSON.parse(localStorage.getItem('trackerState') || '{}');
+
+function todayKey() { return new Date().toISOString().split('T')[0]; }
+function getToday() { const k = todayKey(); if (!state[k]) state[k] = { tasks:{}, habits:{} }; return state[k]; }
+function save() { localStorage.setItem('trackerState', JSON.stringify(state)); }
+
+function calcScore() {
+  const d = getToday();
+  const tDone = Object.values(d.tasks).filter(Boolean).length;
+  const hDone = Object.values(d.habits).filter(Boolean).length;
+  return { tDone, hDone, total: TASKS.length + HABITS.length, tTotal: TASKS.length, hTotal: HABITS.length };
+}
+
+function updateHeader() {
+  const { tDone, hDone, total } = calcScore();
+  const done = tDone + hDone;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('header-score').textContent = `${done}/${total} tasks`;
+  document.getElementById('ring-pct').textContent = pct + '%';
+  document.getElementById('prog-fraction').textContent = `${done} / ${total}`;
+  const offset = 232.5 - (232.5 * pct / 100);
+  document.getElementById('ring').style.strokeDashoffset = offset;
+  const dot = document.getElementById('score-dot');
+  const badge = document.getElementById('grade-badge');
+  if (pct >= 90) { dot.style.background='#22c55e'; badge.className='grade grade-elite'; badge.textContent='Elite Day 🏆'; }
+  else if (pct >= 75) { dot.style.background='#f97316'; badge.className='grade grade-good'; badge.textContent='Strong Day 💪'; }
+  else if (pct >= 60) { dot.style.background='#eab308'; badge.className='grade grade-ok'; badge.textContent='Good Start 👍'; }
+  else { dot.style.background='#ef4444'; badge.className='grade grade-low'; badge.textContent='Keep Going 🔥'; }
+  const wd = JSON.parse(localStorage.getItem('weekData') || '{}');
+  wd[todayKey()] = pct;
+  localStorage.setItem('weekData', JSON.stringify(wd));
+}
+
+function renderTasks() {
+  const d = getToday();
+  const container = document.getElementById('tasks-container');
+  let html = '';
+  let lastSection = '';
+  TASKS.forEach((t, i) => {
+    if (t.section !== lastSection) {
+      if (lastSection) html += '</div>';
+      lastSection = t.section;
+      html += `<div class="section"><div class="section-header"><h2>${t.section}</h2><span class="section-time">${t.time}</span></div>`;
+    }
+    const done = d.tasks[t.id] || false;
+    html += `<div class="task ${done?'done':''}" onclick="toggleTask('${t.id}')">
+      <div class="checkbox"><svg width="12" height="10" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 12 10"><polyline points="1,5 4,8 11,1"/></svg></div>
+      <div class="task-content">
+        <div class="task-title">${t.title}</div>
+        <div class="task-sub">${t.sub}</div>
+        <span class="task-tag tag-${t.tag}">${t.tag}</span>
+      </div>
+    </div>`;
+  });
+  if (lastSection) html += '</div>';
+  container.innerHTML = html;
+}
+
+function toggleTask(id) {
+  const d = getToday(); d.tasks[id] = !d.tasks[id]; save(); renderTasks(); updateHeader();
+}
+
+function renderHabits() {
+  const d = getToday();
+  const container = document.getElementById('habits-container');
+  let html = '';
+  HABITS.forEach(h => {
+    const done = d.habits[h.id] || false;
+    html += `<div class="habit-row">
+      <div class="habit-icon">${h.icon}</div>
+      <div class="habit-info"><div class="habit-name">${h.name}</div><div class="habit-target">${h.target}</div></div>
+      <div class="habit-check ${done?'done':''}" onclick="toggleHabit('${h.id}')">
+        ${done?'<svg width="14" height="12" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 14 12"><polyline points="1,6 5,10 13,1"/></svg>':''}
+      </div>
+    </div>`;
+  });
+  const hDone = Object.values(d.habits).filter(Boolean).length;
+  const pct = Math.round((hDone / HABITS.length) * 100);
+  html += `<div style="margin:16px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;">
+    <div style="font-size:13px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">Habit Score</div>
+    <div style="font-size:36px;font-weight:700;margin-top:6px;">${pct}<span style="font-size:20px;color:var(--muted)">%</span></div>
+    <div style="font-size:13px;color:var(--muted);">${hDone} of ${HABITS.length} habits completed today</div>
+  </div>`;
+  html += `<div class="reset-btn" onclick="resetDay()">🔄 Reset Today's Checklist</div>`;
+  container.innerHTML = html;
+}
+
+function toggleHabit(id) {
+  const d = getToday(); d.habits[id] = !d.habits[id]; save(); renderHabits(); updateHeader();
+}
+
+function resetDay() {
+  if (confirm('Reset today\'s checklist? This cannot be undone.')) {
+    const k = todayKey(); state[k] = { tasks:{}, habits:{} }; save(); renderTasks(); renderHabits(); updateHeader();
+  }
+}
+
+function renderStats() {
+  const { tDone, hDone, total, tTotal, hTotal } = calcScore();
+  const done = tDone + hDone;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('score-grid').innerHTML = `
+    <div class="score-card"><div class="score-card-label">Today's Score</div><div class="score-card-val" style="color:var(--accent)">${pct}%</div><div class="score-card-sub">Overall completion</div></div>
+    <div class="score-card"><div class="score-card-label">Tasks Done</div><div class="score-card-val">${tDone}</div><div class="score-card-sub">of ${tTotal} tasks</div></div>
+    <div class="score-card"><div class="score-card-label">Habits Done</div><div class="score-card-val">${hDone}</div><div class="score-card-sub">of ${hTotal} habits</div></div>
+    <div class="score-card"><div class="score-card-label">Streak 🔥</div><div class="score-card-val">${calcStreak()}</div><div class="score-card-sub">days in a row</div></div>
+  `;
+  renderWeekBars();
+}
+
+function calcStreak() {
+  const wd = JSON.parse(localStorage.getItem('weekData') || '{}');
+  let streak = 0; let d = new Date();
+  while (true) {
+    const k = d.toISOString().split('T')[0];
+    if (wd[k] && wd[k] >= 60) { streak++; d.setDate(d.getDate()-1); } else break;
+  }
+  return streak;
+}
+
+function renderWeekBars() {
+  const wd = JSON.parse(localStorage.getItem('weekData') || '{}');
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const todayStr = new Date().toISOString().split('T')[0];
+  let html = '';
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const k = d.toISOString().split('T')[0];
+    const pct = wd[k] || 0;
+    const isToday = k === todayStr;
+    html += `<div class="week-bar-wrap ${isToday?'today':''}">
+      <div class="week-bar-bg"><div class="week-bar-fill" style="height:${pct}%;background:${isToday?'var(--accent)':'var(--accent2)'}"></div></div>
+      <div class="week-bar-day">${days[d.getDay()]}</div>
+    </div>`;
+  }
+  document.getElementById('week-bars').innerHTML = html;
+}
+
+function setDates() {
+  const opts = { weekday:'long', month:'long', day:'numeric' };
+  const str = new Date().toLocaleDateString('en-US', opts);
+  ['today-date','habits-date','stats-date'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = str; });
+}
+
+function showPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'stats') renderStats();
+  if (name === 'habits') renderHabits();
+}
+
+setDates(); renderTasks(); renderHabits(); updateHeader();
+</script>
+</body>
+</html>
