@@ -9,116 +9,32 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#060608;
-  --card:rgba(255,255,255,0.035);
-  --card-hover:rgba(255,255,255,0.06);
-  --accent:#f97316;
-  --accent-dim:rgba(249,115,22,0.15);
-  --accent-glow:rgba(249,115,22,0.3);
-  --blue:#3b82f6;
-  --blue-dim:rgba(59,130,246,0.12);
-  --green:#22c55e;
-  --green-dim:rgba(34,197,94,0.12);
-  --purple:#a855f7;
-  --text:#f1f5f9;
-  --text-muted:#64748b;
-  --text-soft:rgba(241,245,249,0.7);
-  --border:rgba(255,255,255,0.07);
-  --border-med:rgba(255,255,255,0.11);
-  --border-strong:rgba(255,255,255,0.15);
+  --bg:#060608;--card:rgba(255,255,255,0.035);--card-hover:rgba(255,255,255,0.06);
+  --accent:#f97316;--accent-dim:rgba(249,115,22,0.15);--accent-glow:rgba(249,115,22,0.3);
+  --blue:#3b82f6;--green:#22c55e;--purple:#a855f7;
+  --text:#f1f5f9;--text-muted:#64748b;--text-soft:rgba(241,245,249,0.7);
+  --border:rgba(255,255,255,0.07);--border-med:rgba(255,255,255,0.11);--border-strong:rgba(255,255,255,0.15);
 }
-
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',sans-serif;
-  min-height:100vh;
-  overflow-x:hidden;
-}
-
-body::before{
-  content:'';position:fixed;top:-20%;left:-20%;width:60%;height:60%;
-  background:radial-gradient(ellipse,rgba(249,115,22,0.07) 0%,transparent 70%);
-  pointer-events:none;z-index:0;
-}
-body::after{
-  content:'';position:fixed;bottom:-10%;right:-10%;width:50%;height:50%;
-  background:radial-gradient(ellipse,rgba(59,130,246,0.05) 0%,transparent 70%);
-  pointer-events:none;z-index:0;
-}
-
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;top:-20%;left:-20%;width:60%;height:60%;background:radial-gradient(ellipse,rgba(249,115,22,0.07) 0%,transparent 70%);pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;bottom:-10%;right:-10%;width:50%;height:50%;background:radial-gradient(ellipse,rgba(59,130,246,0.05) 0%,transparent 70%);pointer-events:none;z-index:0;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes scaleIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
-@keyframes glow{0%,100%{box-shadow:0 0 20px var(--accent-glow)}50%{box-shadow:0 0 40px var(--accent-glow)}}
-
-.header{
-  padding:52px 20px 20px;
-  background:linear-gradient(180deg,rgba(6,6,8,0.98) 0%,rgba(6,6,8,0.85) 100%);
-  position:sticky;top:0;z-index:50;
-  backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
-  border-bottom:1px solid var(--border);
-}
+.header{padding:52px 20px 20px;background:linear-gradient(180deg,rgba(6,6,8,0.98) 0%,rgba(6,6,8,0.85) 100%);position:sticky;top:0;z-index:50;backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-bottom:1px solid var(--border);}
 .header-top{display:flex;align-items:flex-start;justify-content:space-between}
-.header h1{
-  font-size:32px;font-weight:800;letter-spacing:-1px;
-  background:linear-gradient(135deg,#ffffff 0%,rgba(249,115,22,0.9) 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.header .date{color:var(--text-muted);font-size:13px;margin-top:4px;font-weight:500;letter-spacing:0.2px}
-.score-pill{
-  display:inline-flex;align-items:center;gap:7px;
-  background:rgba(249,115,22,0.08);
-  border:1px solid rgba(249,115,22,0.2);
-  border-radius:20px;padding:6px 13px;
-  font-size:12px;font-weight:700;margin-top:12px;
-  letter-spacing:0.2px;
-}
+.header h1{font-size:32px;font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#ffffff 0%,rgba(249,115,22,0.9) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.header .date{color:var(--text-muted);font-size:13px;margin-top:4px;font-weight:500;}
+.score-pill{display:inline-flex;align-items:center;gap:7px;background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:20px;padding:6px 13px;font-size:12px;font-weight:700;margin-top:12px;}
 .score-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);transition:all 0.3s}
-
-.glass-card{
-  background:var(--card);
-  border:1px solid var(--border-med);
-  border-radius:24px;
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  position:relative;overflow:hidden;
-}
-.glass-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);
-}
-
-.quote-card{
-  margin:16px 16px 0;
-  padding:20px 22px;
-  background:linear-gradient(135deg,rgba(249,115,22,0.1) 0%,rgba(249,115,22,0.03) 100%);
-  border:1px solid rgba(249,115,22,0.18);
-  border-radius:22px;
-  display:block;
-  position:relative;
-}
+.quote-card{margin:16px 16px 0;padding:20px 22px;background:linear-gradient(135deg,rgba(249,115,22,0.1) 0%,rgba(249,115,22,0.03) 100%);border:1px solid rgba(249,115,22,0.18);border-radius:22px;display:block;position:relative;}
 .card-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
 .label-dot{width:5px;height:5px;border-radius:50%}
 .quote-text{font-size:14px;font-weight:500;line-height:1.65;font-style:italic;color:rgba(241,245,249,0.85);display:block}
-
-.scripture-card{
-  margin:12px 16px 0;
-  padding:20px 22px;
-  background:linear-gradient(135deg,rgba(59,130,246,0.1) 0%,rgba(59,130,246,0.02) 100%);
-  border:1px solid rgba(59,130,246,0.18);
-  border-radius:22px;
-  display:block;
-  position:relative;
-}
+.scripture-card{margin:12px 16px 0;padding:20px 22px;background:linear-gradient(135deg,rgba(59,130,246,0.1) 0%,rgba(59,130,246,0.02) 100%);border:1px solid rgba(59,130,246,0.18);border-radius:22px;display:block;position:relative;}
 .scripture-text{font-size:14px;font-weight:500;line-height:1.65;font-style:italic;color:rgba(241,245,249,0.85);display:block}
 .scripture-ref{font-size:12px;color:#60a5fa;font-weight:700;margin-top:10px;letter-spacing:0.2px;display:block}
-
 .progress-section{padding:16px 16px 0}
-.progress-card{
-  padding:26px;display:flex;align-items:center;gap:24px;
-  background:linear-gradient(135deg,rgba(255,255,255,0.04) 0%,rgba(255,255,255,0.02) 100%);
-  border:1px solid var(--border-strong);border-radius:26px;
-  backdrop-filter:blur(20px);position:relative;overflow:hidden;
-}
+.progress-card{padding:26px;display:flex;align-items:center;gap:24px;background:linear-gradient(135deg,rgba(255,255,255,0.04) 0%,rgba(255,255,255,0.02) 100%);border:1px solid var(--border-strong);border-radius:26px;backdrop-filter:blur(20px);position:relative;overflow:hidden;}
 .progress-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent)}
 .ring-wrap{position:relative;width:96px;height:96px;flex-shrink:0}
 .ring-wrap svg{transform:rotate(-90deg)}
@@ -130,58 +46,24 @@ body::after{
 .ring-label{font-size:9px;color:var(--text-muted);font-weight:700;letter-spacing:0.8px;margin-top:-1px}
 .progress-stats h3{font-size:26px;font-weight:800;letter-spacing:-0.8px}
 .progress-stats p{font-size:13px;color:var(--text-muted);margin-top:4px;font-weight:500}
-.grade{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:10px;font-size:12px;font-weight:700;margin-top:12px;letter-spacing:0.2px}
+.grade{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:10px;font-size:12px;font-weight:700;margin-top:12px;}
 .grade-elite{background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid rgba(34,197,94,0.25)}
 .grade-ok{background:rgba(234,179,8,0.1);color:#facc15;border:1px solid rgba(234,179,8,0.25)}
-
-.victory-banner{
-  margin:16px;padding:28px 22px;border-radius:24px;
-  background:linear-gradient(135deg,rgba(34,197,94,0.12),rgba(34,197,94,0.03));
-  border:1px solid rgba(34,197,94,0.2);text-align:center;
-  animation:scaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
-  position:relative;overflow:hidden;
-}
+.victory-banner{margin:16px;padding:28px 22px;border-radius:24px;background:linear-gradient(135deg,rgba(34,197,94,0.12),rgba(34,197,94,0.03));border:1px solid rgba(34,197,94,0.2);text-align:center;animation:scaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1);position:relative;overflow:hidden;}
 .victory-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(34,197,94,0.5),transparent)}
-
 .section{padding:0 16px;margin-bottom:4px}
 .section-header{display:flex;align-items:center;gap:10px;padding:20px 2px 10px}
-.section-icon{
-  width:32px;height:32px;border-radius:11px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:16px;flex-shrink:0;
-  background:linear-gradient(135deg,rgba(249,115,22,0.18),rgba(249,115,22,0.05));
-  border:1px solid rgba(249,115,22,0.18);
-  box-shadow:0 2px 8px rgba(249,115,22,0.1);
-}
+.section-icon{width:32px;height:32px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:linear-gradient(135deg,rgba(249,115,22,0.18),rgba(249,115,22,0.05));border:1px solid rgba(249,115,22,0.18);box-shadow:0 2px 8px rgba(249,115,22,0.1);}
 .section-header h2{font-size:12px;font-weight:800;color:rgba(241,245,249,0.5);text-transform:uppercase;letter-spacing:1px;flex:1}
-.section-time{font-size:11px;color:var(--accent);background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.15);border-radius:8px;padding:3px 10px;font-weight:700;letter-spacing:0.2px}
-
-.task{
-  display:flex;align-items:flex-start;gap:14px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:18px;padding:16px;margin-bottom:9px;
-  cursor:pointer;
-  transition:all 0.2s cubic-bezier(0.16,1,0.3,1);
-  position:relative;overflow:hidden;
-}
+.section-time{font-size:11px;color:var(--accent);background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.15);border-radius:8px;padding:3px 10px;font-weight:700;}
+.task{display:flex;align-items:flex-start;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:9px;cursor:pointer;transition:all 0.2s cubic-bezier(0.16,1,0.3,1);position:relative;overflow:hidden;}
 .task::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.025),transparent);pointer-events:none}
 .task:active{transform:scale(0.97)}
 .task:hover{border-color:var(--border-med);background:var(--card-hover);transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,0.3)}
 .task.done{opacity:0.4}
 .task.done .task-title{text-decoration:line-through;color:var(--text-muted)}
-.checkbox{
-  width:26px;height:26px;border-radius:50%;
-  border:2px solid rgba(255,255,255,0.12);
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
-  margin-top:1px;background:rgba(255,255,255,0.03);
-}
-.task.done .checkbox{
-  background:var(--green);border-color:var(--green);
-  box-shadow:0 0 14px rgba(34,197,94,0.5);
-  transform:scale(1.1);
-}
+.checkbox{width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);margin-top:1px;background:rgba(255,255,255,0.03);}
+.task.done .checkbox{background:var(--green);border-color:var(--green);box-shadow:0 0 14px rgba(34,197,94,0.5);transform:scale(1.1);}
 .checkbox svg{opacity:0;transition:opacity 0.2s}
 .task.done .checkbox svg{opacity:1}
 .task-content{flex:1;min-width:0}
@@ -193,102 +75,44 @@ body::after{
 .tag-fitness{background:rgba(249,115,22,0.1);color:#fb923c;border:1px solid rgba(249,115,22,0.18)}
 .tag-mindset{background:rgba(168,85,247,0.1);color:#c084fc;border:1px solid rgba(168,85,247,0.18)}
 .tag-energy{background:rgba(234,179,8,0.1);color:#facc15;border:1px solid rgba(234,179,8,0.18)}
-
 .score-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 16px}
-.score-card{
-  background:var(--card);border:1px solid var(--border-med);
-  border-radius:22px;padding:20px;
-  backdrop-filter:blur(16px);position:relative;overflow:hidden;
-  transition:transform 0.2s;
-}
+.score-card{background:var(--card);border:1px solid var(--border-med);border-radius:22px;padding:20px;backdrop-filter:blur(16px);position:relative;overflow:hidden;}
 .score-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent)}
 .score-card-label{font-size:10px;color:var(--text-muted);font-weight:800;text-transform:uppercase;letter-spacing:0.8px}
 .score-card-val{font-size:36px;font-weight:800;margin-top:8px;letter-spacing:-1.5px;line-height:1}
 .score-card-sub{font-size:11px;color:var(--text-muted);margin-top:6px;font-weight:500}
 .score-card-icon{position:absolute;top:16px;right:16px;font-size:22px;opacity:0.4}
-
-.weekly-card{
-  background:var(--card);border:1px solid var(--border-med);
-  border-radius:24px;padding:24px;margin:0 16px 14px;
-  backdrop-filter:blur(16px);position:relative;overflow:hidden;
-}
+.weekly-card{background:var(--card);border:1px solid var(--border-med);border-radius:24px;padding:24px;margin:0 16px 14px;backdrop-filter:blur(16px);position:relative;overflow:hidden;}
 .weekly-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)}
-.weekly-card h3{font-size:15px;font-weight:800;margin-bottom:20px;letter-spacing:-0.3px}
+.weekly-card h3{font-size:15px;font-weight:800;margin-bottom:20px;}
 .week-bars{display:flex;gap:8px;align-items:flex-end;height:90px}
 .week-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;height:100%}
 .week-bar-bg{flex:1;width:100%;background:rgba(255,255,255,0.04);border-radius:8px;overflow:hidden;display:flex;align-items:flex-end;border:1px solid var(--border)}
 .week-bar-fill{width:100%;border-radius:8px;transition:height 0.7s cubic-bezier(0.34,1.56,0.64,1)}
-.week-bar-day{font-size:10px;color:var(--text-muted);font-weight:700;letter-spacing:0.3px}
+.week-bar-day{font-size:10px;color:var(--text-muted);font-weight:700;}
 .week-bar-wrap.today .week-bar-day{color:var(--accent)}
-
-.summary-card{
-  background:var(--card);border:1px solid var(--border-med);
-  border-radius:24px;padding:24px;margin:0 16px 14px;
-  backdrop-filter:blur(16px);position:relative;overflow:hidden;
-}
-.summary-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)}
-.summary-card h3{font-size:15px;font-weight:800;margin-bottom:16px;letter-spacing:-0.3px}
+.summary-card{background:var(--card);border:1px solid var(--border-med);border-radius:24px;padding:24px;margin:0 16px 14px;backdrop-filter:blur(16px);position:relative;overflow:hidden;}
+.summary-card h3{font-size:15px;font-weight:800;margin-bottom:16px;}
 .summary-row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--border)}
 .summary-row:last-child{border-bottom:none}
 .summary-label{font-size:13px;color:var(--text-muted);font-weight:500}
-.summary-val{font-size:14px;font-weight:800;letter-spacing:-0.2px}
-
-.reset-btn{
-  display:block;margin:0 16px 0;padding:17px;
-  background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);
-  border-radius:18px;color:#f87171;font-size:14px;font-weight:700;
-  text-align:center;cursor:pointer;transition:all 0.2s;letter-spacing:0.2px;
-}
-.reset-btn:hover{background:rgba(239,68,68,0.1)}
-
-.diet-card{
-  margin:0 16px 14px;
-  background:var(--card);border:1px solid var(--border-med);
-  border-radius:24px;padding:24px;
-  backdrop-filter:blur(16px);position:relative;overflow:hidden;
-}
+.summary-val{font-size:14px;font-weight:800;}
+.reset-btn{display:block;margin:0 16px 0;padding:17px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);border-radius:18px;color:#f87171;font-size:14px;font-weight:700;text-align:center;cursor:pointer;transition:all 0.2s;}
+.diet-card{margin:0 16px 14px;background:var(--card);border:1px solid var(--border-med);border-radius:24px;padding:24px;backdrop-filter:blur(16px);position:relative;overflow:hidden;}
 .diet-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)}
 .diet-label{font-size:10px;color:var(--text-muted);font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
-
-.notif-card{
-  margin:0 16px 8px;
-  display:flex;align-items:center;gap:16px;
-  background:var(--card);border:1px solid var(--border-med);
-  border-radius:20px;padding:18px 20px;cursor:pointer;
-  transition:all 0.25s cubic-bezier(0.16,1,0.3,1);
-  position:relative;overflow:hidden;
-}
-.notif-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)}
+.notif-card{margin:0 16px 8px;display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--border-med);border-radius:20px;padding:18px 20px;cursor:pointer;transition:all 0.25s cubic-bezier(0.16,1,0.3,1);position:relative;overflow:hidden;}
 .notif-card:hover{border-color:var(--border-strong);transform:translateY(-1px)}
-
-html, body{height:100%;overflow:hidden}
+html,body{height:100%;overflow:hidden}
 body{display:flex;flex-direction:column;}
-.page{display:none;flex:1;overflow-y:auto;padding:0;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.page{display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .page.active{display:flex;flex-direction:column;animation:fadeUp 0.4s cubic-bezier(0.16,1,0.3,1)}
-.nav{
-  flex-shrink:0;
-  position:relative;bottom:auto;left:auto;right:auto;
-  background:rgba(6,6,8,0.98);
-  backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
-  border-top:1px solid var(--border-med);
-  display:flex;z-index:100;
-  padding-bottom:env(safe-area-inset-bottom);
-}
-.nav-btn{
-  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
-  padding:12px 0;cursor:pointer;color:var(--text-muted);
-  font-size:10px;font-weight:700;border:none;background:none;
-  transition:all 0.2s;letter-spacing:0.4px;
-}
+.nav{flex-shrink:0;background:rgba(6,6,8,0.98);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-top:1px solid var(--border-med);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);position:relative;}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;color:var(--text-muted);font-size:10px;font-weight:700;border:none;background:none;transition:all 0.2s;}
 .nav-btn.active{color:var(--accent)}
 .nav-btn svg{width:22px;height:22px;transition:transform 0.2s}
 .nav-btn.active svg{transform:scale(1.1)}
-.nav-indicator{
-  position:absolute;top:0;height:2px;background:var(--accent);
-  border-radius:0 0 3px 3px;transition:left 0.3s cubic-bezier(0.34,1.56,0.64,1);
-  width:33.33%;
-}
-
+.nav-indicator{position:absolute;top:0;height:2px;background:var(--accent);border-radius:0 0 3px 3px;transition:left 0.3s cubic-bezier(0.34,1.56,0.64,1);width:33.33%;}
 input{color-scheme:dark}
 input:focus{border-color:rgba(249,115,22,0.5)!important;box-shadow:0 0 0 3px rgba(249,115,22,0.08)!important;outline:none}
 </style>
@@ -298,25 +122,19 @@ input:focus{border-color:rgba(249,115,22,0.5)!important;box-shadow:0 0 0 3px rgb
 <div id="page-today" class="page active">
   <div class="header">
     <div class="header-top">
-      <div>
-        <h1>Daily Tracker</h1>
-        <div class="date" id="today-date"></div>
-      </div>
+      <div><h1>Daily Tracker</h1><div class="date" id="today-date"></div></div>
     </div>
     <div class="score-pill"><span class="dot" id="score-dot"></span><span id="header-score"></span></div>
   </div>
-
   <div class="quote-card">
     <div class="card-label" style="color:var(--accent)"><span class="label-dot" style="background:var(--accent)"></span>Daily Motivation</div>
     <div class="quote-text" id="daily-quote">Loading...</div>
   </div>
-
   <div class="scripture-card">
     <div class="card-label" style="color:#60a5fa"><span class="label-dot" style="background:#60a5fa"></span>Scripture of the Day</div>
     <div class="scripture-text" id="scripture-text"></div>
     <div class="scripture-ref" id="scripture-ref"></div>
   </div>
-
   <div class="progress-section">
     <div class="progress-card">
       <svg width="0" height="0" style="position:absolute">
@@ -340,45 +158,31 @@ input:focus{border-color:rgba(249,115,22,0.5)!important;box-shadow:0 0 0 3px rgb
         <p>tasks completed</p>
         <div class="grade" id="grade-badge" style="display:none"></div>
       </div>
-
       <!-- Step Counter -->
       <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:8px;">
         <div style="position:relative;width:80px;height:80px;">
           <svg viewBox="0 0 80 80" width="80" height="80" style="transform:rotate(-90deg)">
             <circle fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="6" cx="40" cy="40" r="34"/>
-            <circle id="step-ring" fill="none" stroke="#3b82f6" stroke-width="6" stroke-linecap="round" cx="40" cy="40" r="34"
-              stroke-dasharray="213.6" stroke-dashoffset="213.6"
-              style="transition:stroke-dashoffset 0.5s ease"/>
+            <circle id="step-ring" fill="none" stroke="#3b82f6" stroke-width="6" stroke-linecap="round" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="213.6" style="transition:stroke-dashoffset 0.5s ease"/>
           </svg>
           <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
             <span id="step-count" style="font-size:16px;font-weight:800;letter-spacing:-0.5px;color:#60a5fa">0</span>
             <span style="font-size:8px;color:var(--text-muted);font-weight:700;letter-spacing:0.5px">STEPS</span>
           </div>
         </div>
-        <div id="step-btn" onclick="toggleStepTracking()" style="
-          font-size:10px;font-weight:800;letter-spacing:0.4px;
-          padding:6px 12px;border-radius:10px;cursor:pointer;
-          background:rgba(59,130,246,0.12);
-          border:1px solid rgba(59,130,246,0.25);
-          color:#60a5fa;transition:all 0.2s;
-        ">START</div>
+        <div id="step-btn" onclick="toggleStepTracking()" style="font-size:10px;font-weight:800;letter-spacing:0.4px;padding:6px 12px;border-radius:10px;cursor:pointer;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.25);color:#60a5fa;transition:all 0.2s;">START</div>
         <div style="font-size:9px;color:var(--text-muted);font-weight:600;">Goal: 8k</div>
       </div>
     </div>
   </div>
-
   <div id="tasks-container"></div>
-
   <div style="padding:4px 16px 8px">
     <div class="notif-card" id="notif-toggle" onclick="toggleNotifications()">
       <div style="width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,rgba(249,115,22,0.2),rgba(249,115,22,0.05));border:1px solid rgba(249,115,22,0.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🔔</div>
-      <div style="flex:1">
-        <div style="font-size:14px;font-weight:700;letter-spacing:-0.1px">Daily Reminders</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;font-weight:500">8 AM · 2 PM · 8 PM CST</div>
-      </div>
+      <div style="flex:1"><div style="font-size:14px;font-weight:700;">Daily Reminders</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px;font-weight:500">8 AM · 2 PM · 8 PM CST</div></div>
       <div style="display:flex;align-items:center;gap:8px">
         <div id="notif-dot" style="width:8px;height:8px;border-radius:50%;background:var(--text-muted);transition:all 0.3s"></div>
-        <div id="notif-label" style="font-size:12px;font-weight:800;color:var(--text-muted);letter-spacing:0.3px">OFF</div>
+        <div id="notif-label" style="font-size:12px;font-weight:800;color:var(--text-muted);">OFF</div>
       </div>
     </div>
     <div id="notif-status" style="display:none;margin-top:10px;padding:14px 16px;border-radius:14px;font-size:12px;font-weight:500;line-height:1.5"></div>
@@ -400,28 +204,30 @@ input:focus{border-color:rgba(249,115,22,0.5)!important;box-shadow:0 0 0 3px rgb
   <div class="summary-card"><h3>Weekly Summary</h3><div id="weekly-summary"></div></div>
   <div style="height:8px"></div>
   <div class="reset-btn" onclick="resetDay()">Reset Today</div>
+  <div style="height:16px"></div>
 </div>
 
 <nav class="nav">
   <div class="nav-indicator" id="nav-indicator" style="left:0"></div>
   <button class="nav-btn active" id="nav-today" onclick="showPage('today',this,0)">
-    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-    Today
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Today
   </button>
   <button class="nav-btn" id="nav-diet" onclick="showPage('diet',this,1)">
-    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="2" x2="6" y2="8"/><line x1="10" y1="2" x2="10" y2="8"/><line x1="14" y1="2" x2="14" y2="8"/></svg>
-    Calories
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="2" x2="6" y2="8"/><line x1="10" y1="2" x2="10" y2="8"/><line x1="14" y1="2" x2="14" y2="8"/></svg>Calories
   </button>
   <button class="nav-btn" id="nav-stats" onclick="showPage('stats',this,2)">
-    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-    Stats
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Stats
   </button>
 </nav>
 
 <script>
-var QUOTES=["The secret of getting ahead is getting started.","Push yourself because no one else is going to do it for you.","Success is the sum of small efforts repeated day in and day out.","The body achieves what the mind believes.","Wake up with determination. Go to bed with satisfaction.","Do something today that your future self will thank you for.","It never gets easier. You just get stronger.","Discipline is choosing between what you want now and what you want most.","You don't have to be extreme. Just be consistent.","Your only competition is who you were yesterday.","Small daily improvements lead to stunning results.","The pain you feel today will be the strength you feel tomorrow.","Great things never come from comfort zones.","Be stronger than your excuses.","One day or day one. You decide.","Strive for progress, not perfection.","Results happen over time, not overnight. Work hard, stay consistent.","You are one decision away from a completely different life.","Show up even when you don't feel like it.","Hard work beats talent when talent doesn't work hard."];
+// ── CONSTANTS ──
+var CAL_GOAL = 2300;
+var STEP_GOAL = 8000;
 
-var TASKS=[
+var QUOTES = ["The secret of getting ahead is getting started.","Push yourself because no one else is going to do it for you.","Success is the sum of small efforts repeated day in and day out.","The body achieves what the mind believes.","Wake up with determination. Go to bed with satisfaction.","Do something today that your future self will thank you for.","It never gets easier. You just get stronger.","Discipline is choosing between what you want now and what you want most.","You don't have to be extreme. Just be consistent.","Your only competition is who you were yesterday.","Small daily improvements lead to stunning results.","The pain you feel today will be the strength you feel tomorrow.","Great things never come from comfort zones.","Be stronger than your excuses.","One day or day one. You decide.","Strive for progress, not perfection.","Results happen over time, not overnight. Work hard, stay consistent.","You are one decision away from a completely different life.","Show up even when you don't feel like it.","Hard work beats talent when talent doesn't work hard."];
+
+var TASKS = [
   {id:"t1",time:"4:30 AM",section:"Wake Up Protocol",emoji:"🌅",title:"Alarm up — no phone scrolling",sub:"First 15 min phone-free. No exceptions.",tag:"mindset"},
   {id:"t2",time:"4:30 AM",section:"Wake Up Protocol",emoji:"🌅",title:"500ml water + Hydrate Powder",sub:"Replenish electrolytes after overnight fast",tag:"nutrition"},
   {id:"t4",time:"5:00 AM",section:"Workout",emoji:"🏋️",title:"Complete workout session",sub:"Push hard. Rate intensity 1-10 after.",tag:"fitness"},
@@ -445,251 +251,50 @@ var TASKS=[
   {id:"t20",time:"9:30 PM",section:"Wind-Down",emoji:"🌙",title:"Lights out by 9:30 PM",sub:"7+ hrs before 4:30 AM. Sleep is your #1 performance tool.",tag:"recovery"}
 ];
 
-var CAL_GOAL=2300;
+// ── STATE ──
+var state = {};
+try { state = JSON.parse(localStorage.getItem("trackerState") || "{}"); } catch(e) { state = {}; }
 
-// ── API NINJAS FOOD SEARCH ──
-var API_NINJAS_KEY = "32hx41IS7DiIfz3b8L375eXXiAwdcl8fTadBLDIg"; // paste your key from api-ninjas.com
+function todayKey() { return new Date().toISOString().split("T")[0]; }
+function getToday() { var k=todayKey(); if(!state[k]) state[k]={tasks:{},habits:{}}; return state[k]; }
+function save() { try { localStorage.setItem("trackerState", JSON.stringify(state)); } catch(e) {} }
 
-function searchFood(){
-  var q=document.getElementById("food-search");
-  if(!q||!q.value.trim())return;
-  var query=q.value.trim();
-  var results=document.getElementById("search-results");
-  if(!results)return;
-
-  results.innerHTML="<div style='text-align:center;padding:16px;color:var(--text-muted);font-size:13px;font-weight:500;'>Searching...</div>";
-
-  fetch("https://api.anthropic.com/v1/messages",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      model:"claude-sonnet-4-20250514",
-      max_tokens:1000,
-      messages:[{
-        role:"user",
-        content:"Give me the nutrition info for: \""+query+"\". Respond ONLY with a valid JSON object, no markdown, no explanation. Format: {\"items\":[{\"name\":\"item name\",\"calories\":000,\"protein_g\":0.0,\"carbohydrates_total_g\":0.0,\"fat_total_g\":0.0}],\"total\":{\"calories\":000,\"protein_g\":0.0,\"carbohydrates_total_g\":0.0,\"fat_total_g\":0.0}}. Use realistic average values for restaurant portions."
-      }]
-    })
-  })
-  .then(function(r){return r.json()})
-  .then(function(data){
-    var text=data.content&&data.content[0]&&data.content[0].text;
-    if(!text)throw new Error("No response");
-    var clean=text.replace(/```json|```/g,"").trim();
-    var parsed=JSON.parse(clean);
-    var t=parsed.total;
-    var totalCal=Math.round(t.calories||0);
-    var totalProtein=Math.round(t.protein_g||0);
-    var totalCarbs=Math.round(t.carbohydrates_total_g||0);
-    var totalFat=Math.round(t.fat_total_g||0);
-    var items=parsed.items||[];
-
-    var html="<div style='background:rgba(59,130,246,0.07);border:1px solid rgba(59,130,246,0.18);border-radius:16px;padding:16px;margin-bottom:10px;'>";
-    html+="<div style='font-size:13px;font-weight:700;color:#60a5fa;margin-bottom:12px;'>\""+query+"\"</div>";
-    html+="<div style='font-size:36px;font-weight:800;letter-spacing:-1.5px;line-height:1;margin-bottom:4px;'>"+totalCal+"<span style='font-size:14px;font-weight:600;color:var(--text-muted);margin-left:4px;'>cal</span></div>";
-    html+="<div style='display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;'>";
-    html+=macroPill("Protein","#22c55e",totalProtein+"g");
-    html+=macroPill("Carbs","#3b82f6",totalCarbs+"g");
-    html+=macroPill("Fat","#f97316",totalFat+"g");
-    html+="</div>";
-    if(items.length>1){
-      html+="<div style='margin-top:12px;border-top:1px solid rgba(255,255,255,0.07);padding-top:10px;'>";
-      for(var j=0;j<items.length;j++){
-        var item=items[j];
-        html+="<div style='display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.04);'>";
-        html+="<span style='color:var(--text-soft);font-weight:500;text-transform:capitalize;'>"+item.name+"</span>";
-        html+="<span style='color:var(--text-muted);font-weight:600;'>"+Math.round(item.calories)+" cal &nbsp;·&nbsp; "+Math.round(item.protein_g)+"g P</span>";
-        html+="</div>";
-      }
-      html+="</div>";
-    }
-    html+="<div onclick='addSearchedMeal(\""+query.replace(/"/g,"'").replace(/\n/g," ")+"\","+totalCal+","+totalProtein+","+totalCarbs+","+totalFat+")' style='margin-top:14px;background:linear-gradient(135deg,rgba(59,130,246,0.9),rgba(59,130,246,0.7));color:white;border-radius:12px;padding:13px;text-align:center;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 4px 16px rgba(59,130,246,0.25);'>+ Log This Meal</div>";
-    html+="</div>";
-    results.innerHTML=html;
-  })
-  .catch(function(err){
-    results.innerHTML="<div style='padding:14px 16px;border-radius:13px;background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);color:#f87171;font-size:12px;font-weight:600;line-height:1.6;'>Search failed: "+err.message+"</div>";
-  });
+function calcScore() {
+  var d=getToday(), tDone=0;
+  for (var k in d.tasks) { if (d.tasks[k]) tDone++; }
+  return {tDone:tDone, tTotal:TASKS.length};
 }
 
-function macroPill(label,color,val){
-  return "<div style='display:flex;flex-direction:column;align-items:center;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:8px 12px;min-width:60px;'><span style='font-size:14px;font-weight:800;color:"+color+";'>"+val+"</span><span style='font-size:10px;color:var(--text-muted);font-weight:700;letter-spacing:0.4px;margin-top:2px;'>"+label.toUpperCase()+"</span></div>";
-}
-
-function addSearchedMeal(name,cal,protein,carbs,fat){
-  var d=getCalData();
-  if(!d[todayKey()])d[todayKey()]=[];
-  d[todayKey()].push({name:name,cal:cal,protein:protein,carbs:carbs,fat:fat,time:getTimeStr()});
-  saveCalData(d);
-  // Clear search
-  var q=document.getElementById("food-search");if(q)q.value="";
-  var r=document.getElementById("search-results");if(r)r.innerHTML="";
-  renderDiet();
-}
-var stepCount=0;
-var stepTracking=false;
-var lastAccel={x:0,y:0,z:0};
-var stepThreshold=12;
-var lastStepTime=0;
-var minStepInterval=250;
-var STEP_GOAL=8000;
-
-function toggleStepTracking(){
-  if(stepTracking){
-    stopStepTracking();
-  } else {
-    startStepTracking();
-  }
-}
-
-function startStepTracking(){
-  if(typeof DeviceMotionEvent==="undefined"){
-    alert("Motion tracking not supported in this browser.");return;
-  }
-  // iOS 13+ requires permission
-  if(typeof DeviceMotionEvent.requestPermission==="function"){
-    DeviceMotionEvent.requestPermission().then(function(perm){
-      if(perm==="granted"){
-        beginTracking();
-      } else {
-        alert("Motion permission denied. Enable it in Settings > Safari > Motion & Orientation Access.");
-      }
-    }).catch(function(){beginTracking()});
-  } else {
-    beginTracking();
-  }
-}
-
-var wakeLock=null;
-
-async function requestWakeLock(){
-  if(!("wakeLock" in navigator))return;
-  try{
-    wakeLock=await navigator.wakeLock.request("screen");
-    wakeLock.addEventListener("release",function(){wakeLock=null;});
-  }catch(e){console.warn("Wake lock failed:",e.message);}
-}
-
-function releaseWakeLock(){
-  if(wakeLock){wakeLock.release();wakeLock=null;}
-}
-
-// Re-acquire wake lock when tab becomes visible again
-document.addEventListener("visibilitychange",function(){
-  if(document.visibilityState==="visible"&&stepTracking){requestWakeLock();}
-});
-
-function beginTracking(){
-  stepTracking=true;
-  window.addEventListener("devicemotion",handleMotion);
-  requestWakeLock();
-  var btn=document.getElementById("step-btn");
-  if(btn){
-    btn.textContent="STOP";
-    btn.style.background="rgba(239,68,68,0.12)";
-    btn.style.borderColor="rgba(239,68,68,0.25)";
-    btn.style.color="#f87171";
-  }
-}
-
-function stopStepTracking(){
-  stepTracking=false;
-  window.removeEventListener("devicemotion",handleMotion);
-  releaseWakeLock();
-  var btn=document.getElementById("step-btn");
-  if(btn){
-    btn.textContent="START";
-    btn.style.background="rgba(59,130,246,0.12)";
-    btn.style.borderColor="rgba(59,130,246,0.25)";
-    btn.style.color="#60a5fa";
-  }
-}
-
-function handleMotion(e){
-  var acc=e.accelerationIncludingGravity;
-  if(!acc)return;
-  var x=acc.x||0,y=acc.y||0,z=acc.z||0;
-  var magnitude=Math.sqrt(x*x+y*y+z*z);
-  var delta=Math.abs(magnitude-Math.sqrt(
-    lastAccel.x*lastAccel.x+lastAccel.y*lastAccel.y+lastAccel.z*lastAccel.z
-  ));
-  var now=Date.now();
-  if(delta>stepThreshold&&(now-lastStepTime)>minStepInterval){
-    stepCount++;
-    lastStepTime=now;
-    updateStepUI();
-    // save steps
-    try{localStorage.setItem("stepCount_"+todayKey(),stepCount)}catch(e){}
-    // auto-check step task if goal hit
-    if(stepCount>=6000){
-      var d=getToday();
-      if(!d.tasks["t16c"]){d.tasks["t16c"]=true;save();renderTasks();updateHeader();}
-    }
-  }
-  lastAccel={x:x,y:y,z:z};
-}
-
-function updateStepUI(){
-  var el=document.getElementById("step-count");
-  if(el)el.textContent=stepCount>=1000?(stepCount/1000).toFixed(1)+"k":stepCount;
-  var ring=document.getElementById("step-ring");
-  if(ring){
-    var pct=Math.min(1,stepCount/STEP_GOAL);
-    var circ=213.6;
-    ring.style.strokeDashoffset=circ-(circ*pct);
-    // color changes as you progress
-    if(pct>=1)ring.style.stroke="#22c55e";
-    else if(pct>=0.75)ring.style.stroke="#f97316";
-    else ring.style.stroke="#3b82f6";
-  }
-}
-
-// Load saved step count for today
-try{
-  var saved=localStorage.getItem("stepCount_"+new Date().toISOString().split("T")[0]);
-  if(saved){stepCount=parseInt(saved)||0;setTimeout(updateStepUI,100);}
-}catch(e){}
-var state={};
-try{state=JSON.parse(localStorage.getItem("trackerState")||"{}")}catch(e){state={}}
-
-function todayKey(){return new Date().toISOString().split("T")[0]}
-function getToday(){var k=todayKey();if(!state[k])state[k]={tasks:{},habits:{}};return state[k]}
-function save(){try{localStorage.setItem("trackerState",JSON.stringify(state))}catch(e){}}
-
-function calcScore(){var d=getToday(),tDone=0;for(var k in d.tasks){if(d.tasks[k])tDone++}return{tDone:tDone,tTotal:TASKS.length}}
-
-function updateHeader(){
-  var s=calcScore();
-  var pct=s.tTotal>0?Math.round((s.tDone/s.tTotal)*100):0;
-  var el=document.getElementById("header-score");if(el)el.textContent=s.tDone+"/"+s.tTotal+" tasks";
-  var rp=document.getElementById("ring-pct");if(rp)rp.textContent=pct+"%";
-  var pf=document.getElementById("prog-fraction");if(pf)pf.textContent=s.tDone+" / "+s.tTotal;
-  var ring=document.getElementById("ring");if(ring)ring.style.strokeDashoffset=251.2-(251.2*pct/100);
-  var dot=document.getElementById("score-dot");
-  var badge=document.getElementById("grade-badge");
-  if(pct>=90){if(dot)dot.style.background="#22c55e";if(badge){badge.className="grade grade-elite";badge.textContent="Elite Day 🏆";badge.style.display="inline-flex"}}
-  else if(pct>=75){if(dot)dot.style.background="#22c55e";if(badge){badge.className="grade grade-elite";badge.textContent="Victory! ✅";badge.style.display="inline-flex"}}
-  else if(pct>=60){if(dot)dot.style.background="#eab308";if(badge){badge.className="grade grade-ok";badge.textContent="Good Start 👍";badge.style.display="inline-flex"}}
-  else{if(dot)dot.style.background="#ef4444";if(badge)badge.style.display="none"}
+function updateHeader() {
+  var s=calcScore(), pct=s.tTotal>0?Math.round((s.tDone/s.tTotal)*100):0;
+  var el=document.getElementById("header-score"); if(el) el.textContent=s.tDone+"/"+s.tTotal+" tasks";
+  var rp=document.getElementById("ring-pct"); if(rp) rp.textContent=pct+"%";
+  var pf=document.getElementById("prog-fraction"); if(pf) pf.textContent=s.tDone+" / "+s.tTotal;
+  var ring=document.getElementById("ring"); if(ring) ring.style.strokeDashoffset=251.2-(251.2*pct/100);
+  var dot=document.getElementById("score-dot"), badge=document.getElementById("grade-badge");
+  if(pct>=90){if(dot)dot.style.background="#22c55e";if(badge){badge.className="grade grade-elite";badge.textContent="Elite Day 🏆";badge.style.display="inline-flex";}}
+  else if(pct>=75){if(dot)dot.style.background="#22c55e";if(badge){badge.className="grade grade-elite";badge.textContent="Victory! ✅";badge.style.display="inline-flex";}}
+  else if(pct>=60){if(dot)dot.style.background="#eab308";if(badge){badge.className="grade grade-ok";badge.textContent="Good Start 👍";badge.style.display="inline-flex";}}
+  else{if(dot)dot.style.background="#ef4444";if(badge)badge.style.display="none";}
   var existing=document.getElementById("victory-banner");
   if(pct>=75){
     if(!existing){
       var b=document.createElement("div");b.id="victory-banner";b.className="victory-banner";
-      b.innerHTML="<div style='font-size:42px;margin-bottom:10px'>🏆</div><div style='font-size:22px;font-weight:800;color:#4ade80;letter-spacing:-0.5px'>Victory Day!</div><div style='font-size:13px;color:#86efac;margin-top:8px;font-weight:500'>You hit 75%+ today. That is a win.</div>";
+      b.innerHTML="<div style='font-size:42px;margin-bottom:10px'>🏆</div><div style='font-size:22px;font-weight:800;color:#4ade80;'>Victory Day!</div><div style='font-size:13px;color:#86efac;margin-top:8px;font-weight:500'>You hit 75%+ today. That is a win.</div>";
       var ps=document.querySelector(".progress-section");if(ps&&ps.parentNode)ps.parentNode.insertBefore(b,ps.nextSibling);
     }
-  }else{if(existing)existing.remove()}
-  var wd={};try{wd=JSON.parse(localStorage.getItem("weekData")||"{}")}catch(e){}
-  wd[todayKey()]=pct;try{localStorage.setItem("weekData",JSON.stringify(wd))}catch(e){}
+  } else { if(existing) existing.remove(); }
+  var wd={}; try{wd=JSON.parse(localStorage.getItem("weekData")||"{}");}catch(e){}
+  wd[todayKey()]=pct; try{localStorage.setItem("weekData",JSON.stringify(wd));}catch(e){}
 }
 
-function renderTasks(){
-  var d=getToday(),container=document.getElementById("tasks-container");if(!container)return;
-  var html="",lastSection="";
-  for(var i=0;i<TASKS.length;i++){
+function renderTasks() {
+  var d=getToday(), container=document.getElementById("tasks-container"); if(!container) return;
+  var html="", lastSection="";
+  for (var i=0;i<TASKS.length;i++) {
     var t=TASKS[i];
     if(t.section!==lastSection){
-      if(lastSection)html+="</div>";
+      if(lastSection) html+="</div>";
       lastSection=t.section;
       html+="<div class='section'><div class='section-header'><div class='section-icon'>"+t.emoji+"</div><h2>"+t.section+"</h2><span class='section-time'>"+t.time+"</span></div>";
     }
@@ -698,53 +303,42 @@ function renderTasks(){
     html+="<div class='checkbox'><svg width='12' height='10' fill='none' stroke='white' stroke-width='2.5' viewBox='0 0 12 10'><polyline points='1,5 4,8 11,1'/></svg></div>";
     html+="<div class='task-content'><div class='task-title'>"+t.title+"</div><div class='task-sub'>"+t.sub+"</div><span class='task-tag tag-"+t.tag+"'>"+t.tag+"</span></div></div>";
   }
-  if(lastSection)html+="</div>";
+  if(lastSection) html+="</div>";
   container.innerHTML=html;
 }
 
-function toggleTask(id){var d=getToday();d.tasks[id]=!d.tasks[id];save();renderTasks();updateHeader()}
+function toggleTask(id) { var d=getToday(); d.tasks[id]=!d.tasks[id]; save(); renderTasks(); updateHeader(); }
 
-function getCalData(){var d={};try{d=JSON.parse(localStorage.getItem("calData")||"{}")}catch(e){}return d}
-function saveCalData(d){try{localStorage.setItem("calData",JSON.stringify(d))}catch(e){}}
-function getTimeStr(){var now=new Date(),h=now.getHours(),m=now.getMinutes(),ap=h>=12?"PM":"AM";h=h%12||12;return h+":"+(m<10?"0":"")+m+" "+ap}
+// ── CALORIE TRACKING ──
+function getCalData() { var d={}; try{d=JSON.parse(localStorage.getItem("calData")||"{}");}catch(e){} return d; }
+function saveCalData(d) { try{localStorage.setItem("calData",JSON.stringify(d));}catch(e){} }
+function getTimeStr() { var now=new Date(),h=now.getHours(),m=now.getMinutes(),ap=h>=12?"PM":"AM"; h=h%12||12; return h+":"+(m<10?"0":"")+m+" "+ap; }
 
-function addMealEntry(name,cal){
-  var d=getCalData();if(!d[todayKey()])d[todayKey()]=[];
+function addMealEntry(name, cal) {
+  var d=getCalData(); if(!d[todayKey()]) d[todayKey()]=[];
   d[todayKey()].push({name:name,cal:cal,time:getTimeStr()});
-  saveCalData(d);renderDiet();
+  saveCalData(d); renderDiet();
 }
-function removeMeal(idx){var d=getCalData();if(d[todayKey()]){d[todayKey()].splice(idx,1);saveCalData(d)}renderDiet()}
-function addManualMeal(){
-  var n=document.getElementById("meal-name"),c=document.getElementById("meal-cal");if(!n||!c)return;
-  var name=n.value.trim(),cal=parseInt(c.value);
-  if(!name||!cal||cal<=0){alert("Enter a meal name and calories.");return}
-  n.value="";c.value="";addMealEntry(name,cal);
+function removeMeal(idx) { var d=getCalData(); if(d[todayKey()]){d[todayKey()].splice(idx,1);saveCalData(d);} renderDiet(); }
+function addManualMeal() {
+  var n=document.getElementById("meal-name"), c=document.getElementById("meal-cal"); if(!n||!c) return;
+  var name=n.value.trim(), cal=parseInt(c.value);
+  if(!name||!cal||cal<=0){alert("Enter a meal name and calories.");return;}
+  n.value=""; c.value=""; addMealEntry(name,cal);
 }
 
-function renderDiet(){
-  try{
-    var container=document.getElementById("diet-container");
-    if(!container)return;
+function renderDiet() {
+  try {
+    var container=document.getElementById("diet-container"); if(!container) return;
     var logs=(getCalData()[todayKey()]||[]);
     var total=0;
-    for(var i=0;i<logs.length;i++)total+=Number(logs[i].cal)||0;
-    var rem=CAL_GOAL-total;
-    var pct=Math.min(100,Math.round((total/CAL_GOAL)*100));
+    for(var i=0;i<logs.length;i++) total+=Number(logs[i].cal)||0;
+    var rem=CAL_GOAL-total, pct=Math.min(100,Math.round((total/CAL_GOAL)*100));
     var rc=pct>=100?"#ef4444":pct>=85?"#eab308":"#22c55e";
-    var circ=2*Math.PI*41;
-    var off=circ-(circ*pct/100);
-
-    // Macro totals
-    var totalProtein=0,totalCarbs=0,totalFat=0;
-    for(var i=0;i<logs.length;i++){
-      totalProtein+=Number(logs[i].protein)||0;
-      totalCarbs+=Number(logs[i].carbs)||0;
-      totalFat+=Number(logs[i].fat)||0;
-    }
-
+    var circ=2*Math.PI*41, off=circ-(circ*pct/100);
     var html="";
 
-    // ── Calorie Ring Card ──
+    // Ring Card
     html+="<div class='diet-card' style='display:flex;align-items:center;gap:24px;'>";
     html+="<div style='position:relative;width:110px;height:110px;flex-shrink:0;'>";
     html+="<svg viewBox='0 0 100 100' width='110' height='110' style='transform:rotate(-90deg)'>";
@@ -752,61 +346,35 @@ function renderDiet(){
     html+="<circle fill='none' stroke='"+rc+"' stroke-width='8' stroke-linecap='round' cx='50' cy='50' r='41' stroke-dasharray='"+circ+"' stroke-dashoffset='"+off+"'/>";
     html+="</svg>";
     html+="<div style='position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;'>";
-    html+="<div style='font-size:22px;font-weight:800;color:"+rc+";letter-spacing:-1px'>"+pct+"%</div>";
-    html+="<div style='font-size:9px;color:var(--text-muted);font-weight:700;letter-spacing:0.8px;margin-top:1px'>OF GOAL</div>";
+    html+="<div style='font-size:22px;font-weight:800;color:"+rc+";'>"+pct+"%</div>";
+    html+="<div style='font-size:9px;color:var(--text-muted);font-weight:700;letter-spacing:0.8px;'>OF GOAL</div>";
     html+="</div></div>";
     html+="<div style='flex:1;'>";
-    html+="<div style='font-size:42px;font-weight:800;letter-spacing:-2px;line-height:1'>"+total+"</div>";
-    html+="<div style='font-size:13px;color:var(--text-muted);margin-top:4px;font-weight:500'>of "+CAL_GOAL+" cal goal</div>";
-    if(rem>0){
-      html+="<div style='margin-top:8px;font-size:13px;font-weight:700;color:#4ade80;'>"+rem+" cal remaining</div>";
-    }else{
-      html+="<div style='margin-top:8px;font-size:13px;font-weight:700;color:#f87171;'>+"+Math.abs(rem)+" over goal</div>";
-    }
-    // Macro summary
-    if(totalProtein||totalCarbs||totalFat){
-      html+="<div style='display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;'>";
-      html+="<span style='font-size:11px;font-weight:700;color:#22c55e;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:7px;padding:3px 8px;'>P "+Math.round(totalProtein)+"g</span>";
-      html+="<span style='font-size:11px;font-weight:700;color:#60a5fa;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);border-radius:7px;padding:3px 8px;'>C "+Math.round(totalCarbs)+"g</span>";
-      html+="<span style='font-size:11px;font-weight:700;color:#fb923c;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:7px;padding:3px 8px;'>F "+Math.round(totalFat)+"g</span>";
-      html+="</div>";
-    }
+    html+="<div style='font-size:42px;font-weight:800;letter-spacing:-2px;line-height:1;'>"+total+"</div>";
+    html+="<div style='font-size:13px;color:var(--text-muted);margin-top:4px;font-weight:500;'>of "+CAL_GOAL+" cal goal</div>";
+    if(rem>0) html+="<div style='margin-top:8px;font-size:13px;font-weight:700;color:#4ade80;'>"+rem+" cal remaining</div>";
+    else html+="<div style='margin-top:8px;font-size:13px;font-weight:700;color:#f87171;'>+"+Math.abs(rem)+" over goal</div>";
     html+="</div></div>";
 
-    // ── Food Search Card ──
+    // Manual Entry Card
     html+="<div class='diet-card'>";
-    html+="<div class='diet-label'>🔍 Restaurant & Food Search</div>";
-    html+="<div style='font-size:11px;color:var(--text-muted);margin-bottom:12px;font-weight:500;line-height:1.5'>Type anything — \"Chipotle burrito bowl\", \"Big Mac and fries\", \"grilled salmon 6oz\"</div>";
-    html+="<div style='display:flex;gap:8px;margin-bottom:10px;'>";
-    html+="<input id='food-search' type='text' placeholder='What did you eat?' style='flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--border-med);border-radius:13px;padding:13px 16px;color:var(--text);font-size:14px;font-weight:500;' onkeydown='if(event.key===\"Enter\")searchFood()'/>";
-    html+="<div onclick='searchFood()' style='background:linear-gradient(135deg,rgba(59,130,246,0.9),rgba(59,130,246,0.7));color:white;border-radius:13px;padding:13px 16px;font-size:14px;font-weight:800;cursor:pointer;white-space:nowrap;'>Search</div>";
-    html+="</div>";
-    html+="<div id='search-results'></div>";
-    html+="<div style='border-top:1px solid var(--border);padding-top:14px;margin-top:8px;'>";
-    html+="<div class='diet-label' style='margin-bottom:10px;'>Or Add Manually</div>";
+    html+="<div class='diet-label'>➕ Add Meal</div>";
     html+="<input id='meal-name' type='text' placeholder='Meal name' style='width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border-med);border-radius:13px;padding:13px 16px;color:var(--text);font-size:14px;margin-bottom:10px;font-weight:500;'/>";
     html+="<input id='meal-cal' type='number' placeholder='Calories' style='width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border-med);border-radius:13px;padding:13px 16px;color:var(--text);font-size:14px;margin-bottom:14px;font-weight:500;'/>";
     html+="<div onclick='addManualMeal()' style='background:linear-gradient(135deg,rgba(249,115,22,0.9),rgba(249,115,22,0.75));color:white;border-radius:13px;padding:15px;text-align:center;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 4px 20px rgba(249,115,22,0.25);'>+ Add Meal</div>";
-    html+="</div></div>";
+    html+="</div>";
 
-    // ── Today's Log Card ──
+    // Log Card
     html+="<div class='diet-card'>";
     html+="<div class='diet-label'>Today's Log</div>";
     if(logs.length===0){
       html+="<div style='font-size:13px;color:var(--text-muted);text-align:center;padding:24px 0;font-weight:500;'>No meals logged yet</div>";
-    }else{
+    } else {
       for(var l=0;l<logs.length;l++){
         var log=logs[l];
         html+="<div style='display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--border);'>";
         html+="<div style='flex:1;min-width:0;'>";
         html+="<div style='font-size:14px;font-weight:600;'>"+log.name+"</div>";
-        if(log.protein||log.carbs||log.fat){
-          html+="<div style='display:flex;gap:8px;margin-top:4px;flex-wrap:wrap;'>";
-          if(log.protein)html+="<span style='font-size:10px;font-weight:700;color:#22c55e;'>P: "+Math.round(log.protein)+"g</span>";
-          if(log.carbs)html+="<span style='font-size:10px;font-weight:700;color:#60a5fa;'>C: "+Math.round(log.carbs)+"g</span>";
-          if(log.fat)html+="<span style='font-size:10px;font-weight:700;color:#fb923c;'>F: "+Math.round(log.fat)+"g</span>";
-          html+="</div>";
-        }
         html+="<div style='font-size:11px;color:var(--text-muted);margin-top:3px;'>"+log.time+"</div>";
         html+="</div>";
         html+="<div style='display:flex;align-items:center;gap:14px;flex-shrink:0;'>";
@@ -815,191 +383,239 @@ function renderDiet(){
         html+="</div></div>";
       }
     }
-    html+="</div>";
-    html+="<div style='height:16px;'></div>";
-
+    html+="</div><div style='height:16px;'></div>";
     container.innerHTML=html;
-  }catch(err){
+  } catch(err) {
     var c=document.getElementById("diet-container");
-    if(c)c.innerHTML="<div style='padding:24px;color:#f87171;font-size:13px;'>Error rendering diet page: "+err.message+"</div>";
+    if(c) c.innerHTML="<div style='padding:24px;color:#f87171;font-size:13px;'>Error: "+err.message+"</div>";
   }
 }
 
-function renderStats(){
-  var s=calcScore(),pct=s.tTotal>0?Math.round((s.tDone/s.tTotal)*100):0;
+// ── STATS ──
+function renderStats() {
+  var s=calcScore(), pct=s.tTotal>0?Math.round((s.tDone/s.tTotal)*100):0;
   var sg=document.getElementById("score-grid");
-  if(sg)sg.innerHTML=
+  if(sg) sg.innerHTML=
     "<div class='score-card'><div class='score-card-icon'>🔥</div><div class='score-card-label'>Today</div><div class='score-card-val' style='color:var(--accent)'>"+pct+"%</div><div class='score-card-sub'>completion rate</div></div>"+
     "<div class='score-card'><div class='score-card-icon'>✅</div><div class='score-card-label'>Tasks Done</div><div class='score-card-val'>"+s.tDone+"</div><div class='score-card-sub'>of "+s.tTotal+" total</div></div>"+
     "<div class='score-card'><div class='score-card-icon'>⚡</div><div class='score-card-label'>Streak</div><div class='score-card-val'>"+calcStreak()+"</div><div class='score-card-sub'>days in a row</div></div>"+
     "<div class='score-card'><div class='score-card-icon'>🏆</div><div class='score-card-label'>Victories</div><div class='score-card-val' style='color:#4ade80'>"+calcAllVictories()+"</div><div class='score-card-sub'>days at 75%+</div></div>";
-  renderWeekBars();renderWeeklySummary();
+  renderWeekBars(); renderWeeklySummary();
 }
 
-function calcStreak(){
-  var wd={};try{wd=JSON.parse(localStorage.getItem("weekData")||"{}")}catch(e){}
+function calcStreak() {
+  var wd={}; try{wd=JSON.parse(localStorage.getItem("weekData")||"{}");}catch(e){}
   var streak=0;
-  for(var i=0;i<365;i++){var d=new Date();d.setDate(d.getDate()-i);var k=d.toISOString().split("T")[0];if(wd[k]&&wd[k]>=60)streak++;else break}
+  for(var i=0;i<365;i++){var d=new Date();d.setDate(d.getDate()-i);var k=d.toISOString().split("T")[0];if(wd[k]&&wd[k]>=60)streak++;else break;}
   return streak;
 }
-function calcAllVictories(){var wd={};try{wd=JSON.parse(localStorage.getItem("weekData")||"{}")}catch(e){}var c=0;for(var k in wd){if(wd[k]>=75)c++}return c}
+function calcAllVictories() { var wd={}; try{wd=JSON.parse(localStorage.getItem("weekData")||"{}");}catch(e){} var c=0; for(var k in wd){if(wd[k]>=75)c++;} return c; }
 
-function renderWeekBars(){
-  var wd={};try{wd=JSON.parse(localStorage.getItem("weekData")||"{}")}catch(e){}
-  var days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],todayStr=new Date().toISOString().split("T")[0],html="";
+function renderWeekBars() {
+  var wd={}; try{wd=JSON.parse(localStorage.getItem("weekData")||"{}");}catch(e){}
+  var days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"], todayStr=new Date().toISOString().split("T")[0], html="";
   for(var i=6;i>=0;i--){
-    var d=new Date();d.setDate(d.getDate()-i);
-    var k=d.toISOString().split("T")[0],p=wd[k]||0,isT=k===todayStr;
-    html+="<div class='week-bar-wrap "+(isT?"today":"")+"'><div class='week-bar-bg'><div class='week-bar-fill' style='height:"+p+"%;background:"+(isT?"linear-gradient(180deg,#fb923c,#f97316)":"rgba(59,130,246,0.5)")+";box-shadow:"+(isT?"0 -2px 12px rgba(249,115,22,0.4)":"none")+"'></div></div><div class='week-bar-day'>"+days[d.getDay()]+"</div></div>";
+    var d=new Date(); d.setDate(d.getDate()-i);
+    var k=d.toISOString().split("T")[0], p=wd[k]||0, isT=k===todayStr;
+    html+="<div class='week-bar-wrap "+(isT?"today":"")+"'><div class='week-bar-bg'><div class='week-bar-fill' style='height:"+p+"%;background:"+(isT?"linear-gradient(180deg,#fb923c,#f97316)":"rgba(59,130,246,0.5)")+";'></div></div><div class='week-bar-day'>"+days[d.getDay()]+"</div></div>";
   }
-  var wb=document.getElementById("week-bars");if(wb)wb.innerHTML=html;
+  var wb=document.getElementById("week-bars"); if(wb) wb.innerHTML=html;
 }
 
-function renderWeeklySummary(){
-  var wd={};try{wd=JSON.parse(localStorage.getItem("weekData")||"{}")}catch(e){}
-  var days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],last7=[];
-  for(var i=6;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);var k=d.toISOString().split("T")[0];last7.push({day:days[d.getDay()],pct:wd[k]||0})}
+function renderWeeklySummary() {
+  var wd={}; try{wd=JSON.parse(localStorage.getItem("weekData")||"{}");}catch(e){}
+  var days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"], last7=[];
+  for(var i=6;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);var k=d.toISOString().split("T")[0];last7.push({day:days[d.getDay()],pct:wd[k]||0});}
   var total=0,victories=0,best=0,bestDay="--";
-  for(var i=0;i<last7.length;i++){total+=last7[i].pct;if(last7[i].pct>=75)victories++;if(last7[i].pct>best){best=last7[i].pct;bestDay=last7[i].day}}
-  var avg=Math.round(total/7),f=0,s2=0;
-  for(var i=0;i<3;i++)f+=last7[i].pct;for(var i=3;i<7;i++)s2+=last7[i].pct;
+  for(var i=0;i<last7.length;i++){total+=last7[i].pct;if(last7[i].pct>=75)victories++;if(last7[i].pct>best){best=last7[i].pct;bestDay=last7[i].day;}}
+  var avg=Math.round(total/7), f=0, s2=0;
+  for(var i=0;i<3;i++)f+=last7[i].pct;
+  for(var i=3;i<7;i++)s2+=last7[i].pct;
   var imp=s2>=f;
-  var el=document.getElementById("weekly-summary");if(!el)return;
+  var el=document.getElementById("weekly-summary"); if(!el) return;
   el.innerHTML=
     "<div class='summary-row'><span class='summary-label'>Best day this week</span><span class='summary-val'>"+bestDay+" ("+best+"%)</span></div>"+
     "<div class='summary-row'><span class='summary-label'>Victories this week</span><span class='summary-val' style='color:#4ade80'>"+victories+" / 7</span></div>"+
     "<div class='summary-row'><span class='summary-label'>Avg completion</span><span class='summary-val'>"+avg+"%</span></div>"+
-    "<div class='summary-row'><span class='summary-label'>Trend</span><span class='summary-val' style='color:"+(imp?"#4ade80":"#f87171")+";'>"+(imp?"↑ Improving":"↓ Needs focus")+"</span></div>"+
+    "<div class='summary-row'><span class='summary-label'>Trend</span><span class='summary-val' style='color:"+(imp?"#4ade80":"#f87171")+"'>"+(imp?"↑ Improving":"↓ Needs focus")+"</span></div>"+
     "<div class='summary-row'><span class='summary-label'>All-time victories</span><span class='summary-val' style='color:var(--accent)'>"+calcAllVictories()+" days</span></div>";
 }
 
-function renderQuote(){
-  var el=document.getElementById("daily-quote");if(!el)return;
-  var cached="",cachedDate="";
-  try{cached=localStorage.getItem("cachedQuote")||"";cachedDate=localStorage.getItem("cachedQuoteDate")||""}catch(e){}
-  if(cached&&cachedDate===todayKey()){el.textContent=cached;return}
-  var idx=new Date().getDate()%QUOTES.length;
-  el.textContent='"'+QUOTES[idx]+'"';
+// ── STEP TRACKING ──
+var stepCount=0, stepTracking=false;
+var lastAccel={x:0,y:0,z:0}, lastStepTime=0;
+var stepThreshold=12, minStepInterval=250;
+var wakeLock=null;
+
+async function requestWakeLock(){
+  if(!("wakeLock" in navigator)) return;
+  try { wakeLock=await navigator.wakeLock.request("screen"); wakeLock.addEventListener("release",function(){wakeLock=null;}); } catch(e) {}
+}
+function releaseWakeLock(){ if(wakeLock){wakeLock.release();wakeLock=null;} }
+document.addEventListener("visibilitychange",function(){ if(document.visibilityState==="visible"&&stepTracking) requestWakeLock(); });
+
+function toggleStepTracking(){ stepTracking ? stopStepTracking() : startStepTracking(); }
+
+function startStepTracking(){
+  if(typeof DeviceMotionEvent==="undefined"){alert("Motion tracking not supported.");return;}
+  if(typeof DeviceMotionEvent.requestPermission==="function"){
+    DeviceMotionEvent.requestPermission().then(function(p){ if(p==="granted") beginTracking(); else alert("Motion permission denied."); }).catch(function(){beginTracking();});
+  } else { beginTracking(); }
 }
 
-function renderScripture(){
-  var textEl=document.getElementById("scripture-text"),refEl=document.getElementById("scripture-ref");if(!textEl||!refEl)return;
-  var verses=[
-    {t:"Haven't I commanded you? Be strong and courageous. Don't be afraid. Don't be dismayed, for the Lord your God is with you wherever you go.",r:"— Joshua 1:9"},
-    {t:"I can do all things through Christ who strengthens me.",r:"— Philippians 4:13"},
-    {t:"Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight.",r:"— Proverbs 3:5-6"},
-    {t:"For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future.",r:"— Jeremiah 29:11"},
-    {t:"And we know that in all things God works for the good of those who love him, who have been called according to his purpose.",r:"— Romans 8:28"},
-    {t:"The Lord is my shepherd, I lack nothing.",r:"— Psalm 23:1"},
-    {t:"But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint.",r:"— Isaiah 40:31"},
-    {t:"But seek first his kingdom and his righteousness, and all these things will be given to you as well.",r:"— Matthew 6:33"},
-    {t:"God is our refuge and strength, an ever-present help in trouble.",r:"— Psalm 46:1"},
-    {t:"I have told you these things, so that in me you may have peace. In this world you will have trouble. But take heart! I have overcome the world.",r:"— John 16:33"},
-    {t:"Do not conform to the pattern of this world, but be transformed by the renewing of your mind.",r:"— Romans 12:2"},
-    {t:"The Lord is my strength and my shield; my heart trusts in him, and he helps me.",r:"— Psalm 28:7"},
-    {t:"Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God.",r:"— Philippians 4:6-7"},
-    {t:"Finally, be strong in the Lord and in his mighty power.",r:"— Ephesians 6:10"},
-    {t:"For God has not given us a spirit of fear, but of power and of love and of a sound mind.",r:"— 2 Timothy 1:7"},
-    {t:"Now faith is confidence in what we hope for and assurance about what we do not see.",r:"— Hebrews 11:1"},
-    {t:"Whatever you do, work at it with all your heart, as working for the Lord, not for human masters.",r:"— Colossians 3:23"},
-    {t:"No temptation has overtaken you except what is common to mankind. And God is faithful; he will not let you be tempted beyond what you can bear.",r:"— 1 Corinthians 10:13"},
-    {t:"He who dwells in the shelter of the Most High will rest in the shadow of the Almighty.",r:"— Psalm 91:1"},
-    {t:"Consider it pure joy, my brothers and sisters, whenever you face trials of many kinds, because you know that the testing of your faith produces perseverance.",r:"— James 1:2-3"},
-  ];
-  var idx=new Date().getDate()%verses.length;
-  textEl.textContent=verses[idx].t;refEl.textContent=verses[idx].r;
+function beginTracking(){
+  stepTracking=true;
+  window.addEventListener("devicemotion",handleMotion);
+  requestWakeLock();
+  var btn=document.getElementById("step-btn");
+  if(btn){btn.textContent="STOP";btn.style.background="rgba(239,68,68,0.12)";btn.style.borderColor="rgba(239,68,68,0.25)";btn.style.color="#f87171";}
 }
 
+function stopStepTracking(){
+  stepTracking=false;
+  window.removeEventListener("devicemotion",handleMotion);
+  releaseWakeLock();
+  var btn=document.getElementById("step-btn");
+  if(btn){btn.textContent="START";btn.style.background="rgba(59,130,246,0.12)";btn.style.borderColor="rgba(59,130,246,0.25)";btn.style.color="#60a5fa";}
+}
+
+function handleMotion(e){
+  var acc=e.accelerationIncludingGravity; if(!acc) return;
+  var x=acc.x||0,y=acc.y||0,z=acc.z||0;
+  var mag=Math.sqrt(x*x+y*y+z*z);
+  var prev=Math.sqrt(lastAccel.x*lastAccel.x+lastAccel.y*lastAccel.y+lastAccel.z*lastAccel.z);
+  var delta=Math.abs(mag-prev), now=Date.now();
+  if(delta>stepThreshold&&(now-lastStepTime)>minStepInterval){
+    stepCount++; lastStepTime=now; updateStepUI();
+    try{localStorage.setItem("stepCount_"+todayKey(),stepCount);}catch(e){}
+    if(stepCount>=6000){var d=getToday();if(!d.tasks["t16c"]){d.tasks["t16c"]=true;save();renderTasks();updateHeader();}}
+  }
+  lastAccel={x:x,y:y,z:z};
+}
+
+function updateStepUI(){
+  var el=document.getElementById("step-count");
+  if(el) el.textContent=stepCount>=1000?(stepCount/1000).toFixed(1)+"k":stepCount;
+  var ring=document.getElementById("step-ring");
+  if(ring){
+    var pct=Math.min(1,stepCount/STEP_GOAL), circ=213.6;
+    ring.style.strokeDashoffset=circ-(circ*pct);
+    ring.style.stroke=pct>=1?"#22c55e":pct>=0.75?"#f97316":"#3b82f6";
+  }
+}
+
+// ── NOTIFICATIONS ──
 var REMINDERS=[
   {hour:8,min:0,title:"🌅 Morning Check-In",body:"Devotion done? Water in? Sunlight? Let's get the day started right."},
-  {hour:14,min:0,title:"🌆 Afternoon Check-In",body:"No caffeine. Drink water. Check your step count — stay on track."},
-  {hour:20,min:0,title:"🌙 Evening Check-In",body:"Wind-down time. No screens soon. Prep for tomorrow. Lights out by 9:30."},
+  {hour:14,min:0,title:"🌆 Afternoon Check-In",body:"No caffeine. Drink water. Check your step count."},
+  {hour:20,min:0,title:"🌙 Evening Check-In",body:"Wind-down time. No screens soon. Prep for tomorrow."},
 ];
 var notifPermission=typeof Notification!=="undefined"&&Notification.permission==="granted";
 var scheduledTimers=[];
 
 function scheduleReminders(){
-  scheduledTimers.forEach(function(t){clearTimeout(t)});scheduledTimers=[];
-  if(!notifPermission)return;
+  scheduledTimers.forEach(function(t){clearTimeout(t);}); scheduledTimers=[];
+  if(!notifPermission) return;
   var now=new Date();
   REMINDERS.forEach(function(r){
-    var target=new Date();target.setHours(r.hour,r.min,0,0);
+    var target=new Date(); target.setHours(r.hour,r.min,0,0);
     var ms=target-now;
-    if(ms>0)scheduledTimers.push(setTimeout(function(){new Notification(r.title,{body:r.body})},ms));
+    if(ms>0) scheduledTimers.push(setTimeout(function(){new Notification(r.title,{body:r.body});},ms));
   });
 }
 
 function toggleNotifications(){
   var enabled=localStorage.getItem("notifsEnabled")==="true"&&notifPermission;
   var statusEl=document.getElementById("notif-status");
-  if(enabled){
-    localStorage.setItem("notifsEnabled","false");
-    scheduledTimers.forEach(function(t){clearTimeout(t)});scheduledTimers=[];
-    if(statusEl)statusEl.style.display="none";
-    updateNotifUI();return;
-  }
-  if(typeof Notification==="undefined"){
-    showNotifStatus("Notifications aren't supported in this browser.","error");return;
-  }
-  if(Notification.permission==="denied"){
-    showNotifStatus("Notifications are blocked. Go to browser Settings → Site Settings → Notifications and allow this site.","error");return;
-  }
+  if(enabled){localStorage.setItem("notifsEnabled","false");scheduledTimers.forEach(function(t){clearTimeout(t);});scheduledTimers=[];if(statusEl)statusEl.style.display="none";updateNotifUI();return;}
+  if(typeof Notification==="undefined"){showNotifStatus("Notifications not supported.","error");return;}
+  if(Notification.permission==="denied"){showNotifStatus("Notifications blocked. Enable in browser settings.","error");return;}
   Notification.requestPermission().then(function(perm){
-    if(perm==="granted"){
-      notifPermission=true;localStorage.setItem("notifsEnabled","true");
-      scheduleReminders();updateNotifUI();
-      showNotifStatus("✓ Reminders set for 8 AM, 2 PM, and 8 PM CST.","success");
-    }else{showNotifStatus("Permission denied. Enable notifications in your browser settings.","error")}
+    if(perm==="granted"){notifPermission=true;localStorage.setItem("notifsEnabled","true");scheduleReminders();updateNotifUI();showNotifStatus("✓ Reminders set for 8 AM, 2 PM, and 8 PM CST.","success");}
+    else{showNotifStatus("Permission denied.","error");}
   });
 }
 
 function showNotifStatus(msg,type){
-  var el=document.getElementById("notif-status");if(!el)return;
+  var el=document.getElementById("notif-status"); if(!el) return;
   el.style.display="block";
-  if(type==="success"){el.style.background="rgba(34,197,94,0.07)";el.style.border="1px solid rgba(34,197,94,0.2)";el.style.color="#4ade80"}
-  else{el.style.background="rgba(239,68,68,0.07)";el.style.border="1px solid rgba(239,68,68,0.2)";el.style.color="#f87171"}
+  if(type==="success"){el.style.background="rgba(34,197,94,0.07)";el.style.border="1px solid rgba(34,197,94,0.2)";el.style.color="#4ade80";}
+  else{el.style.background="rgba(239,68,68,0.07)";el.style.border="1px solid rgba(239,68,68,0.2)";el.style.color="#f87171";}
   el.textContent=msg;
 }
 
 function updateNotifUI(){
   var enabled=localStorage.getItem("notifsEnabled")==="true"&&notifPermission;
   var btn=document.getElementById("notif-toggle"),dot=document.getElementById("notif-dot"),label=document.getElementById("notif-label");
-  if(btn){btn.style.borderColor=enabled?"rgba(34,197,94,0.3)":"var(--border-med)";btn.style.background=enabled?"rgba(34,197,94,0.07)":"var(--card)"}
-  if(dot){dot.style.background=enabled?"#22c55e":"var(--text-muted)";dot.style.boxShadow=enabled?"0 0 8px #22c55e":"none"}
-  if(label){label.textContent=enabled?"ON":"OFF";label.style.color=enabled?"#4ade80":"var(--text-muted)"}
+  if(btn){btn.style.borderColor=enabled?"rgba(34,197,94,0.3)":"var(--border-med)";btn.style.background=enabled?"rgba(34,197,94,0.07)":"var(--card)";}
+  if(dot){dot.style.background=enabled?"#22c55e":"var(--text-muted)";dot.style.boxShadow=enabled?"0 0 8px #22c55e":"none";}
+  if(label){label.textContent=enabled?"ON":"OFF";label.style.color=enabled?"#4ade80":"var(--text-muted)";}
 }
 
+// ── MISC ──
 function resetDay(){
-  if(confirm("Reset today? This cannot be undone.")){var k=todayKey();state[k]={tasks:{},habits:{}};save();renderTasks();updateHeader()}
+  if(confirm("Reset today? This cannot be undone.")){var k=todayKey();state[k]={tasks:{},habits:{}};save();renderTasks();updateHeader();}
 }
 
 function setDates(){
   var str=new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
-  ["today-date","diet-date","stats-date"].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=str});
+  ["today-date","diet-date","stats-date"].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=str;});
 }
 
 function showPage(name,btn,idx){
-  document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active")});
-  document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.remove("active")});
+  document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");});
+  document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.remove("active");});
   document.getElementById("page-"+name).classList.add("active");
   btn.classList.add("active");
-  var ind=document.getElementById("nav-indicator");
-  if(ind)ind.style.left=(idx*33.33)+"%";
-  if(name==="stats")renderStats();
-  if(name==="diet")renderDiet();
+  var ind=document.getElementById("nav-indicator"); if(ind) ind.style.left=(idx*33.33)+"%";
+  if(name==="stats") renderStats();
+  if(name==="diet") renderDiet();
 }
 
-var lastKey="";try{lastKey=localStorage.getItem("lastActiveDay")||""}catch(e){}
-if(lastKey&&lastKey!==todayKey()){if(!state[todayKey()])state[todayKey()]={tasks:{},habits:{}};save()}
-try{localStorage.setItem("lastActiveDay",todayKey())}catch(e){}
-setInterval(function(){
-  var cur=todayKey(),stored="";try{stored=localStorage.getItem("lastActiveDay")||""}catch(e){}
-  if(stored!==cur){try{localStorage.setItem("lastActiveDay",cur)}catch(e){}if(!state[cur])state[cur]={tasks:{},habits:{}};save();renderTasks();updateHeader();setDates()}
-},60000);
+function renderQuote(){
+  var el=document.getElementById("daily-quote"); if(!el) return;
+  var idx=new Date().getDate()%QUOTES.length;
+  el.textContent='"'+QUOTES[idx]+'"';
+}
 
-if(localStorage.getItem("notifsEnabled")==="true"&&notifPermission)scheduleReminders();
+function renderScripture(){
+  var textEl=document.getElementById("scripture-text"),refEl=document.getElementById("scripture-ref"); if(!textEl||!refEl) return;
+  var verses=[
+    {t:"Haven't I commanded you? Be strong and courageous. Don't be afraid. Don't be dismayed, for the Lord your God is with you wherever you go.",r:"— Joshua 1:9"},
+    {t:"I can do all things through Christ who strengthens me.",r:"— Philippians 4:13"},
+    {t:"Trust in the Lord with all your heart and lean not on your own understanding.",r:"— Proverbs 3:5-6"},
+    {t:"For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you.",r:"— Jeremiah 29:11"},
+    {t:"And we know that in all things God works for the good of those who love him.",r:"— Romans 8:28"},
+    {t:"The Lord is my shepherd, I lack nothing.",r:"— Psalm 23:1"},
+    {t:"But those who hope in the Lord will renew their strength. They will soar on wings like eagles.",r:"— Isaiah 40:31"},
+    {t:"But seek first his kingdom and his righteousness, and all these things will be given to you as well.",r:"— Matthew 6:33"},
+    {t:"God is our refuge and strength, an ever-present help in trouble.",r:"— Psalm 46:1"},
+    {t:"Take heart! I have overcome the world.",r:"— John 16:33"},
+    {t:"Do not conform to the pattern of this world, but be transformed by the renewing of your mind.",r:"— Romans 12:2"},
+    {t:"The Lord is my strength and my shield; my heart trusts in him, and he helps me.",r:"— Psalm 28:7"},
+    {t:"Do not be anxious about anything, but in every situation, present your requests to God.",r:"— Philippians 4:6-7"},
+    {t:"Finally, be strong in the Lord and in his mighty power.",r:"— Ephesians 6:10"},
+    {t:"For God has not given us a spirit of fear, but of power and of love and of a sound mind.",r:"— 2 Timothy 1:7"},
+    {t:"Now faith is confidence in what we hope for and assurance about what we do not see.",r:"— Hebrews 11:1"},
+    {t:"Whatever you do, work at it with all your heart, as working for the Lord.",r:"— Colossians 3:23"},
+    {t:"God is faithful; he will not let you be tempted beyond what you can bear.",r:"— 1 Corinthians 10:13"},
+    {t:"He who dwells in the shelter of the Most High will rest in the shadow of the Almighty.",r:"— Psalm 91:1"},
+    {t:"Consider it pure joy whenever you face trials, because the testing of your faith produces perseverance.",r:"— James 1:2-3"},
+  ];
+  var idx=new Date().getDate()%verses.length;
+  textEl.textContent=verses[idx].t; refEl.textContent=verses[idx].r;
+}
 
-setDates();renderQuote();renderScripture();renderTasks();updateHeader();
+// ── INIT ──
+var lastKey=""; try{lastKey=localStorage.getItem("lastActiveDay")||"";}catch(e){}
+if(lastKey&&lastKey!==todayKey()){if(!state[todayKey()])state[todayKey()]={tasks:{},habits:{}};save();}
+try{localStorage.setItem("lastActiveDay",todayKey());}catch(e){}
+
+try{var saved=localStorage.getItem("stepCount_"+todayKey());if(saved){stepCount=parseInt(saved)||0;setTimeout(updateStepUI,100);}}catch(e){}
+
+if(localStorage.getItem("notifsEnabled")==="true"&&notifPermission) scheduleReminders();
+
+setDates(); renderQuote(); renderScripture(); renderTasks(); updateHeader();
 setTimeout(updateNotifUI,50);
 </script>
 </body>
