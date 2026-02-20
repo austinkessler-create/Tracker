@@ -5,104 +5,350 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Daily Tracker">
 <title>Daily Tracker</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--bg:#0a0a0f;--card:#13131a;--card2:#1a1a24;--accent:#f97316;--accent2:#3b82f6;--green:#22c55e;--text:#f1f5f9;--muted:#64748b;--border:#1e1e2e}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;min-height:100vh;overflow-x:hidden}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-.page{display:none;padding:0 0 90px 0;min-height:100vh}
-.page.active{display:block}
-.header{padding:56px 20px 16px;background:linear-gradient(180deg,#0f0f1a 0%,var(--bg) 100%);position:sticky;top:0;z-index:50;backdrop-filter:blur(10px)}
-.header h1{font-size:28px;font-weight:700;letter-spacing:-0.5px}
-.header .date{color:var(--muted);font-size:13px;margin-top:2px}
-.score-pill{display:inline-flex;align-items:center;gap:6px;background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:13px;font-weight:600;margin-top:10px}
-.score-pill .dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
-.quote-card{margin:16px 16px 0;padding:18px 20px;background:linear-gradient(135deg,rgba(249,115,22,0.12),rgba(249,115,22,0.03));border:1px solid rgba(249,115,22,0.25);border-radius:18px}
-.quote-label{font-size:11px;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px}
-.quote-text{font-size:15px;font-weight:500;line-height:1.5;font-style:italic;color:var(--text)}
-.progress-section{padding:20px 16px 0}
-.progress-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;display:flex;align-items:center;gap:20px}
-.ring-wrap{position:relative;width:90px;height:90px;flex-shrink:0}
+:root{
+  --bg:#060608;
+  --card:rgba(255,255,255,0.035);
+  --card-hover:rgba(255,255,255,0.06);
+  --accent:#f97316;
+  --accent-dim:rgba(249,115,22,0.15);
+  --accent-glow:rgba(249,115,22,0.3);
+  --blue:#3b82f6;
+  --blue-dim:rgba(59,130,246,0.12);
+  --green:#22c55e;
+  --green-dim:rgba(34,197,94,0.12);
+  --purple:#a855f7;
+  --text:#f1f5f9;
+  --text-muted:#64748b;
+  --text-soft:rgba(241,245,249,0.7);
+  --border:rgba(255,255,255,0.07);
+  --border-med:rgba(255,255,255,0.11);
+  --border-strong:rgba(255,255,255,0.15);
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* Ambient background blobs */
+body::before{
+  content:'';position:fixed;top:-20%;left:-20%;width:60%;height:60%;
+  background:radial-gradient(ellipse,rgba(249,115,22,0.07) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+body::after{
+  content:'';position:fixed;bottom:-10%;right:-10%;width:50%;height:50%;
+  background:radial-gradient(ellipse,rgba(59,130,246,0.05) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px var(--accent-glow)}50%{box-shadow:0 0 40px var(--accent-glow)}}
+
+.page{display:none;padding:0 0 110px;min-height:100vh;position:relative;z-index:1}
+.page.active{display:block;animation:fadeUp 0.4s cubic-bezier(0.16,1,0.3,1)}
+
+/* ── HEADER ── */
+.header{
+  padding:52px 20px 20px;
+  background:linear-gradient(180deg,rgba(6,6,8,0.98) 0%,rgba(6,6,8,0.85) 100%);
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
+  border-bottom:1px solid var(--border);
+}
+.header-top{display:flex;align-items:flex-start;justify-content:space-between}
+.header h1{
+  font-size:32px;font-weight:800;letter-spacing:-1px;
+  background:linear-gradient(135deg,#ffffff 0%,rgba(249,115,22,0.9) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.header .date{color:var(--text-muted);font-size:13px;margin-top:4px;font-weight:500;letter-spacing:0.2px}
+.score-pill{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(249,115,22,0.08);
+  border:1px solid rgba(249,115,22,0.2);
+  border-radius:20px;padding:6px 13px;
+  font-size:12px;font-weight:700;margin-top:12px;
+  letter-spacing:0.2px;
+}
+.score-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);transition:all 0.3s}
+
+/* ── CARDS ── */
+.glass-card{
+  background:var(--card);
+  border:1px solid var(--border-med);
+  border-radius:24px;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  position:relative;overflow:hidden;
+}
+.glass-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);
+}
+
+/* ── QUOTE ── */
+.quote-card{
+  margin:16px 16px 0;
+  padding:20px 22px;
+  background:linear-gradient(135deg,rgba(249,115,22,0.1) 0%,rgba(249,115,22,0.03) 100%);
+  border:1px solid rgba(249,115,22,0.18);
+  border-radius:22px;
+  position:relative;overflow:hidden;
+}
+.quote-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(249,115,22,0.6),transparent)}
+.quote-card::after{content:'"';position:absolute;top:-10px;right:16px;font-size:120px;font-family:Georgia,serif;color:rgba(249,115,22,0.06);line-height:1;pointer-events:none}
+.card-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.label-dot{width:5px;height:5px;border-radius:50%}
+.quote-text{font-size:14px;font-weight:500;line-height:1.65;font-style:italic;color:var(--text-soft)}
+
+/* ── SCRIPTURE ── */
+.scripture-card{
+  margin:12px 16px 0;
+  padding:20px 22px;
+  background:linear-gradient(135deg,rgba(59,130,246,0.1) 0%,rgba(59,130,246,0.02) 100%);
+  border:1px solid rgba(59,130,246,0.18);
+  border-radius:22px;
+  position:relative;overflow:hidden;
+}
+.scripture-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(59,130,246,0.6),transparent)}
+.scripture-card::after{content:'✝';position:absolute;top:12px;right:18px;font-size:40px;color:rgba(59,130,246,0.08);pointer-events:none}
+.scripture-text{font-size:14px;font-weight:500;line-height:1.65;font-style:italic;color:var(--text-soft)}
+.scripture-ref{font-size:12px;color:#60a5fa;font-weight:700;margin-top:10px;letter-spacing:0.2px}
+
+/* ── PROGRESS RING ── */
+.progress-section{padding:16px 16px 0}
+.progress-card{
+  padding:26px;display:flex;align-items:center;gap:24px;
+  background:linear-gradient(135deg,rgba(255,255,255,0.04) 0%,rgba(255,255,255,0.02) 100%);
+  border:1px solid var(--border-strong);border-radius:26px;
+  backdrop-filter:blur(20px);position:relative;overflow:hidden;
+}
+.progress-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent)}
+.ring-wrap{position:relative;width:96px;height:96px;flex-shrink:0}
 .ring-wrap svg{transform:rotate(-90deg)}
-.ring-bg{fill:none;stroke:var(--border);stroke-width:8}
-.ring-fill{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 0.5s ease}
+.ring-bg{fill:none;stroke:rgba(255,255,255,0.05);stroke-width:7}
+.ring-track{fill:none;stroke:rgba(249,115,22,0.1);stroke-width:7}
+.ring-fill{fill:none;stroke:url(#ringGrad);stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset 1s cubic-bezier(0.34,1.56,0.64,1)}
 .ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.ring-pct{font-size:22px;font-weight:700}
-.ring-label{font-size:9px;color:var(--muted);margin-top:-2px}
-.progress-stats{flex:1}
-.progress-stats h3{font-size:20px;font-weight:700}
-.progress-stats p{font-size:13px;color:var(--muted);margin-top:4px}
-.grade{display:inline-block;padding:4px 12px;border-radius:10px;font-size:13px;font-weight:700;margin-top:10px}
-.grade-elite{background:rgba(34,197,94,0.15);color:#4ade80}
-.grade-ok{background:rgba(234,179,8,0.15);color:#facc15}
-.section{padding:0 16px;margin-bottom:8px}
-.section-header{display:flex;align-items:center;gap:8px;padding:14px 4px 8px}
-.section-header h2{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px}
-.section-time{font-size:12px;color:var(--accent);background:rgba(249,115,22,0.1);border-radius:8px;padding:2px 8px;margin-left:auto}
-.task{display:flex;align-items:flex-start;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:8px;cursor:pointer;transition:transform 0.1s}
-.task:active{transform:scale(0.98)}
-.task.done{opacity:0.5}
-.task.done .task-title{text-decoration:line-through;color:var(--muted)}
-.checkbox{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;margin-top:1px}
-.task.done .checkbox{background:var(--green);border-color:var(--green)}
+.ring-pct{font-size:24px;font-weight:800;letter-spacing:-1px}
+.ring-label{font-size:9px;color:var(--text-muted);font-weight:700;letter-spacing:0.8px;margin-top:-1px}
+.progress-stats h3{font-size:26px;font-weight:800;letter-spacing:-0.8px}
+.progress-stats p{font-size:13px;color:var(--text-muted);margin-top:4px;font-weight:500}
+.grade{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:10px;font-size:12px;font-weight:700;margin-top:12px;letter-spacing:0.2px}
+.grade-elite{background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid rgba(34,197,94,0.25)}
+.grade-ok{background:rgba(234,179,8,0.1);color:#facc15;border:1px solid rgba(234,179,8,0.25)}
+
+/* ── VICTORY BANNER ── */
+.victory-banner{
+  margin:16px;padding:28px 22px;border-radius:24px;
+  background:linear-gradient(135deg,rgba(34,197,94,0.12),rgba(34,197,94,0.03));
+  border:1px solid rgba(34,197,94,0.2);text-align:center;
+  animation:scaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  position:relative;overflow:hidden;
+}
+.victory-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(34,197,94,0.5),transparent)}
+
+/* ── SECTIONS ── */
+.section{padding:0 16px;margin-bottom:4px}
+.section-header{display:flex;align-items:center;gap:10px;padding:20px 2px 10px}
+.section-icon{
+  width:32px;height:32px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+  background:linear-gradient(135deg,rgba(249,115,22,0.18),rgba(249,115,22,0.05));
+  border:1px solid rgba(249,115,22,0.18);
+  box-shadow:0 2px 8px rgba(249,115,22,0.1);
+}
+.section-header h2{font-size:12px;font-weight:800;color:rgba(241,245,249,0.5);text-transform:uppercase;letter-spacing:1px;flex:1}
+.section-time{font-size:11px;color:var(--accent);background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.15);border-radius:8px;padding:3px 10px;font-weight:700;letter-spacing:0.2px}
+
+/* ── TASKS ── */
+.task{
+  display:flex;align-items:flex-start;gap:14px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;padding:16px;margin-bottom:9px;
+  cursor:pointer;
+  transition:all 0.2s cubic-bezier(0.16,1,0.3,1);
+  position:relative;overflow:hidden;
+}
+.task::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.025),transparent);pointer-events:none}
+.task:active{transform:scale(0.97)}
+.task:hover{border-color:var(--border-med);background:var(--card-hover);transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.task.done{opacity:0.4}
+.task.done .task-title{text-decoration:line-through;color:var(--text-muted)}
+.checkbox{
+  width:26px;height:26px;border-radius:50%;
+  border:2px solid rgba(255,255,255,0.12);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  margin-top:1px;background:rgba(255,255,255,0.03);
+}
+.task.done .checkbox{
+  background:var(--green);border-color:var(--green);
+  box-shadow:0 0 14px rgba(34,197,94,0.5);
+  transform:scale(1.1);
+}
 .checkbox svg{opacity:0;transition:opacity 0.2s}
 .task.done .checkbox svg{opacity:1}
-.task-content{flex:1}
-.task-title{font-size:15px;font-weight:500;line-height:1.3}
-.task-sub{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4}
-.task-tag{display:inline-block;font-size:10px;font-weight:600;border-radius:6px;padding:2px 7px;margin-top:5px}
-.tag-recovery{background:rgba(59,130,246,0.15);color:#60a5fa}
-.tag-nutrition{background:rgba(34,197,94,0.15);color:#4ade80}
-.tag-fitness{background:rgba(249,115,22,0.15);color:#fb923c}
-.tag-mindset{background:rgba(168,85,247,0.15);color:#c084fc}
-.tag-energy{background:rgba(234,179,8,0.15);color:#facc15}
-.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px}
-.score-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px}
-.score-card-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
-.score-card-val{font-size:28px;font-weight:700;margin-top:4px}
-.score-card-sub{font-size:11px;color:var(--muted);margin-top:2px}
-.weekly-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:20px;margin:0 16px 12px}
-.weekly-card h3{font-size:15px;font-weight:600;margin-bottom:16px}
-.week-bars{display:flex;gap:8px;align-items:flex-end;height:80px}
-.week-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%}
-.week-bar-bg{flex:1;width:100%;background:var(--border);border-radius:6px;overflow:hidden;display:flex;align-items:flex-end}
-.week-bar-fill{width:100%;border-radius:6px;transition:height 0.4s ease}
-.week-bar-day{font-size:10px;color:var(--muted)}
-.week-bar-wrap.today .week-bar-day{color:var(--accent);font-weight:700}
-.summary-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:20px;margin:0 16px 12px}
-.summary-card h3{font-size:15px;font-weight:600;margin-bottom:14px}
-.summary-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+.task-content{flex:1;min-width:0}
+.task-title{font-size:15px;font-weight:600;line-height:1.35;letter-spacing:-0.15px}
+.task-sub{font-size:12px;color:var(--text-muted);margin-top:5px;line-height:1.5;font-weight:400}
+.task-tag{display:inline-flex;align-items:center;font-size:10px;font-weight:700;border-radius:7px;padding:3px 9px;margin-top:8px;letter-spacing:0.4px}
+.tag-recovery{background:rgba(59,130,246,0.1);color:#60a5fa;border:1px solid rgba(59,130,246,0.18)}
+.tag-nutrition{background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid rgba(34,197,94,0.18)}
+.tag-fitness{background:rgba(249,115,22,0.1);color:#fb923c;border:1px solid rgba(249,115,22,0.18)}
+.tag-mindset{background:rgba(168,85,247,0.1);color:#c084fc;border:1px solid rgba(168,85,247,0.18)}
+.tag-energy{background:rgba(234,179,8,0.1);color:#facc15;border:1px solid rgba(234,179,8,0.18)}
+
+/* ── STATS ── */
+.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 16px}
+.score-card{
+  background:var(--card);border:1px solid var(--border-med);
+  border-radius:22px;padding:20px;
+  backdrop-filter:blur(16px);position:relative;overflow:hidden;
+  transition:transform 0.2s;
+}
+.score-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent)}
+.score-card-label{font-size:10px;color:var(--text-muted);font-weight:800;text-transform:uppercase;letter-spacing:0.8px}
+.score-card-val{font-size:36px;font-weight:800;margin-top:8px;letter-spacing:-1.5px;line-height:1}
+.score-card-sub{font-size:11px;color:var(--text-muted);margin-top:6px;font-weight:500}
+.score-card-icon{position:absolute;top:16px;right:16px;font-size:22px;opacity:0.4}
+
+.weekly-card{
+  background:var(--card);border:1px solid var(--border-med);
+  border-radius:24px;padding:24px;margin:0 16px 14px;
+  backdrop-filter:blur(16px);position:relative;overflow:hidden;
+}
+.weekly-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)}
+.weekly-card h3{font-size:15px;font-weight:800;margin-bottom:20px;letter-spacing:-0.3px}
+.week-bars{display:flex;gap:8px;align-items:flex-end;height:90px}
+.week-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;height:100%}
+.week-bar-bg{flex:1;width:100%;background:rgba(255,255,255,0.04);border-radius:8px;overflow:hidden;display:flex;align-items:flex-end;border:1px solid var(--border)}
+.week-bar-fill{width:100%;border-radius:8px;transition:height 0.7s cubic-bezier(0.34,1.56,0.64,1)}
+.week-bar-day{font-size:10px;color:var(--text-muted);font-weight:700;letter-spacing:0.3px}
+.week-bar-wrap.today .week-bar-day{color:var(--accent)}
+
+.summary-card{
+  background:var(--card);border:1px solid var(--border-med);
+  border-radius:24px;padding:24px;margin:0 16px 14px;
+  backdrop-filter:blur(16px);position:relative;overflow:hidden;
+}
+.summary-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)}
+.summary-card h3{font-size:15px;font-weight:800;margin-bottom:16px;letter-spacing:-0.3px}
+.summary-row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--border)}
 .summary-row:last-child{border-bottom:none}
-.summary-label{font-size:13px;color:var(--muted)}
-.summary-val{font-size:14px;font-weight:700}
-.reset-btn{display:block;margin:20px 16px;padding:16px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:14px;color:#f87171;font-size:15px;font-weight:600;text-align:center;cursor:pointer}
-.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(13,13,20,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0;cursor:pointer;color:var(--muted);font-size:10px;border:none;background:none;transition:color 0.2s}
+.summary-label{font-size:13px;color:var(--text-muted);font-weight:500}
+.summary-val{font-size:14px;font-weight:800;letter-spacing:-0.2px}
+
+.reset-btn{
+  display:block;margin:0 16px 0;padding:17px;
+  background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);
+  border-radius:18px;color:#f87171;font-size:14px;font-weight:700;
+  text-align:center;cursor:pointer;transition:all 0.2s;letter-spacing:0.2px;
+}
+.reset-btn:hover{background:rgba(239,68,68,0.1)}
+
+/* ── DIET ── */
+.diet-card{
+  margin:0 16px 14px;
+  background:var(--card);border:1px solid var(--border-med);
+  border-radius:24px;padding:24px;
+  backdrop-filter:blur(16px);position:relative;overflow:hidden;
+}
+.diet-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)}
+.diet-label{font-size:10px;color:var(--text-muted);font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+
+/* ── NOTIFICATION ── */
+.notif-card{
+  margin:0 16px 8px;
+  display:flex;align-items:center;gap:16px;
+  background:var(--card);border:1px solid var(--border-med);
+  border-radius:20px;padding:18px 20px;cursor:pointer;
+  transition:all 0.25s cubic-bezier(0.16,1,0.3,1);
+  position:relative;overflow:hidden;
+}
+.notif-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)}
+.notif-card:hover{border-color:var(--border-strong);transform:translateY(-1px)}
+
+/* ── NAV ── */
+.nav{
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(6,6,8,0.95);
+  backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
+  border-top:1px solid var(--border-med);
+  display:flex;z-index:100;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.nav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:12px 0;cursor:pointer;color:var(--text-muted);
+  font-size:10px;font-weight:700;border:none;background:none;
+  transition:all 0.2s;letter-spacing:0.4px;
+}
 .nav-btn.active{color:var(--accent)}
-.nav-btn svg{width:22px;height:22px}
+.nav-btn svg{width:22px;height:22px;transition:transform 0.2s}
+.nav-btn.active svg{transform:scale(1.1)}
+.nav-indicator{
+  position:absolute;top:0;height:2px;background:var(--accent);
+  border-radius:0 0 3px 3px;transition:left 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  width:33.33%;
+}
+
 input{color-scheme:dark}
+input:focus{border-color:rgba(249,115,22,0.5)!important;box-shadow:0 0 0 3px rgba(249,115,22,0.08)!important;outline:none}
 </style>
 </head>
 <body>
 
+<!-- TODAY PAGE -->
 <div id="page-today" class="page active">
   <div class="header">
-    <h1>Daily Tracker</h1>
-    <div class="date" id="today-date"></div>
+    <div class="header-top">
+      <div>
+        <h1>Daily Tracker</h1>
+        <div class="date" id="today-date"></div>
+      </div>
+    </div>
     <div class="score-pill"><span class="dot" id="score-dot"></span><span id="header-score"></span></div>
   </div>
+
+  <!-- Quote -->
   <div class="quote-card">
-    <div class="quote-label">Daily Motivation</div>
+    <div class="card-label" style="color:var(--accent)"><span class="label-dot" style="background:var(--accent);box-shadow:0 0 6px var(--accent)"></span>Daily Motivation</div>
     <div class="quote-text" id="daily-quote">Loading...</div>
   </div>
+
+  <!-- Scripture -->
+  <div class="scripture-card">
+    <div class="card-label" style="color:#60a5fa"><span class="label-dot" style="background:#60a5fa;box-shadow:0 0 6px #60a5fa"></span>Scripture of the Day</div>
+    <div class="scripture-text" id="scripture-text">Haven't I commanded you? Be strong and courageous. Don't be afraid. Don't be dismayed, for the Lord your God is with you wherever you go.</div>
+    <div class="scripture-ref" id="scripture-ref">— Joshua 1:9</div>
+  </div>
+
+  <!-- Progress -->
   <div class="progress-section">
     <div class="progress-card">
+      <svg width="0" height="0" style="position:absolute">
+        <defs>
+          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#f97316"/>
+            <stop offset="100%" style="stop-color:#fb923c"/>
+          </linearGradient>
+        </defs>
+      </svg>
       <div class="ring-wrap">
-        <svg viewBox="0 0 90 90" width="90" height="90">
-          <circle class="ring-bg" cx="45" cy="45" r="37"/>
-          <circle class="ring-fill" id="ring" cx="45" cy="45" r="37" stroke-dasharray="232.5" stroke-dashoffset="232.5"/>
+        <svg viewBox="0 0 96 96" width="96" height="96">
+          <circle class="ring-bg" cx="48" cy="48" r="40"/>
+          <circle class="ring-track" cx="48" cy="48" r="40" stroke-dasharray="251.2" stroke-dashoffset="0"/>
+          <circle class="ring-fill" id="ring" cx="48" cy="48" r="40" stroke-dasharray="251.2" stroke-dashoffset="251.2"/>
         </svg>
         <div class="ring-text"><span class="ring-pct" id="ring-pct">0%</span><span class="ring-label">TODAY</span></div>
       </div>
@@ -113,504 +359,393 @@ input{color-scheme:dark}
       </div>
     </div>
   </div>
+
   <div id="tasks-container"></div>
+
+  <!-- Notifications -->
+  <div style="padding:4px 16px 8px">
+    <div class="notif-card" id="notif-toggle" onclick="toggleNotifications()">
+      <div style="width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,rgba(249,115,22,0.2),rgba(249,115,22,0.05));border:1px solid rgba(249,115,22,0.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🔔</div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:700;letter-spacing:-0.1px">Daily Reminders</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;font-weight:500">8 AM · 2 PM · 8 PM CST</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div id="notif-dot" style="width:8px;height:8px;border-radius:50%;background:var(--text-muted);transition:all 0.3s"></div>
+        <div id="notif-label" style="font-size:12px;font-weight:800;color:var(--text-muted);letter-spacing:0.3px">OFF</div>
+      </div>
+    </div>
+    <div id="notif-status" style="display:none;margin-top:10px;padding:14px 16px;border-radius:14px;font-size:12px;font-weight:500;line-height:1.5"></div>
+  </div>
 </div>
 
+<!-- CALORIES PAGE -->
 <div id="page-diet" class="page">
   <div class="header"><h1>Calories</h1><div class="date" id="diet-date"></div></div>
-  <div style="height:12px"></div>
+  <div style="height:16px"></div>
   <div id="diet-container"></div>
 </div>
 
+<!-- STATS PAGE -->
 <div id="page-stats" class="page">
   <div class="header"><h1>Weekly Stats</h1><div class="date" id="stats-date"></div></div>
-  <div style="height:12px"></div>
-  <div class="score-grid" id="score-grid"></div>
   <div style="height:16px"></div>
+  <div class="score-grid" id="score-grid"></div>
+  <div style="height:14px"></div>
   <div class="weekly-card"><h3>This Week</h3><div class="week-bars" id="week-bars"></div></div>
   <div class="summary-card"><h3>Weekly Summary</h3><div id="weekly-summary"></div></div>
+  <div style="height:8px"></div>
   <div class="reset-btn" onclick="resetDay()">Reset Today</div>
 </div>
 
-<nav class="nav">
-  <button class="nav-btn active" onclick="showPage('today',this)">
+<!-- NAV -->
+<nav class="nav" style="position:relative">
+  <div class="nav-indicator" id="nav-indicator" style="left:0"></div>
+  <button class="nav-btn active" id="nav-today" onclick="showPage('today',this,0)">
     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
     Today
   </button>
-  <button class="nav-btn" onclick="showPage('diet',this)">
+  <button class="nav-btn" id="nav-diet" onclick="showPage('diet',this,1)">
     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="2" x2="6" y2="8"/><line x1="10" y1="2" x2="10" y2="8"/><line x1="14" y1="2" x2="14" y2="8"/></svg>
     Calories
   </button>
-  <button class="nav-btn" onclick="showPage('stats',this)">
+  <button class="nav-btn" id="nav-stats" onclick="showPage('stats',this,2)">
     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
     Stats
   </button>
 </nav>
 
 <script>
-var QUOTES = ["The secret of getting ahead is getting started.","Push yourself because no one else is going to do it for you.","Success is the sum of small efforts repeated day in and day out.","The body achieves what the mind believes.","Wake up with determination. Go to bed with satisfaction.","Do something today that your future self will thank you for.","It never gets easier. You just get stronger.","Discipline is choosing between what you want now and what you want most.","You don't have to be extreme. Just be consistent.","Your only competition is who you were yesterday.","Small daily improvements lead to stunning results.","The pain you feel today will be the strength you feel tomorrow.","Great things never come from comfort zones.","Be stronger than your excuses.","One day or day one. You decide.","Strive for progress, not perfection.","Results happen over time, not overnight. Work hard, stay consistent.","You are one decision away from a completely different life.","Show up even when you don't feel like it.","Hard work beats talent when talent doesn't work hard.","Every rep, every meal, every choice — it all adds up.","Fall in love with taking care of yourself.","Make yourself proud.","Your future self is watching. Don't let him down.","Energy and persistence conquer all things.","Train your mind as hard as you train your body.","Success is not given. It is earned.","The grind never stops. Neither should you.","Earn your rest.","Champions are made from something deep inside."];
+var QUOTES=["The secret of getting ahead is getting started.","Push yourself because no one else is going to do it for you.","Success is the sum of small efforts repeated day in and day out.","The body achieves what the mind believes.","Wake up with determination. Go to bed with satisfaction.","Do something today that your future self will thank you for.","It never gets easier. You just get stronger.","Discipline is choosing between what you want now and what you want most.","You don't have to be extreme. Just be consistent.","Your only competition is who you were yesterday.","Small daily improvements lead to stunning results.","The pain you feel today will be the strength you feel tomorrow.","Great things never come from comfort zones.","Be stronger than your excuses.","One day or day one. You decide.","Strive for progress, not perfection.","Results happen over time, not overnight. Work hard, stay consistent.","You are one decision away from a completely different life.","Show up even when you don't feel like it.","Hard work beats talent when talent doesn't work hard."];
 
-var TASKS = [
-  {id:"t1", time:"4:30 AM", section:"Wake Up Protocol", emoji:"🌅", title:"Alarm up — no phone scrolling", sub:"First 15 min phone-free. No exceptions.", tag:"mindset"},
-  {id:"t2", time:"4:30 AM", section:"Wake Up Protocol", emoji:"🌅", title:"500ml water + Hydrate Powder", sub:"Replenish electrolytes after overnight fast", tag:"nutrition"},
-  {id:"t4", time:"5:00 AM", section:"Workout", emoji:"🏋️", title:"Complete workout session", sub:"Push hard. Rate intensity 1-10 after.", tag:"fitness"},
-  {id:"t5", time:"5:00 AM", section:"Workout", emoji:"🏋️", title:"Post-workout protein shake within 20 min", sub:"40-50g whey + fast carb (banana or dextrose)", tag:"nutrition"},
-  {id:"t6", time:"6:00 AM", section:"Recovery Stack", emoji:"🧊", title:"Infrared sauna at 140-160F", sub:"Listen to a podcast, audiobook, or breathe deeply", tag:"recovery"},
-  {id:"t7", time:"6:00 AM", section:"Recovery Stack", emoji:"🧊", title:"Drink 250ml water inside sauna", sub:"Stay hydrated during heat exposure", tag:"nutrition"},
-  {id:"t8", time:"6:00 AM", section:"Recovery Stack", emoji:"🧊", title:"Cold tub — 3-5 min at 45-55F", sub:"Controlled breathing. Do not fight the cold.", tag:"recovery"},
-  {id:"t8b",time:"6:00 AM", section:"Recovery Stack", emoji:"🧊", title:"Read daily devotion", sub:"Start the day grounded — faith before the grind", tag:"mindset"},
-  {id:"t9", time:"8:00 AM", section:"Work Block", emoji:"☀️", title:"500ml water by 10 AM", sub:"Dehydration kills cognitive function and energy", tag:"energy"},
-  {id:"t10",time:"8:00 AM", section:"Work Block", emoji:"☀️", title:"Sunlight exposure within 1 hr of waking", sub:"Even 5 min outside in Minneapolis winter counts", tag:"energy"},
-  {id:"t11",time:"12:00 PM", section:"Lunch", emoji:"🥗", title:"Hit 50-60g protein at lunch", sub:"Lean sources — chicken, beef, fish, eggs", tag:"nutrition"},
-  {id:"t12",time:"12:00 PM", section:"Lunch", emoji:"🥗", title:"Take supplements over lunch", sub:"Vitamin D3, Creatine, Fish Oil, Magnesium", tag:"nutrition"},
-  {id:"t13",time:"2:00 PM", section:"Afternoon Energy", emoji:"🌆", title:"No caffeine after 1 PM", sub:"Protects your 4:30 AM wake-up sleep quality", tag:"energy"},
-  {id:"t14",time:"2:00 PM", section:"Afternoon Energy", emoji:"🌆", title:"Drink 500ml water this afternoon", sub:"Stay ahead of dehydration before the evening", tag:"nutrition"},
-  {id:"t15",time:"2:00 PM", section:"Afternoon Energy", emoji:"🌆", title:"Hit 6,000-8,000 steps today", sub:"Check your phone or watch throughout the day", tag:"fitness"},
-  {id:"t16",time:"6:30 PM", section:"Dinner", emoji:"🍽️", title:"Dinner by 7:00 PM — hard cutoff", sub:"Hit 50-60g protein. Stop eating after.", tag:"nutrition"},
-  {id:"t17",time:"7:30 PM", section:"Wind-Down", emoji:"🌙", title:"No screens by 9:00 PM", sub:"Read, stretch, or light mobility instead", tag:"mindset"},
-  {id:"t18",time:"7:30 PM", section:"Wind-Down", emoji:"🌙", title:"Tomorrow prep — 10 min", sub:"Pre-log meals, set out gym clothes, review workout", tag:"mindset"},
-  {id:"t19",time:"9:00 PM", section:"Wind-Down", emoji:"🌙", title:"Read 10-20 minutes before bed", sub:"Wind the mind down naturally — no screens", tag:"mindset"},
-  {id:"t20",time:"9:30 PM", section:"Wind-Down", emoji:"🌙", title:"Lights out by 9:30 PM", sub:"7+ hrs before 4:30 AM. Sleep is your #1 performance tool.", tag:"recovery"}
+var TASKS=[
+  {id:"t1",time:"4:30 AM",section:"Wake Up Protocol",emoji:"🌅",title:"Alarm up — no phone scrolling",sub:"First 15 min phone-free. No exceptions.",tag:"mindset"},
+  {id:"t2",time:"4:30 AM",section:"Wake Up Protocol",emoji:"🌅",title:"500ml water + Hydrate Powder",sub:"Replenish electrolytes after overnight fast",tag:"nutrition"},
+  {id:"t4",time:"5:00 AM",section:"Workout",emoji:"🏋️",title:"Complete workout session",sub:"Push hard. Rate intensity 1-10 after.",tag:"fitness"},
+  {id:"t6",time:"6:00 AM",section:"Recovery Stack",emoji:"🧊",title:"Post-workout protein shake",sub:"40-50g whey + fast carb (banana or dextrose)",tag:"nutrition"},
+  {id:"t6b",time:"6:00 AM",section:"Recovery Stack",emoji:"🧊",title:"Infrared sauna at 140-160F",sub:"Listen to a podcast, audiobook, or breathe deeply",tag:"recovery"},
+  {id:"t7",time:"6:00 AM",section:"Recovery Stack",emoji:"🧊",title:"Drink 250ml water inside sauna",sub:"Stay hydrated during heat exposure",tag:"nutrition"},
+  {id:"t8",time:"6:00 AM",section:"Recovery Stack",emoji:"🧊",title:"Cold tub — 3-5 min at 45-55F",sub:"Controlled breathing. Do not fight the cold.",tag:"recovery"},
+  {id:"t8b",time:"8:00 AM",section:"Work Block",emoji:"☀️",title:"Read daily devotion",sub:"Start the day grounded — faith before the grind",tag:"mindset"},
+  {id:"t9",time:"8:00 AM",section:"Work Block",emoji:"☀️",title:"500ml water by 10 AM",sub:"Dehydration kills cognitive function and energy",tag:"energy"},
+  {id:"t10",time:"8:00 AM",section:"Work Block",emoji:"☀️",title:"Sunlight exposure today",sub:"Even 5 min outside in Minneapolis winter counts",tag:"energy"},
+  {id:"t11",time:"12:00 PM",section:"Lunch",emoji:"🥗",title:"Eat a healthy lunch",sub:"Lean protein, veggies, whole foods — keep it clean",tag:"nutrition"},
+  {id:"t12",time:"12:00 PM",section:"Lunch",emoji:"🥗",title:"Take supplements over lunch",sub:"Vitamin D3, Creatine, Fish Oil, Magnesium",tag:"nutrition"},
+  {id:"t13",time:"2:00 PM",section:"Afternoon Energy",emoji:"🌆",title:"No caffeine after 1 PM",sub:"Protects your 4:30 AM wake-up sleep quality",tag:"energy"},
+  {id:"t14",time:"2:00 PM",section:"Afternoon Energy",emoji:"🌆",title:"Drink 500ml water this afternoon",sub:"Stay ahead of dehydration before the evening",tag:"energy"},
+  {id:"t16",time:"6:30 PM",section:"Dinner",emoji:"🍽️",title:"Dinner by 7:00 PM — hard cutoff",sub:"Hit 50-60g protein. Stop eating after.",tag:"nutrition"},
+  {id:"t16b",time:"6:30 PM",section:"Dinner",emoji:"🍽️",title:"No dessert after dinner",sub:"Keep it clean after 7 PM — nothing sweet.",tag:"nutrition"},
+  {id:"t16c",time:"7:00 PM",section:"Dinner",emoji:"🍽️",title:"Hit 6,000-8,000 steps today",sub:"Check your phone or watch — get a walk in after dinner if needed",tag:"fitness"},
+  {id:"t17",time:"7:30 PM",section:"Wind-Down",emoji:"🌙",title:"No screens by 9:00 PM",sub:"Read, stretch, or light mobility instead",tag:"mindset"},
+  {id:"t18",time:"7:30 PM",section:"Wind-Down",emoji:"🌙",title:"Tomorrow prep — 10 min",sub:"Pre-log meals, set out gym clothes, review workout",tag:"mindset"},
+  {id:"t19",time:"9:00 PM",section:"Wind-Down",emoji:"🌙",title:"Read 10-20 minutes before bed",sub:"Wind the mind down naturally — no screens",tag:"mindset"},
+  {id:"t20",time:"9:30 PM",section:"Wind-Down",emoji:"🌙",title:"Lights out by 9:30 PM",sub:"7+ hrs before 4:30 AM. Sleep is your #1 performance tool.",tag:"recovery"}
 ];
 
-var CAL_GOAL = 2300;
-var state = {};
-try { state = JSON.parse(localStorage.getItem("trackerState") || "{}"); } catch(e) { state = {}; }
+var CAL_GOAL=2300;
+var state={};
+try{state=JSON.parse(localStorage.getItem("trackerState")||"{}")}catch(e){state={}}
 
-function todayKey() {
-  return new Date().toISOString().split("T")[0];
-}
+function todayKey(){return new Date().toISOString().split("T")[0]}
+function getToday(){var k=todayKey();if(!state[k])state[k]={tasks:{},habits:{}};return state[k]}
+function save(){try{localStorage.setItem("trackerState",JSON.stringify(state))}catch(e){}}
 
-function getToday() {
-  var k = todayKey();
-  if (!state[k]) state[k] = {tasks:{}, habits:{}};
-  return state[k];
-}
+function calcScore(){var d=getToday(),tDone=0;for(var k in d.tasks){if(d.tasks[k])tDone++}return{tDone:tDone,tTotal:TASKS.length}}
 
-function save() {
-  try { localStorage.setItem("trackerState", JSON.stringify(state)); } catch(e) {}
-}
-
-function calcScore() {
-  var d = getToday();
-  var tDone = 0;
-  for (var k in d.tasks) { if (d.tasks[k]) tDone++; }
-  return {tDone:tDone, tTotal:TASKS.length};
-}
-
-function updateHeader() {
-  var s = calcScore();
-  var pct = s.tTotal > 0 ? Math.round((s.tDone / s.tTotal) * 100) : 0;
-  var el = document.getElementById("header-score");
-  if (el) el.textContent = s.tDone + "/" + s.tTotal + " tasks";
-  var rp = document.getElementById("ring-pct");
-  if (rp) rp.textContent = pct + "%";
-  var pf = document.getElementById("prog-fraction");
-  if (pf) pf.textContent = s.tDone + " / " + s.tTotal;
-  var ring = document.getElementById("ring");
-  if (ring) ring.style.strokeDashoffset = 232.5 - (232.5 * pct / 100);
-  var dot = document.getElementById("score-dot");
-  var badge = document.getElementById("grade-badge");
-  if (pct >= 90) {
-    if (dot) dot.style.background = "#22c55e";
-    if (badge) { badge.className = "grade grade-elite"; badge.textContent = "Elite Day 🏆"; badge.style.display = "inline-block"; }
-  } else if (pct >= 75) {
-    if (dot) dot.style.background = "#22c55e";
-    if (badge) { badge.className = "grade grade-elite"; badge.textContent = "Victory! ✅"; badge.style.display = "inline-block"; }
-  } else if (pct >= 60) {
-    if (dot) dot.style.background = "#eab308";
-    if (badge) { badge.className = "grade grade-ok"; badge.textContent = "Good Start 👍"; badge.style.display = "inline-block"; }
-  } else {
-    if (dot) dot.style.background = "#ef4444";
-    if (badge) badge.style.display = "none";
-  }
-  var existing = document.getElementById("victory-banner");
-  if (pct >= 75) {
-    if (!existing) {
-      var banner = document.createElement("div");
-      banner.id = "victory-banner";
-      banner.style.cssText = "margin:16px;padding:20px;border-radius:20px;background:linear-gradient(135deg,rgba(34,197,94,0.2),rgba(34,197,94,0.05));border:1px solid rgba(34,197,94,0.4);text-align:center;animation:fadeIn 0.5s ease;";
-      banner.innerHTML = "<div style='font-size:36px;margin-bottom:8px'>🏆</div><div style='font-size:20px;font-weight:700;color:#4ade80'>Victory Day!</div><div style='font-size:13px;color:#86efac;margin-top:6px'>You hit 75%+ today. That is a win.</div>";
-      var ps = document.querySelector(".progress-section");
-      if (ps && ps.parentNode) ps.parentNode.insertBefore(banner, ps.nextSibling);
+function updateHeader(){
+  var s=calcScore();
+  var pct=s.tTotal>0?Math.round((s.tDone/s.tTotal)*100):0;
+  var el=document.getElementById("header-score");if(el)el.textContent=s.tDone+"/"+s.tTotal+" tasks";
+  var rp=document.getElementById("ring-pct");if(rp)rp.textContent=pct+"%";
+  var pf=document.getElementById("prog-fraction");if(pf)pf.textContent=s.tDone+" / "+s.tTotal;
+  var ring=document.getElementById("ring");if(ring)ring.style.strokeDashoffset=251.2-(251.2*pct/100);
+  var dot=document.getElementById("score-dot");
+  var badge=document.getElementById("grade-badge");
+  if(pct>=90){if(dot)dot.style.background="#22c55e";if(badge){badge.className="grade grade-elite";badge.textContent="Elite Day 🏆";badge.style.display="inline-flex"}}
+  else if(pct>=75){if(dot)dot.style.background="#22c55e";if(badge){badge.className="grade grade-elite";badge.textContent="Victory! ✅";badge.style.display="inline-flex"}}
+  else if(pct>=60){if(dot)dot.style.background="#eab308";if(badge){badge.className="grade grade-ok";badge.textContent="Good Start 👍";badge.style.display="inline-flex"}}
+  else{if(dot)dot.style.background="#ef4444";if(badge)badge.style.display="none"}
+  var existing=document.getElementById("victory-banner");
+  if(pct>=75){
+    if(!existing){
+      var b=document.createElement("div");b.id="victory-banner";b.className="victory-banner";
+      b.innerHTML="<div style='font-size:42px;margin-bottom:10px'>🏆</div><div style='font-size:22px;font-weight:800;color:#4ade80;letter-spacing:-0.5px'>Victory Day!</div><div style='font-size:13px;color:#86efac;margin-top:8px;font-weight:500'>You hit 75%+ today. That is a win.</div>";
+      var ps=document.querySelector(".progress-section");if(ps&&ps.parentNode)ps.parentNode.insertBefore(b,ps.nextSibling);
     }
-  } else {
-    if (existing) existing.remove();
-  }
-  var wd = {};
-  try { wd = JSON.parse(localStorage.getItem("weekData") || "{}"); } catch(e) {}
-  wd[todayKey()] = pct;
-  try { localStorage.setItem("weekData", JSON.stringify(wd)); } catch(e) {}
+  }else{if(existing)existing.remove()}
+  var wd={};try{wd=JSON.parse(localStorage.getItem("weekData")||"{}")}catch(e){}
+  wd[todayKey()]=pct;try{localStorage.setItem("weekData",JSON.stringify(wd))}catch(e){}
 }
 
-function renderTasks() {
-  var d = getToday();
-  var container = document.getElementById("tasks-container");
-  if (!container) return;
-  var html = "";
-  var lastSection = "";
-  for (var i = 0; i < TASKS.length; i++) {
-    var t = TASKS[i];
-    if (t.section !== lastSection) {
-      if (lastSection) html += "</div>";
-      lastSection = t.section;
-      html += "<div class='section'><div class='section-header'><h2>" + t.emoji + " " + t.section + "</h2><span class='section-time'>" + t.time + "</span></div>";
+function renderTasks(){
+  var d=getToday(),container=document.getElementById("tasks-container");if(!container)return;
+  var html="",lastSection="";
+  for(var i=0;i<TASKS.length;i++){
+    var t=TASKS[i];
+    if(t.section!==lastSection){
+      if(lastSection)html+="</div>";
+      lastSection=t.section;
+      html+="<div class='section'><div class='section-header'><div class='section-icon'>"+t.emoji+"</div><h2>"+t.section+"</h2><span class='section-time'>"+t.time+"</span></div>";
     }
-    var done = d.tasks[t.id] ? true : false;
-    html += "<div class='task " + (done ? "done" : "") + "' onclick='toggleTask(\"" + t.id + "\")'>";
-    html += "<div class='checkbox'><svg width='12' height='10' fill='none' stroke='white' stroke-width='2.5' viewBox='0 0 12 10'><polyline points='1,5 4,8 11,1'/></svg></div>";
-    html += "<div class='task-content'><div class='task-title'>" + t.title + "</div><div class='task-sub'>" + t.sub + "</div><span class='task-tag tag-" + t.tag + "'>" + t.tag + "</span></div></div>";
+    var done=d.tasks[t.id]?true:false;
+    html+="<div class='task "+(done?"done":"")+"' onclick='toggleTask(\""+t.id+"\")'>";
+    html+="<div class='checkbox'><svg width='12' height='10' fill='none' stroke='white' stroke-width='2.5' viewBox='0 0 12 10'><polyline points='1,5 4,8 11,1'/></svg></div>";
+    html+="<div class='task-content'><div class='task-title'>"+t.title+"</div><div class='task-sub'>"+t.sub+"</div><span class='task-tag tag-"+t.tag+"'>"+t.tag+"</span></div></div>";
   }
-  if (lastSection) html += "</div>";
-  container.innerHTML = html;
+  if(lastSection)html+="</div>";
+  container.innerHTML=html;
 }
 
-function toggleTask(id) {
-  var d = getToday();
-  d.tasks[id] = !d.tasks[id];
-  save(); renderTasks(); updateHeader();
+function toggleTask(id){var d=getToday();d.tasks[id]=!d.tasks[id];save();renderTasks();updateHeader()}
+
+function getCalData(){var d={};try{d=JSON.parse(localStorage.getItem("calData")||"{}")}catch(e){}return d}
+function saveCalData(d){try{localStorage.setItem("calData",JSON.stringify(d))}catch(e){}}
+function getTimeStr(){var now=new Date(),h=now.getHours(),m=now.getMinutes(),ap=h>=12?"PM":"AM";h=h%12||12;return h+":"+(m<10?"0":"")+m+" "+ap}
+
+function addMealEntry(name,cal){
+  var d=getCalData();if(!d[todayKey()])d[todayKey()]=[];
+  d[todayKey()].push({name:name,cal:cal,time:getTimeStr()});
+  saveCalData(d);renderDiet();
+}
+function removeMeal(idx){var d=getCalData();if(d[todayKey()]){d[todayKey()].splice(idx,1);saveCalData(d)}renderDiet()}
+function addManualMeal(){
+  var n=document.getElementById("meal-name"),c=document.getElementById("meal-cal");if(!n||!c)return;
+  var name=n.value.trim(),cal=parseInt(c.value);
+  if(!name||!cal||cal<=0){alert("Enter a meal name and calories.");return}
+  n.value="";c.value="";addMealEntry(name,cal);
 }
 
-function getCalData() {
-  var d = {};
-  try { d = JSON.parse(localStorage.getItem("calData") || "{}"); } catch(e) {}
-  return d;
-}
-
-function saveCalData(d) {
-  try { localStorage.setItem("calData", JSON.stringify(d)); } catch(e) {}
-}
-
-function getTimeStr() {
-  var now = new Date();
-  var h = now.getHours(); var m = now.getMinutes();
-  var ap = h >= 12 ? "PM" : "AM";
-  h = h % 12 || 12;
-  return h + ":" + (m < 10 ? "0" : "") + m + " " + ap;
-}
-
-function addMealEntry(name, cal) {
-  var d = getCalData();
-  if (!d[todayKey()]) d[todayKey()] = [];
-  d[todayKey()].push({name:name, cal:cal, time:getTimeStr()});
-  saveCalData(d);
-  renderDiet();
-}
-
-function removeMeal(idx) {
-  var d = getCalData();
-  if (d[todayKey()]) {
-    d[todayKey()].splice(idx, 1);
-    saveCalData(d);
-  }
-  renderDiet();
-}
-
-function addManualMeal() {
-  var nameEl = document.getElementById("meal-name");
-  var calEl = document.getElementById("meal-cal");
-  if (!nameEl || !calEl) return;
-  var name = nameEl.value.trim();
-  var cal = parseInt(calEl.value);
-  if (!name || !cal || cal <= 0) { alert("Enter a meal name and calories."); return; }
-  nameEl.value = ""; calEl.value = "";
-  addMealEntry(name, cal);
-}
-
-function quickAdd(name, cal) {
-  addMealEntry(name, cal);
-}
-
-function searchFood() {
-  var input = document.getElementById("food-search");
-  if (!input) return;
-  var query = input.value.trim();
-  if (!query) { alert("Enter a food to search."); return; }
-  var resultsEl = document.getElementById("search-results");
-  if (resultsEl) resultsEl.innerHTML = "<div style='font-size:13px;color:var(--muted);text-align:center;padding:12px 0;'>Searching...</div>";
-  fetch("https://world.openfoodfacts.org/cgi/search.pl?search_terms=" + encodeURIComponent(query) + "&search_simple=1&action=process&json=1&page_size=10&fields=product_name,nutriments,brands")
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      var products = data.products || [];
-      var filtered = [];
-      for (var i = 0; i < products.length; i++) {
-        var p = products[i];
-        if (p.product_name && p.nutriments && p.nutriments["energy-kcal_100g"]) {
-          filtered.push(p);
-        }
-      }
-      if (!resultsEl) return;
-      if (filtered.length === 0) {
-        resultsEl.innerHTML = "<div style='font-size:13px;color:var(--muted);text-align:center;padding:12px 0;'>No results. Try different keywords.</div>";
-        return;
-      }
-      var html = "";
-      var shown = Math.min(filtered.length, 5);
-      for (var j = 0; j < shown; j++) {
-        var prod = filtered[j];
-        var pname = prod.product_name || "Unknown";
-        var brand = prod.brands ? prod.brands.split(",")[0] : "";
-        var calPer100 = Math.round(prod.nutriments["energy-kcal_100g"]);
-        var safeN = pname.replace(/\\/g,"").replace(/"/g,"").replace(/'/g,"");
-        html += "<div style='display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);gap:10px;'>";
-        html += "<div style='flex:1;min-width:0;'><div style='font-size:13px;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'>" + pname + (brand ? " (" + brand + ")" : "") + "</div>";
-        html += "<div style='font-size:11px;color:var(--muted);margin-top:2px;'>" + calPer100 + " cal per 100g</div></div>";
-        html += "<div onclick='pickFood(\"" + safeN + "\"," + calPer100 + ")' style='background:var(--accent);color:white;border-radius:10px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;'>+ Add</div>";
-        html += "</div>";
-      }
-      resultsEl.innerHTML = html;
-    })
-    .catch(function() {
-      if (resultsEl) resultsEl.innerHTML = "<div style='font-size:13px;color:#f87171;text-align:center;padding:12px 0;'>Search failed. Check connection.</div>";
-    });
-}
-
-function pickFood(name, calPer100) {
-  var grams = prompt("How many grams did you eat?", "100");
-  if (!grams || isNaN(grams) || parseInt(grams) <= 0) return;
-  var cal = Math.round((calPer100 * parseInt(grams)) / 100);
-  addMealEntry(name, cal);
-  var resultsEl = document.getElementById("search-results");
-  if (resultsEl) resultsEl.innerHTML = "<div style='font-size:13px;color:#4ade80;text-align:center;padding:8px 0;'>Added " + name + " — " + cal + " cal</div>";
-}
-
-function renderDiet() {
-  var container = document.getElementById("diet-container");
-  if (!container) return;
-  var calData = getCalData();
-  var todayLogs = calData[todayKey()] || [];
-  var totalCals = 0;
-  for (var i = 0; i < todayLogs.length; i++) totalCals += todayLogs[i].cal;
-  var remaining = CAL_GOAL - totalCals;
-  var pct = Math.min(100, Math.round((totalCals / CAL_GOAL) * 100));
-  var ringColor = pct >= 100 ? "#ef4444" : pct >= 85 ? "#eab308" : "#22c55e";
-  var circumference = 2 * Math.PI * 41;
-  var ringOffset = circumference - (circumference * pct / 100);
-
-  var html = "";
+function renderDiet(){
+  var container=document.getElementById("diet-container");if(!container)return;
+  var logs=(getCalData()[todayKey()]||[]);
+  var total=0;for(var i=0;i<logs.length;i++)total+=logs[i].cal;
+  var rem=CAL_GOAL-total,pct=Math.min(100,Math.round((total/CAL_GOAL)*100));
+  var rc=pct>=100?"#ef4444":pct>=85?"#eab308":"#22c55e";
+  var circ=2*Math.PI*41,off=circ-(circ*pct/100);
+  var html="";
 
   // Ring card
-  html += "<div style='margin:0 16px 16px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;display:flex;align-items:center;gap:20px;'>";
-  html += "<div style='position:relative;width:100px;height:100px;flex-shrink:0;'>";
-  html += "<svg viewBox='0 0 100 100' width='100' height='100' style='transform:rotate(-90deg)'>";
-  html += "<circle fill='none' stroke='var(--border)' stroke-width='9' cx='50' cy='50' r='41'/>";
-  html += "<circle fill='none' stroke='" + ringColor + "' stroke-width='9' stroke-linecap='round' cx='50' cy='50' r='41' stroke-dasharray='" + circumference + "' stroke-dashoffset='" + ringOffset + "'/>";
-  html += "</svg>";
-  html += "<div style='position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;'><div style='font-size:20px;font-weight:700;color:" + ringColor + "'>" + pct + "%</div><div style='font-size:9px;color:var(--muted);'>OF GOAL</div></div></div>";
-  html += "<div style='flex:1;'><div style='font-size:36px;font-weight:700;'>" + totalCals + "</div><div style='font-size:13px;color:var(--muted);margin-top:2px;'>of " + CAL_GOAL + " cal goal</div>";
-  if (remaining > 0) {
-    html += "<div style='margin-top:10px;font-size:13px;font-weight:600;color:#4ade80;'>" + remaining + " cal remaining</div>";
-  } else {
-    html += "<div style='margin-top:10px;font-size:13px;font-weight:600;color:#f87171;'>+" + Math.abs(remaining) + " over goal</div>";
-  }
-  html += "</div></div>";
+  html+="<div class='diet-card' style='display:flex;align-items:center;gap:24px;'>";
+  html+="<div style='position:relative;width:110px;height:110px;flex-shrink:0;'>";
+  html+="<svg viewBox='0 0 100 100' width='110' height='110' style='transform:rotate(-90deg);filter:drop-shadow(0 0 10px "+rc+"44)'>";
+  html+="<circle fill='none' stroke='rgba(255,255,255,0.05)' stroke-width='8' cx='50' cy='50' r='41'/>";
+  html+="<circle fill='none' stroke='"+rc+"' stroke-width='8' stroke-linecap='round' cx='50' cy='50' r='41' stroke-dasharray='"+circ+"' stroke-dashoffset='"+off+"' style='transition:stroke-dashoffset 0.8s cubic-bezier(0.34,1.56,0.64,1)'/>";
+  html+="</svg>";
+  html+="<div style='position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;'><div style='font-size:22px;font-weight:800;color:"+rc+";letter-spacing:-1px'>"+pct+"%</div><div style='font-size:9px;color:var(--text-muted);font-weight:700;letter-spacing:0.8px;margin-top:1px'>OF GOAL</div></div></div>";
+  html+="<div style='flex:1;'><div style='font-size:42px;font-weight:800;letter-spacing:-2px;line-height:1'>"+total+"</div><div style='font-size:13px;color:var(--text-muted);margin-top:4px;font-weight:500'>of "+CAL_GOAL+" cal goal</div>";
+  if(rem>0)html+="<div style='margin-top:12px;font-size:13px;font-weight:700;color:#4ade80;'>"+rem+" cal remaining</div>";
+  else html+="<div style='margin-top:12px;font-size:13px;font-weight:700;color:#f87171;'>+"+Math.abs(rem)+" over goal</div>";
+  html+="</div></div>";
 
-  // Search
-  html += "<div style='margin:0 16px 16px;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;'>";
-  html += "<div style='font-size:13px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px;'>Search Food Database</div>";
-  html += "<div style='display:flex;gap:8px;margin-bottom:8px;'>";
-  html += "<input id='food-search' type='text' placeholder='e.g. chicken breast, oatmeal...' style='flex:1;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-size:14px;outline:none;'/>";
-  html += "<div onclick='searchFood()' style='background:var(--accent);color:white;border-radius:12px;padding:12px 16px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;'>Search</div>";
-  html += "</div>";
-  html += "<div id='search-results'></div>";
-  html += "</div>";
-
-  // Quick add
-  var quick = [{name:"Protein Shake",cal:200},{name:"Chicken and Rice",cal:550},{name:"Eggs and Toast",cal:420},{name:"Salmon and Veggies",cal:580},{name:"Greek Yogurt",cal:150},{name:"Steak and Potato",cal:650}];
-  html += "<div style='margin:0 16px 16px;'>";
-  html += "<div style='font-size:13px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;'>Quick Add</div>";
-  html += "<div style='display:grid;grid-template-columns:1fr 1fr;gap:8px;'>";
-  for (var q = 0; q < quick.length; q++) {
-    html += "<div onclick='quickAdd(\"" + quick[q].name + "\"," + quick[q].cal + ")' style='background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;cursor:pointer;'>";
-    html += "<div style='font-size:13px;font-weight:600;'>" + quick[q].name + "</div>";
-    html += "<div style='font-size:12px;color:var(--accent);margin-top:4px;font-weight:700;'>" + quick[q].cal + " cal</div></div>";
-  }
-  html += "</div></div>";
-
-  // Manual entry
-  html += "<div style='margin:0 16px 16px;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;'>";
-  html += "<div style='font-size:13px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px;'>Add Manually</div>";
-  html += "<input id='meal-name' type='text' placeholder='Meal name' style='width:100%;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-size:14px;margin-bottom:10px;outline:none;'/>";
-  html += "<input id='meal-cal' type='number' placeholder='Calories' style='width:100%;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-size:14px;margin-bottom:12px;outline:none;'/>";
-  html += "<div onclick='addManualMeal()' style='background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:12px;padding:13px;text-align:center;font-size:15px;font-weight:700;cursor:pointer;'>+ Add Meal</div>";
-  html += "</div>";
+  // Add Manually
+  html+="<div class='diet-card'>";
+  html+="<div class='diet-label'>Add Manually</div>";
+  html+="<input id='meal-name' type='text' placeholder='Meal name' style='width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border-med);border-radius:13px;padding:13px 16px;color:var(--text);font-size:14px;margin-bottom:10px;font-weight:500;transition:all 0.2s;'/>";
+  html+="<input id='meal-cal' type='number' placeholder='Calories' style='width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border-med);border-radius:13px;padding:13px 16px;color:var(--text);font-size:14px;margin-bottom:14px;font-weight:500;transition:all 0.2s;'/>";
+  html+="<div onclick='addManualMeal()' style='background:linear-gradient(135deg,rgba(249,115,22,0.9),rgba(249,115,22,0.75));color:white;border-radius:13px;padding:15px;text-align:center;font-size:15px;font-weight:800;cursor:pointer;letter-spacing:0.2px;box-shadow:0 4px 20px rgba(249,115,22,0.25);transition:all 0.2s;'>+ Add Meal</div>";
+  html+="</div>";
 
   // Log
-  html += "<div style='margin:0 16px 24px;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;'>";
-  html += "<div style='font-size:13px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px;'>Today's Log</div>";
-  if (todayLogs.length === 0) {
-    html += "<div style='font-size:13px;color:var(--muted);text-align:center;padding:16px 0;'>No meals logged yet</div>";
-  } else {
-    for (var l = 0; l < todayLogs.length; l++) {
-      var log = todayLogs[l];
-      html += "<div style='display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);'>";
-      html += "<div><div style='font-size:14px;font-weight:500;'>" + log.name + "</div><div style='font-size:11px;color:var(--muted);margin-top:2px;'>" + log.time + "</div></div>";
-      html += "<div style='display:flex;align-items:center;gap:12px;'><div style='font-size:15px;font-weight:700;color:var(--accent);'>" + log.cal + "</div>";
-      html += "<div onclick='removeMeal(" + l + ")' style='color:#f87171;font-size:20px;cursor:pointer;line-height:1;'>×</div></div></div>";
+  html+="<div class='diet-card'>";
+  html+="<div class='diet-label'>Today's Log</div>";
+  if(logs.length===0){
+    html+="<div style='font-size:13px;color:var(--text-muted);text-align:center;padding:24px 0;font-weight:500;'>No meals logged yet</div>";
+  }else{
+    for(var l=0;l<logs.length;l++){
+      var log=logs[l];
+      html+="<div style='display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--border);'>";
+      html+="<div><div style='font-size:14px;font-weight:600;letter-spacing:-0.1px'>"+log.name+"</div><div style='font-size:11px;color:var(--text-muted);margin-top:3px;font-weight:500'>"+log.time+"</div></div>";
+      html+="<div style='display:flex;align-items:center;gap:16px;'><div style='font-size:16px;font-weight:800;color:var(--accent);letter-spacing:-0.5px'>"+log.cal+"</div>";
+      html+="<div onclick='removeMeal("+l+")' style='color:rgba(248,113,113,0.5);font-size:22px;cursor:pointer;line-height:1;transition:color 0.2s;'>×</div></div></div>";
     }
   }
-  html += "</div>";
-  container.innerHTML = html;
+  html+="</div>";
+  container.innerHTML=html;
 }
 
-function renderStats() {
-  var s = calcScore();
-  var pct = s.tTotal > 0 ? Math.round((s.tDone / s.tTotal) * 100) : 0;
-  var sg = document.getElementById("score-grid");
-  if (sg) {
-    sg.innerHTML =
-      "<div class='score-card'><div class='score-card-label'>Today</div><div class='score-card-val' style='color:var(--accent)'>" + pct + "%</div><div class='score-card-sub'>completion</div></div>" +
-      "<div class='score-card'><div class='score-card-label'>Tasks Done</div><div class='score-card-val'>" + s.tDone + "</div><div class='score-card-sub'>of " + s.tTotal + "</div></div>" +
-      "<div class='score-card'><div class='score-card-label'>Streak</div><div class='score-card-val'>" + calcStreak() + "</div><div class='score-card-sub'>days in a row</div></div>" +
-      "<div class='score-card'><div class='score-card-label'>Victories</div><div class='score-card-val' style='color:#4ade80'>" + calcAllVictories() + "</div><div class='score-card-sub'>days at 75%+</div></div>";
-  }
-  renderWeekBars();
-  renderWeeklySummary();
+function renderStats(){
+  var s=calcScore(),pct=s.tTotal>0?Math.round((s.tDone/s.tTotal)*100):0;
+  var sg=document.getElementById("score-grid");
+  if(sg)sg.innerHTML=
+    "<div class='score-card'><div class='score-card-icon'>🔥</div><div class='score-card-label'>Today</div><div class='score-card-val' style='color:var(--accent)'>"+pct+"%</div><div class='score-card-sub'>completion rate</div></div>"+
+    "<div class='score-card'><div class='score-card-icon'>✅</div><div class='score-card-label'>Tasks Done</div><div class='score-card-val'>"+s.tDone+"</div><div class='score-card-sub'>of "+s.tTotal+" total</div></div>"+
+    "<div class='score-card'><div class='score-card-icon'>⚡</div><div class='score-card-label'>Streak</div><div class='score-card-val'>"+calcStreak()+"</div><div class='score-card-sub'>days in a row</div></div>"+
+    "<div class='score-card'><div class='score-card-icon'>🏆</div><div class='score-card-label'>Victories</div><div class='score-card-val' style='color:#4ade80'>"+calcAllVictories()+"</div><div class='score-card-sub'>days at 75%+</div></div>";
+  renderWeekBars();renderWeeklySummary();
 }
 
-function calcStreak() {
-  var wd = {};
-  try { wd = JSON.parse(localStorage.getItem("weekData") || "{}"); } catch(e) {}
-  var streak = 0;
-  for (var i = 0; i < 365; i++) {
-    var d = new Date(); d.setDate(d.getDate() - i);
-    var k = d.toISOString().split("T")[0];
-    if (wd[k] && wd[k] >= 60) { streak++; } else { break; }
-  }
+function calcStreak(){
+  var wd={};try{wd=JSON.parse(localStorage.getItem("weekData")||"{}")}catch(e){}
+  var streak=0;
+  for(var i=0;i<365;i++){var d=new Date();d.setDate(d.getDate()-i);var k=d.toISOString().split("T")[0];if(wd[k]&&wd[k]>=60)streak++;else break}
   return streak;
 }
+function calcAllVictories(){var wd={};try{wd=JSON.parse(localStorage.getItem("weekData")||"{}")}catch(e){}var c=0;for(var k in wd){if(wd[k]>=75)c++}return c}
 
-function calcAllVictories() {
-  var wd = {};
-  try { wd = JSON.parse(localStorage.getItem("weekData") || "{}"); } catch(e) {}
-  var count = 0;
-  for (var k in wd) { if (wd[k] >= 75) count++; }
-  return count;
+function renderWeekBars(){
+  var wd={};try{wd=JSON.parse(localStorage.getItem("weekData")||"{}")}catch(e){}
+  var days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],todayStr=new Date().toISOString().split("T")[0],html="";
+  for(var i=6;i>=0;i--){
+    var d=new Date();d.setDate(d.getDate()-i);
+    var k=d.toISOString().split("T")[0],p=wd[k]||0,isT=k===todayStr;
+    html+="<div class='week-bar-wrap "+(isT?"today":"")+"'><div class='week-bar-bg'><div class='week-bar-fill' style='height:"+p+"%;background:"+(isT?"linear-gradient(180deg,#fb923c,#f97316)":"rgba(59,130,246,0.5)")+";box-shadow:"+(isT?"0 -2px 12px rgba(249,115,22,0.4)":"none")+"'></div></div><div class='week-bar-day'>"+days[d.getDay()]+"</div></div>";
+  }
+  var wb=document.getElementById("week-bars");if(wb)wb.innerHTML=html;
 }
 
-function renderWeekBars() {
-  var wd = {};
-  try { wd = JSON.parse(localStorage.getItem("weekData") || "{}"); } catch(e) {}
-  var days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-  var todayStr = new Date().toISOString().split("T")[0];
-  var html = "";
-  for (var i = 6; i >= 0; i--) {
-    var d = new Date(); d.setDate(d.getDate() - i);
-    var k = d.toISOString().split("T")[0];
-    var p = wd[k] || 0;
-    var isToday = k === todayStr;
-    html += "<div class='week-bar-wrap " + (isToday ? "today" : "") + "'><div class='week-bar-bg'><div class='week-bar-fill' style='height:" + p + "%;background:" + (isToday ? "var(--accent)" : "var(--accent2)") + "'></div></div><div class='week-bar-day'>" + days[d.getDay()] + "</div></div>";
-  }
-  var wb = document.getElementById("week-bars");
-  if (wb) wb.innerHTML = html;
+function renderWeeklySummary(){
+  var wd={};try{wd=JSON.parse(localStorage.getItem("weekData")||"{}")}catch(e){}
+  var days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],last7=[];
+  for(var i=6;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);var k=d.toISOString().split("T")[0];last7.push({day:days[d.getDay()],pct:wd[k]||0})}
+  var total=0,victories=0,best=0,bestDay="--";
+  for(var i=0;i<last7.length;i++){total+=last7[i].pct;if(last7[i].pct>=75)victories++;if(last7[i].pct>best){best=last7[i].pct;bestDay=last7[i].day}}
+  var avg=Math.round(total/7),f=0,s2=0;
+  for(var i=0;i<3;i++)f+=last7[i].pct;for(var i=3;i<7;i++)s2+=last7[i].pct;
+  var imp=s2>=f;
+  var el=document.getElementById("weekly-summary");if(!el)return;
+  el.innerHTML=
+    "<div class='summary-row'><span class='summary-label'>Best day this week</span><span class='summary-val'>"+bestDay+" ("+best+"%)</span></div>"+
+    "<div class='summary-row'><span class='summary-label'>Victories this week</span><span class='summary-val' style='color:#4ade80'>"+victories+" / 7</span></div>"+
+    "<div class='summary-row'><span class='summary-label'>Avg completion</span><span class='summary-val'>"+avg+"%</span></div>"+
+    "<div class='summary-row'><span class='summary-label'>Trend</span><span class='summary-val' style='color:"+(imp?"#4ade80":"#f87171")+";'>"+(imp?"↑ Improving":"↓ Needs focus")+"</span></div>"+
+    "<div class='summary-row'><span class='summary-label'>All-time victories</span><span class='summary-val' style='color:var(--accent)'>"+calcAllVictories()+" days</span></div>";
 }
 
-function renderWeeklySummary() {
-  var wd = {};
-  try { wd = JSON.parse(localStorage.getItem("weekData") || "{}"); } catch(e) {}
-  var days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-  var last7 = [];
-  for (var i = 6; i >= 0; i--) {
-    var d = new Date(); d.setDate(d.getDate() - i);
-    var k = d.toISOString().split("T")[0];
-    last7.push({day:days[d.getDay()], pct:wd[k] || 0});
-  }
-  var total = 0; var victories = 0; var best = 0; var bestDay = "--";
-  for (var i = 0; i < last7.length; i++) {
-    total += last7[i].pct;
-    if (last7[i].pct >= 75) victories++;
-    if (last7[i].pct > best) { best = last7[i].pct; bestDay = last7[i].day; }
-  }
-  var avg = Math.round(total / 7);
-  var f = 0; var s2 = 0;
-  for (var i = 0; i < 3; i++) f += last7[i].pct;
-  for (var i = 3; i < 7; i++) s2 += last7[i].pct;
-  var improving = s2 >= f;
-  var el = document.getElementById("weekly-summary");
-  if (!el) return;
-  el.innerHTML =
-    "<div class='summary-row'><span class='summary-label'>Best day this week</span><span class='summary-val'>" + bestDay + " (" + best + "%)</span></div>" +
-    "<div class='summary-row'><span class='summary-label'>Victories this week</span><span class='summary-val' style='color:#4ade80'>" + victories + " / 7</span></div>" +
-    "<div class='summary-row'><span class='summary-label'>Avg completion</span><span class='summary-val'>" + avg + "%</span></div>" +
-    "<div class='summary-row'><span class='summary-label'>Trend</span><span class='summary-val' style='color:" + (improving ? "#4ade80" : "#f87171") + "'>" + (improving ? "Improving" : "Needs focus") + "</span></div>" +
-    "<div class='summary-row'><span class='summary-label'>All-time victories</span><span class='summary-val' style='color:#f97316'>" + calcAllVictories() + " days</span></div>";
-}
-
-function renderQuote() {
-  var el = document.getElementById("daily-quote");
-  if (!el) return;
-  var cached = ""; var cachedDate = "";
-  try { cached = localStorage.getItem("cachedQuote") || ""; cachedDate = localStorage.getItem("cachedQuoteDate") || ""; } catch(e) {}
-  if (cached && cachedDate === todayKey()) { el.textContent = cached; return; }
+function renderQuote(){
+  var el=document.getElementById("daily-quote");if(!el)return;
+  var cached="",cachedDate="";
+  try{cached=localStorage.getItem("cachedQuote")||"";cachedDate=localStorage.getItem("cachedQuoteDate")||""}catch(e){}
+  if(cached&&cachedDate===todayKey()){el.textContent=cached;return}
   fetch("https://zenquotes.io/api/today")
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data && data[0] && data[0].q) {
-        var q = '"' + data[0].q + '"' + (data[0].a ? " — " + data[0].a : "");
-        el.textContent = q;
-        try { localStorage.setItem("cachedQuote", q); localStorage.setItem("cachedQuoteDate", todayKey()); } catch(e) {}
-      } else { useFallback(el); }
-    })
-    .catch(function() { useFallback(el); });
+    .then(function(r){return r.json()})
+    .then(function(data){
+      if(data&&data[0]&&data[0].q){var q='"'+data[0].q+'"'+(data[0].a?" — "+data[0].a:"");el.textContent=q;try{localStorage.setItem("cachedQuote",q);localStorage.setItem("cachedQuoteDate",todayKey())}catch(e){}}
+      else useFallback(el);
+    }).catch(function(){useFallback(el)});
+}
+function useFallback(el){var idx=new Date().getDate()%QUOTES.length;if(el)el.textContent='"'+QUOTES[idx]+'"'}
+
+function renderScripture(){
+  var textEl=document.getElementById("scripture-text"),refEl=document.getElementById("scripture-ref");if(!textEl||!refEl)return;
+  var verses=[
+    {t:"Haven't I commanded you? Be strong and courageous. Don't be afraid. Don't be dismayed, for the Lord your God is with you wherever you go.",r:"— Joshua 1:9"},
+    {t:"I can do all things through Christ who strengthens me.",r:"— Philippians 4:13"},
+    {t:"Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight.",r:"— Proverbs 3:5-6"},
+    {t:"For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future.",r:"— Jeremiah 29:11"},
+    {t:"And we know that in all things God works for the good of those who love him, who have been called according to his purpose.",r:"— Romans 8:28"},
+    {t:"The Lord is my shepherd, I lack nothing.",r:"— Psalm 23:1"},
+    {t:"But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint.",r:"— Isaiah 40:31"},
+    {t:"But seek first his kingdom and his righteousness, and all these things will be given to you as well.",r:"— Matthew 6:33"},
+    {t:"God is our refuge and strength, an ever-present help in trouble.",r:"— Psalm 46:1"},
+    {t:"I have told you these things, so that in me you may have peace. In this world you will have trouble. But take heart! I have overcome the world.",r:"— John 16:33"},
+    {t:"Do not conform to the pattern of this world, but be transformed by the renewing of your mind.",r:"— Romans 12:2"},
+    {t:"The Lord is my strength and my shield; my heart trusts in him, and he helps me.",r:"— Psalm 28:7"},
+    {t:"Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God.",r:"— Philippians 4:6-7"},
+    {t:"Finally, be strong in the Lord and in his mighty power.",r:"— Ephesians 6:10"},
+    {t:"For God has not given us a spirit of fear, but of power and of love and of a sound mind.",r:"— 2 Timothy 1:7"},
+    {t:"Now faith is confidence in what we hope for and assurance about what we do not see.",r:"— Hebrews 11:1"},
+    {t:"Whatever you do, work at it with all your heart, as working for the Lord, not for human masters.",r:"— Colossians 3:23"},
+    {t:"No temptation has overtaken you except what is common to mankind. And God is faithful; he will not let you be tempted beyond what you can bear.",r:"— 1 Corinthians 10:13"},
+    {t:"He who dwells in the shelter of the Most High will rest in the shadow of the Almighty.",r:"— Psalm 91:1"},
+    {t:"Consider it pure joy, my brothers and sisters, whenever you face trials of many kinds, because you know that the testing of your faith produces perseverance.",r:"— James 1:2-3"},
+  ];
+  var idx=new Date().getDate()%verses.length;
+  textEl.textContent=verses[idx].t;refEl.textContent=verses[idx].r;
 }
 
-function useFallback(el) {
-  var idx = new Date().getDate() % QUOTES.length;
-  if (el) el.textContent = '"' + QUOTES[idx] + '"';
+// NOTIFICATIONS
+var REMINDERS=[
+  {hour:8,min:0,title:"🌅 Morning Check-In",body:"Devotion done? Water in? Sunlight? Let's get the day started right."},
+  {hour:14,min:0,title:"🌆 Afternoon Check-In",body:"No caffeine. Drink water. Check your step count — stay on track."},
+  {hour:20,min:0,title:"🌙 Evening Check-In",body:"Wind-down time. No screens soon. Prep for tomorrow. Lights out by 9:30."},
+];
+var notifPermission=Notification&&Notification.permission==="granted";
+var scheduledTimers=[];
+
+function scheduleReminders(){
+  scheduledTimers.forEach(function(t){clearTimeout(t)});scheduledTimers=[];
+  if(!notifPermission)return;
+  var now=new Date();
+  REMINDERS.forEach(function(r){
+    var target=new Date();target.setHours(r.hour,r.min,0,0);
+    var ms=target-now;
+    if(ms>0)scheduledTimers.push(setTimeout(function(){new Notification(r.title,{body:r.body})},ms));
+  });
 }
 
-function resetDay() {
-  if (confirm("Reset today? This cannot be undone.")) {
-    var k = todayKey();
-    state[k] = {tasks:{}, habits:{}};
-    save(); renderTasks(); updateHeader();
+function toggleNotifications(){
+  var enabled=localStorage.getItem("notifsEnabled")==="true"&&notifPermission;
+  var statusEl=document.getElementById("notif-status");
+  if(enabled){
+    localStorage.setItem("notifsEnabled","false");
+    scheduledTimers.forEach(function(t){clearTimeout(t)});scheduledTimers=[];
+    if(statusEl)statusEl.style.display="none";
+    updateNotifUI();return;
   }
-}
-
-function setDates() {
-  var opts = {weekday:"long", month:"long", day:"numeric"};
-  var str = new Date().toLocaleDateString("en-US", opts);
-  var ids = ["today-date","diet-date","stats-date"];
-  for (var i = 0; i < ids.length; i++) {
-    var el = document.getElementById(ids[i]);
-    if (el) el.textContent = str;
+  if(!("Notification" in window)){
+    showNotifStatus("Notifications aren't supported in this browser.","error");return;
   }
+  if(Notification.permission==="denied"){
+    showNotifStatus("Notifications are blocked. Go to browser Settings → Site Settings → Notifications and allow this site.","error");return;
+  }
+  Notification.requestPermission().then(function(perm){
+    if(perm==="granted"){
+      notifPermission=true;localStorage.setItem("notifsEnabled","true");
+      scheduleReminders();updateNotifUI();
+      showNotifStatus("✓ Reminders set for 8 AM, 2 PM, and 8 PM CST.","success");
+    }else{showNotifStatus("Permission denied. Enable notifications in your browser settings.","error")}
+  });
 }
 
-function showPage(name, btn) {
-  var pages = document.querySelectorAll(".page");
-  for (var i = 0; i < pages.length; i++) pages[i].classList.remove("active");
-  var btns = document.querySelectorAll(".nav-btn");
-  for (var i = 0; i < btns.length; i++) btns[i].classList.remove("active");
-  document.getElementById("page-" + name).classList.add("active");
+function showNotifStatus(msg,type){
+  var el=document.getElementById("notif-status");if(!el)return;
+  el.style.display="block";
+  if(type==="success"){el.style.background="rgba(34,197,94,0.07)";el.style.border="1px solid rgba(34,197,94,0.2)";el.style.color="#4ade80"}
+  else{el.style.background="rgba(239,68,68,0.07)";el.style.border="1px solid rgba(239,68,68,0.2)";el.style.color="#f87171"}
+  el.textContent=msg;
+}
+
+function updateNotifUI(){
+  var enabled=localStorage.getItem("notifsEnabled")==="true"&&notifPermission;
+  var btn=document.getElementById("notif-toggle"),dot=document.getElementById("notif-dot"),label=document.getElementById("notif-label");
+  if(btn){btn.style.borderColor=enabled?"rgba(34,197,94,0.3)":"var(--border-med)";btn.style.background=enabled?"rgba(34,197,94,0.07)":"var(--card)"}
+  if(dot){dot.style.background=enabled?"#22c55e":"var(--text-muted)";dot.style.boxShadow=enabled?"0 0 8px #22c55e":"none"}
+  if(label){label.textContent=enabled?"ON":"OFF";label.style.color=enabled?"#4ade80":"var(--text-muted)"}
+}
+
+function resetDay(){
+  if(confirm("Reset today? This cannot be undone.")){var k=todayKey();state[k]={tasks:{},habits:{}};save();renderTasks();updateHeader()}
+}
+
+function setDates(){
+  var str=new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
+  ["today-date","diet-date","stats-date"].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=str});
+}
+
+function showPage(name,btn,idx){
+  document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active")});
+  document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.remove("active")});
+  document.getElementById("page-"+name).classList.add("active");
   btn.classList.add("active");
-  if (name === "stats") renderStats();
-  if (name === "diet") renderDiet();
+  var ind=document.getElementById("nav-indicator");
+  if(ind)ind.style.left=(idx*33.33)+"%";
+  if(name==="stats")renderStats();
+  if(name==="diet")renderDiet();
 }
 
 // Auto-reset on new day
-var lastKey = "";
-try { lastKey = localStorage.getItem("lastActiveDay") || ""; } catch(e) {}
-if (lastKey && lastKey !== todayKey()) {
-  if (!state[todayKey()]) state[todayKey()] = {tasks:{}, habits:{}};
-  save();
-}
-try { localStorage.setItem("lastActiveDay", todayKey()); } catch(e) {}
-setInterval(function() {
-  var cur = todayKey();
-  var stored = "";
-  try { stored = localStorage.getItem("lastActiveDay") || ""; } catch(e) {}
-  if (stored !== cur) {
-    try { localStorage.setItem("lastActiveDay", cur); } catch(e) {}
-    if (!state[cur]) state[cur] = {tasks:{}, habits:{}};
-    save(); renderTasks(); updateHeader(); setDates();
-  }
-}, 60000);
+var lastKey="";try{lastKey=localStorage.getItem("lastActiveDay")||""}catch(e){}
+if(lastKey&&lastKey!==todayKey()){if(!state[todayKey()])state[todayKey()]={tasks:{},habits:{}};save()}
+try{localStorage.setItem("lastActiveDay",todayKey())}catch(e){}
+setInterval(function(){
+  var cur=todayKey(),stored="";try{stored=localStorage.getItem("lastActiveDay")||""}catch(e){}
+  if(stored!==cur){try{localStorage.setItem("lastActiveDay",cur)}catch(e){}if(!state[cur])state[cur]={tasks:{},habits:{}};save();renderTasks();updateHeader();setDates()}
+},60000);
 
-setDates();
-renderQuote();
-renderTasks();
-updateHeader();
+if(localStorage.getItem("notifsEnabled")==="true"&&notifPermission)scheduleReminders();
+
+setDates();renderQuote();renderScripture();renderTasks();updateHeader();
+setTimeout(updateNotifUI,50);
 </script>
 </body>
 </html>
