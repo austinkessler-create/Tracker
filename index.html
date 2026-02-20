@@ -36,7 +36,6 @@ body{
   overflow-x:hidden;
 }
 
-/* Ambient background blobs */
 body::before{
   content:'';position:fixed;top:-20%;left:-20%;width:60%;height:60%;
   background:radial-gradient(ellipse,rgba(249,115,22,0.07) 0%,transparent 70%);
@@ -52,9 +51,6 @@ body::after{
 @keyframes scaleIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
 @keyframes glow{0%,100%{box-shadow:0 0 20px var(--accent-glow)}50%{box-shadow:0 0 40px var(--accent-glow)}}
 
-
-
-/* ── HEADER ── */
 .header{
   padding:52px 20px 20px;
   background:linear-gradient(180deg,rgba(6,6,8,0.98) 0%,rgba(6,6,8,0.85) 100%);
@@ -79,7 +75,6 @@ body::after{
 }
 .score-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);transition:all 0.3s}
 
-/* ── CARDS ── */
 .glass-card{
   background:var(--card);
   border:1px solid var(--border-med);
@@ -92,7 +87,6 @@ body::after{
   background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);
 }
 
-/* ── QUOTE ── */
 .quote-card{
   margin:16px 16px 0;
   padding:20px 22px;
@@ -118,7 +112,6 @@ body::after{
 .scripture-text{font-size:14px;font-weight:500;line-height:1.65;font-style:italic;color:rgba(241,245,249,0.85);display:block}
 .scripture-ref{font-size:12px;color:#60a5fa;font-weight:700;margin-top:10px;letter-spacing:0.2px;display:block}
 
-/* ── PROGRESS RING ── */
 .progress-section{padding:16px 16px 0}
 .progress-card{
   padding:26px;display:flex;align-items:center;gap:24px;
@@ -141,7 +134,6 @@ body::after{
 .grade-elite{background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid rgba(34,197,94,0.25)}
 .grade-ok{background:rgba(234,179,8,0.1);color:#facc15;border:1px solid rgba(234,179,8,0.25)}
 
-/* ── VICTORY BANNER ── */
 .victory-banner{
   margin:16px;padding:28px 22px;border-radius:24px;
   background:linear-gradient(135deg,rgba(34,197,94,0.12),rgba(34,197,94,0.03));
@@ -151,7 +143,6 @@ body::after{
 }
 .victory-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(34,197,94,0.5),transparent)}
 
-/* ── SECTIONS ── */
 .section{padding:0 16px;margin-bottom:4px}
 .section-header{display:flex;align-items:center;gap:10px;padding:20px 2px 10px}
 .section-icon{
@@ -165,7 +156,6 @@ body::after{
 .section-header h2{font-size:12px;font-weight:800;color:rgba(241,245,249,0.5);text-transform:uppercase;letter-spacing:1px;flex:1}
 .section-time{font-size:11px;color:var(--accent);background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.15);border-radius:8px;padding:3px 10px;font-weight:700;letter-spacing:0.2px}
 
-/* ── TASKS ── */
 .task{
   display:flex;align-items:flex-start;gap:14px;
   background:var(--card);
@@ -204,7 +194,6 @@ body::after{
 .tag-mindset{background:rgba(168,85,247,0.1);color:#c084fc;border:1px solid rgba(168,85,247,0.18)}
 .tag-energy{background:rgba(234,179,8,0.1);color:#facc15;border:1px solid rgba(234,179,8,0.18)}
 
-/* ── STATS ── */
 .score-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 16px}
 .score-card{
   background:var(--card);border:1px solid var(--border-med);
@@ -252,7 +241,6 @@ body::after{
 }
 .reset-btn:hover{background:rgba(239,68,68,0.1)}
 
-/* ── DIET ── */
 .diet-card{
   margin:0 16px 14px;
   background:var(--card);border:1px solid var(--border-med);
@@ -262,7 +250,6 @@ body::after{
 .diet-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)}
 .diet-label{font-size:10px;color:var(--text-muted);font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
 
-/* ── NOTIFICATION ── */
 .notif-card{
   margin:0 16px 8px;
   display:flex;align-items:center;gap:16px;
@@ -274,7 +261,6 @@ body::after{
 .notif-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)}
 .notif-card:hover{border-color:var(--border-strong);transform:translateY(-1px)}
 
-/* ── NAV ── */
 html, body{height:100%;overflow:hidden}
 body{display:flex;flex-direction:column;}
 .page{display:none;flex:1;overflow-y:auto;padding:0;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
@@ -309,7 +295,6 @@ input:focus{border-color:rgba(249,115,22,0.5)!important;box-shadow:0 0 0 3px rgb
 </head>
 <body>
 
-<!-- TODAY PAGE -->
 <div id="page-today" class="page active">
   <div class="header">
     <div class="header-top">
@@ -321,20 +306,17 @@ input:focus{border-color:rgba(249,115,22,0.5)!important;box-shadow:0 0 0 3px rgb
     <div class="score-pill"><span class="dot" id="score-dot"></span><span id="header-score"></span></div>
   </div>
 
-  <!-- Quote -->
   <div class="quote-card">
     <div class="card-label" style="color:var(--accent)"><span class="label-dot" style="background:var(--accent)"></span>Daily Motivation</div>
     <div class="quote-text" id="daily-quote">Loading...</div>
   </div>
 
-  <!-- Scripture -->
   <div class="scripture-card">
     <div class="card-label" style="color:#60a5fa"><span class="label-dot" style="background:#60a5fa"></span>Scripture of the Day</div>
-    <div class="scripture-text" id="scripture-text">Haven't I commanded you? Be strong and courageous. Don't be afraid. Don't be dismayed, for the Lord your God is with you wherever you go.</div>
-    <div class="scripture-ref" id="scripture-ref">— Joshua 1:9</div>
+    <div class="scripture-text" id="scripture-text"></div>
+    <div class="scripture-ref" id="scripture-ref"></div>
   </div>
 
-  <!-- Progress -->
   <div class="progress-section">
     <div class="progress-card">
       <svg width="0" height="0" style="position:absolute">
@@ -358,12 +340,35 @@ input:focus{border-color:rgba(249,115,22,0.5)!important;box-shadow:0 0 0 3px rgb
         <p>tasks completed</p>
         <div class="grade" id="grade-badge" style="display:none"></div>
       </div>
+
+      <!-- Step Counter -->
+      <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <div style="position:relative;width:80px;height:80px;">
+          <svg viewBox="0 0 80 80" width="80" height="80" style="transform:rotate(-90deg)">
+            <circle fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="6" cx="40" cy="40" r="34"/>
+            <circle id="step-ring" fill="none" stroke="#3b82f6" stroke-width="6" stroke-linecap="round" cx="40" cy="40" r="34"
+              stroke-dasharray="213.6" stroke-dashoffset="213.6"
+              style="transition:stroke-dashoffset 0.5s ease"/>
+          </svg>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+            <span id="step-count" style="font-size:16px;font-weight:800;letter-spacing:-0.5px;color:#60a5fa">0</span>
+            <span style="font-size:8px;color:var(--text-muted);font-weight:700;letter-spacing:0.5px">STEPS</span>
+          </div>
+        </div>
+        <div id="step-btn" onclick="toggleStepTracking()" style="
+          font-size:10px;font-weight:800;letter-spacing:0.4px;
+          padding:6px 12px;border-radius:10px;cursor:pointer;
+          background:rgba(59,130,246,0.12);
+          border:1px solid rgba(59,130,246,0.25);
+          color:#60a5fa;transition:all 0.2s;
+        ">START</div>
+        <div style="font-size:9px;color:var(--text-muted);font-weight:600;">Goal: 8k</div>
+      </div>
     </div>
   </div>
 
   <div id="tasks-container"></div>
 
-  <!-- Notifications -->
   <div style="padding:4px 16px 8px">
     <div class="notif-card" id="notif-toggle" onclick="toggleNotifications()">
       <div style="width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,rgba(249,115,22,0.2),rgba(249,115,22,0.05));border:1px solid rgba(249,115,22,0.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🔔</div>
@@ -380,14 +385,12 @@ input:focus{border-color:rgba(249,115,22,0.5)!important;box-shadow:0 0 0 3px rgb
   </div>
 </div>
 
-<!-- CALORIES PAGE -->
 <div id="page-diet" class="page">
   <div class="header"><h1>Calories</h1><div class="date" id="diet-date"></div></div>
   <div style="height:16px"></div>
   <div id="diet-container"></div>
 </div>
 
-<!-- STATS PAGE -->
 <div id="page-stats" class="page">
   <div class="header"><h1>Weekly Stats</h1><div class="date" id="stats-date"></div></div>
   <div style="height:16px"></div>
@@ -399,7 +402,6 @@ input:focus{border-color:rgba(249,115,22,0.5)!important;box-shadow:0 0 0 3px rgb
   <div class="reset-btn" onclick="resetDay()">Reset Today</div>
 </div>
 
-<!-- NAV -->
 <nav class="nav">
   <div class="nav-indicator" id="nav-indicator" style="left:0"></div>
   <button class="nav-btn active" id="nav-today" onclick="showPage('today',this,0)">
@@ -444,6 +446,131 @@ var TASKS=[
 ];
 
 var CAL_GOAL=2300;
+
+// Step Tracking
+var stepCount=0;
+var stepTracking=false;
+var lastAccel={x:0,y:0,z:0};
+var stepThreshold=12;
+var lastStepTime=0;
+var minStepInterval=250;
+var STEP_GOAL=8000;
+
+function toggleStepTracking(){
+  if(stepTracking){
+    stopStepTracking();
+  } else {
+    startStepTracking();
+  }
+}
+
+function startStepTracking(){
+  if(typeof DeviceMotionEvent==="undefined"){
+    alert("Motion tracking not supported in this browser.");return;
+  }
+  // iOS 13+ requires permission
+  if(typeof DeviceMotionEvent.requestPermission==="function"){
+    DeviceMotionEvent.requestPermission().then(function(perm){
+      if(perm==="granted"){
+        beginTracking();
+      } else {
+        alert("Motion permission denied. Enable it in Settings > Safari > Motion & Orientation Access.");
+      }
+    }).catch(function(){beginTracking()});
+  } else {
+    beginTracking();
+  }
+}
+
+var wakeLock=null;
+
+async function requestWakeLock(){
+  if(!("wakeLock" in navigator))return;
+  try{
+    wakeLock=await navigator.wakeLock.request("screen");
+    wakeLock.addEventListener("release",function(){wakeLock=null;});
+  }catch(e){console.warn("Wake lock failed:",e.message);}
+}
+
+function releaseWakeLock(){
+  if(wakeLock){wakeLock.release();wakeLock=null;}
+}
+
+// Re-acquire wake lock when tab becomes visible again
+document.addEventListener("visibilitychange",function(){
+  if(document.visibilityState==="visible"&&stepTracking){requestWakeLock();}
+});
+
+function beginTracking(){
+  stepTracking=true;
+  window.addEventListener("devicemotion",handleMotion);
+  requestWakeLock();
+  var btn=document.getElementById("step-btn");
+  if(btn){
+    btn.textContent="STOP";
+    btn.style.background="rgba(239,68,68,0.12)";
+    btn.style.borderColor="rgba(239,68,68,0.25)";
+    btn.style.color="#f87171";
+  }
+}
+
+function stopStepTracking(){
+  stepTracking=false;
+  window.removeEventListener("devicemotion",handleMotion);
+  releaseWakeLock();
+  var btn=document.getElementById("step-btn");
+  if(btn){
+    btn.textContent="START";
+    btn.style.background="rgba(59,130,246,0.12)";
+    btn.style.borderColor="rgba(59,130,246,0.25)";
+    btn.style.color="#60a5fa";
+  }
+}
+
+function handleMotion(e){
+  var acc=e.accelerationIncludingGravity;
+  if(!acc)return;
+  var x=acc.x||0,y=acc.y||0,z=acc.z||0;
+  var magnitude=Math.sqrt(x*x+y*y+z*z);
+  var delta=Math.abs(magnitude-Math.sqrt(
+    lastAccel.x*lastAccel.x+lastAccel.y*lastAccel.y+lastAccel.z*lastAccel.z
+  ));
+  var now=Date.now();
+  if(delta>stepThreshold&&(now-lastStepTime)>minStepInterval){
+    stepCount++;
+    lastStepTime=now;
+    updateStepUI();
+    // save steps
+    try{localStorage.setItem("stepCount_"+todayKey(),stepCount)}catch(e){}
+    // auto-check step task if goal hit
+    if(stepCount>=6000){
+      var d=getToday();
+      if(!d.tasks["t16c"]){d.tasks["t16c"]=true;save();renderTasks();updateHeader();}
+    }
+  }
+  lastAccel={x:x,y:y,z:z};
+}
+
+function updateStepUI(){
+  var el=document.getElementById("step-count");
+  if(el)el.textContent=stepCount>=1000?(stepCount/1000).toFixed(1)+"k":stepCount;
+  var ring=document.getElementById("step-ring");
+  if(ring){
+    var pct=Math.min(1,stepCount/STEP_GOAL);
+    var circ=213.6;
+    ring.style.strokeDashoffset=circ-(circ*pct);
+    // color changes as you progress
+    if(pct>=1)ring.style.stroke="#22c55e";
+    else if(pct>=0.75)ring.style.stroke="#f97316";
+    else ring.style.stroke="#3b82f6";
+  }
+}
+
+// Load saved step count for today
+try{
+  var saved=localStorage.getItem("stepCount_"+new Date().toISOString().split("T")[0]);
+  if(saved){stepCount=parseInt(saved)||0;setTimeout(updateStepUI,100);}
+}catch(e){}
 var state={};
 try{state=JSON.parse(localStorage.getItem("trackerState")||"{}")}catch(e){state={}}
 
@@ -525,7 +652,6 @@ function renderDiet(){
   var circ=2*Math.PI*41,off=circ-(circ*pct/100);
   var html="";
 
-  // Ring card
   html+="<div class='diet-card' style='display:flex;align-items:center;gap:24px;'>";
   html+="<div style='position:relative;width:110px;height:110px;flex-shrink:0;'>";
   html+="<svg viewBox='0 0 100 100' width='110' height='110' style='transform:rotate(-90deg);filter:drop-shadow(0 0 10px "+rc+"44)'>";
@@ -538,7 +664,6 @@ function renderDiet(){
   else html+="<div style='margin-top:12px;font-size:13px;font-weight:700;color:#f87171;'>+"+Math.abs(rem)+" over goal</div>";
   html+="</div></div>";
 
-  // Add Manually
   html+="<div class='diet-card'>";
   html+="<div class='diet-label'>Add Manually</div>";
   html+="<input id='meal-name' type='text' placeholder='Meal name' style='width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border-med);border-radius:13px;padding:13px 16px;color:var(--text);font-size:14px;margin-bottom:10px;font-weight:500;transition:all 0.2s;'/>";
@@ -546,7 +671,6 @@ function renderDiet(){
   html+="<div onclick='addManualMeal()' style='background:linear-gradient(135deg,rgba(249,115,22,0.9),rgba(249,115,22,0.75));color:white;border-radius:13px;padding:15px;text-align:center;font-size:15px;font-weight:800;cursor:pointer;letter-spacing:0.2px;box-shadow:0 4px 20px rgba(249,115,22,0.25);transition:all 0.2s;'>+ Add Meal</div>";
   html+="</div>";
 
-  // Log
   html+="<div class='diet-card'>";
   html+="<div class='diet-label'>Today's Log</div>";
   if(logs.length===0){
@@ -617,14 +741,9 @@ function renderQuote(){
   var cached="",cachedDate="";
   try{cached=localStorage.getItem("cachedQuote")||"";cachedDate=localStorage.getItem("cachedQuoteDate")||""}catch(e){}
   if(cached&&cachedDate===todayKey()){el.textContent=cached;return}
-  fetch("https://zenquotes.io/api/today")
-    .then(function(r){return r.json()})
-    .then(function(data){
-      if(data&&data[0]&&data[0].q){var q='"'+data[0].q+'"'+(data[0].a?" — "+data[0].a:"");el.textContent=q;try{localStorage.setItem("cachedQuote",q);localStorage.setItem("cachedQuoteDate",todayKey())}catch(e){}}
-      else useFallback(el);
-    }).catch(function(){useFallback(el)});
+  var idx=new Date().getDate()%QUOTES.length;
+  el.textContent='"'+QUOTES[idx]+'"';
 }
-function useFallback(el){var idx=new Date().getDate()%QUOTES.length;if(el)el.textContent='"'+QUOTES[idx]+'"'}
 
 function renderScripture(){
   var textEl=document.getElementById("scripture-text"),refEl=document.getElementById("scripture-ref");if(!textEl||!refEl)return;
@@ -654,13 +773,12 @@ function renderScripture(){
   textEl.textContent=verses[idx].t;refEl.textContent=verses[idx].r;
 }
 
-// NOTIFICATIONS
 var REMINDERS=[
   {hour:8,min:0,title:"🌅 Morning Check-In",body:"Devotion done? Water in? Sunlight? Let's get the day started right."},
   {hour:14,min:0,title:"🌆 Afternoon Check-In",body:"No caffeine. Drink water. Check your step count — stay on track."},
   {hour:20,min:0,title:"🌙 Evening Check-In",body:"Wind-down time. No screens soon. Prep for tomorrow. Lights out by 9:30."},
 ];
-var notifPermission=Notification&&Notification.permission==="granted";
+var notifPermission=typeof Notification!=="undefined"&&Notification.permission==="granted";
 var scheduledTimers=[];
 
 function scheduleReminders(){
@@ -683,7 +801,7 @@ function toggleNotifications(){
     if(statusEl)statusEl.style.display="none";
     updateNotifUI();return;
   }
-  if(!("Notification" in window)){
+  if(typeof Notification==="undefined"){
     showNotifStatus("Notifications aren't supported in this browser.","error");return;
   }
   if(Notification.permission==="denied"){
@@ -734,7 +852,6 @@ function showPage(name,btn,idx){
   if(name==="diet")renderDiet();
 }
 
-// Auto-reset on new day
 var lastKey="";try{lastKey=localStorage.getItem("lastActiveDay")||""}catch(e){}
 if(lastKey&&lastKey!==todayKey()){if(!state[todayKey()])state[todayKey()]={tasks:{},habits:{}};save()}
 try{localStorage.setItem("lastActiveDay",todayKey())}catch(e){}
