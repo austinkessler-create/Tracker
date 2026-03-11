@@ -2,621 +2,454 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Daily Tracker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Johnny B's Decking Company</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{
-  --bg:#060608;--card:rgba(255,255,255,0.035);--card-hover:rgba(255,255,255,0.06);
-  --accent:#f97316;--accent-dim:rgba(249,115,22,0.15);--accent-glow:rgba(249,115,22,0.3);
-  --blue:#3b82f6;--green:#22c55e;--purple:#a855f7;
-  --text:#f1f5f9;--text-muted:#64748b;--text-soft:rgba(241,245,249,0.7);
-  --border:rgba(255,255,255,0.07);--border-med:rgba(255,255,255,0.11);--border-strong:rgba(255,255,255,0.15);
-}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',sans-serif;min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;top:-20%;left:-20%;width:60%;height:60%;background:radial-gradient(ellipse,rgba(249,115,22,0.07) 0%,transparent 70%);pointer-events:none;z-index:0;}
-body::after{content:'';position:fixed;bottom:-10%;right:-10%;width:50%;height:50%;background:radial-gradient(ellipse,rgba(59,130,246,0.05) 0%,transparent 70%);pointer-events:none;z-index:0;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes scaleIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
-.header{padding:52px 20px 20px;background:linear-gradient(180deg,rgba(6,6,8,0.98) 0%,rgba(6,6,8,0.85) 100%);position:sticky;top:0;z-index:50;backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-bottom:1px solid var(--border);}
-.header-top{display:flex;align-items:flex-start;justify-content:space-between}
-.header h1{font-size:32px;font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#ffffff 0%,rgba(249,115,22,0.9) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.header .date{color:var(--text-muted);font-size:13px;margin-top:4px;font-weight:500;}
-.score-pill{display:inline-flex;align-items:center;gap:7px;background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:20px;padding:6px 13px;font-size:12px;font-weight:700;margin-top:12px;}
-.score-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);transition:all 0.3s}
-.quote-card{margin:16px 16px 0;padding:20px 22px;background:linear-gradient(135deg,rgba(249,115,22,0.1) 0%,rgba(249,115,22,0.03) 100%);border:1px solid rgba(249,115,22,0.18);border-radius:22px;display:block;position:relative;}
-.card-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.label-dot{width:5px;height:5px;border-radius:50%}
-.quote-text{font-size:14px;font-weight:500;line-height:1.65;font-style:italic;color:rgba(241,245,249,0.85);display:block}
-.scripture-card{margin:12px 16px 0;padding:20px 22px;background:linear-gradient(135deg,rgba(59,130,246,0.1) 0%,rgba(59,130,246,0.02) 100%);border:1px solid rgba(59,130,246,0.18);border-radius:22px;display:block;position:relative;}
-.scripture-text{font-size:14px;font-weight:500;line-height:1.65;font-style:italic;color:rgba(241,245,249,0.85);display:block}
-.scripture-ref{font-size:12px;color:#60a5fa;font-weight:700;margin-top:10px;letter-spacing:0.2px;display:block}
-.progress-section{padding:16px 16px 0}
-.progress-card{padding:26px;display:flex;align-items:center;gap:24px;background:linear-gradient(135deg,rgba(255,255,255,0.04) 0%,rgba(255,255,255,0.02) 100%);border:1px solid var(--border-strong);border-radius:26px;backdrop-filter:blur(20px);position:relative;overflow:hidden;}
-.progress-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent)}
-.ring-wrap{position:relative;width:96px;height:96px;flex-shrink:0}
-.ring-wrap svg{transform:rotate(-90deg)}
-.ring-bg{fill:none;stroke:rgba(255,255,255,0.05);stroke-width:7}
-.ring-track{fill:none;stroke:rgba(249,115,22,0.1);stroke-width:7}
-.ring-fill{fill:none;stroke:url(#ringGrad);stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset 1s cubic-bezier(0.34,1.56,0.64,1)}
-.ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.ring-pct{font-size:24px;font-weight:800;letter-spacing:-1px}
-.ring-label{font-size:9px;color:var(--text-muted);font-weight:700;letter-spacing:0.8px;margin-top:-1px}
-.progress-stats h3{font-size:26px;font-weight:800;letter-spacing:-0.8px}
-.progress-stats p{font-size:13px;color:var(--text-muted);margin-top:4px;font-weight:500}
-.grade{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:10px;font-size:12px;font-weight:700;margin-top:12px;}
-.grade-elite{background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid rgba(34,197,94,0.25)}
-.grade-ok{background:rgba(234,179,8,0.1);color:#facc15;border:1px solid rgba(234,179,8,0.25)}
-.victory-banner{margin:16px;padding:28px 22px;border-radius:24px;background:linear-gradient(135deg,rgba(34,197,94,0.12),rgba(34,197,94,0.03));border:1px solid rgba(34,197,94,0.2);text-align:center;animation:scaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1);position:relative;overflow:hidden;}
-.victory-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(34,197,94,0.5),transparent)}
-.section{padding:0 16px;margin-bottom:4px}
-.section-header{display:flex;align-items:center;gap:10px;padding:20px 2px 10px}
-.section-icon{width:32px;height:32px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:linear-gradient(135deg,rgba(249,115,22,0.18),rgba(249,115,22,0.05));border:1px solid rgba(249,115,22,0.18);box-shadow:0 2px 8px rgba(249,115,22,0.1);}
-.section-header h2{font-size:12px;font-weight:800;color:rgba(241,245,249,0.5);text-transform:uppercase;letter-spacing:1px;flex:1}
-.section-time{font-size:11px;color:var(--accent);background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.15);border-radius:8px;padding:3px 10px;font-weight:700;}
-.task{display:flex;align-items:flex-start;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:9px;cursor:pointer;transition:all 0.2s cubic-bezier(0.16,1,0.3,1);position:relative;overflow:hidden;}
-.task::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.025),transparent);pointer-events:none}
-.task:active{transform:scale(0.97)}
-.task:hover{border-color:var(--border-med);background:var(--card-hover);transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,0.3)}
-.task.done{opacity:0.4}
-.task.done .task-title{text-decoration:line-through;color:var(--text-muted)}
-.checkbox{width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);margin-top:1px;background:rgba(255,255,255,0.03);}
-.task.done .checkbox{background:var(--green);border-color:var(--green);box-shadow:0 0 14px rgba(34,197,94,0.5);transform:scale(1.1);}
-.checkbox svg{opacity:0;transition:opacity 0.2s}
-.task.done .checkbox svg{opacity:1}
-.task-content{flex:1;min-width:0}
-.task-title{font-size:15px;font-weight:600;line-height:1.35;letter-spacing:-0.15px}
-.task-sub{font-size:12px;color:var(--text-muted);margin-top:5px;line-height:1.5;font-weight:400}
-.task-tag{display:inline-flex;align-items:center;font-size:10px;font-weight:700;border-radius:7px;padding:3px 9px;margin-top:8px;letter-spacing:0.4px}
-.tag-recovery{background:rgba(59,130,246,0.1);color:#60a5fa;border:1px solid rgba(59,130,246,0.18)}
-.tag-nutrition{background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid rgba(34,197,94,0.18)}
-.tag-fitness{background:rgba(249,115,22,0.1);color:#fb923c;border:1px solid rgba(249,115,22,0.18)}
-.tag-mindset{background:rgba(168,85,247,0.1);color:#c084fc;border:1px solid rgba(168,85,247,0.18)}
-.tag-energy{background:rgba(234,179,8,0.1);color:#facc15;border:1px solid rgba(234,179,8,0.18)}
-.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 16px}
-.score-card{background:var(--card);border:1px solid var(--border-med);border-radius:22px;padding:20px;backdrop-filter:blur(16px);position:relative;overflow:hidden;}
-.score-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent)}
-.score-card-label{font-size:10px;color:var(--text-muted);font-weight:800;text-transform:uppercase;letter-spacing:0.8px}
-.score-card-val{font-size:36px;font-weight:800;margin-top:8px;letter-spacing:-1.5px;line-height:1}
-.score-card-sub{font-size:11px;color:var(--text-muted);margin-top:6px;font-weight:500}
-.score-card-icon{position:absolute;top:16px;right:16px;font-size:22px;opacity:0.4}
-.weekly-card{background:var(--card);border:1px solid var(--border-med);border-radius:24px;padding:24px;margin:0 16px 14px;backdrop-filter:blur(16px);position:relative;overflow:hidden;}
-.weekly-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)}
-.weekly-card h3{font-size:15px;font-weight:800;margin-bottom:20px;}
-.week-bars{display:flex;gap:8px;align-items:flex-end;height:90px}
-.week-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;height:100%}
-.week-bar-bg{flex:1;width:100%;background:rgba(255,255,255,0.04);border-radius:8px;overflow:hidden;display:flex;align-items:flex-end;border:1px solid var(--border)}
-.week-bar-fill{width:100%;border-radius:8px;transition:height 0.7s cubic-bezier(0.34,1.56,0.64,1)}
-.week-bar-day{font-size:10px;color:var(--text-muted);font-weight:700;}
-.week-bar-wrap.today .week-bar-day{color:var(--accent)}
-.summary-card{background:var(--card);border:1px solid var(--border-med);border-radius:24px;padding:24px;margin:0 16px 14px;backdrop-filter:blur(16px);position:relative;overflow:hidden;}
-.summary-card h3{font-size:15px;font-weight:800;margin-bottom:16px;}
-.summary-row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--border)}
-.summary-row:last-child{border-bottom:none}
-.summary-label{font-size:13px;color:var(--text-muted);font-weight:500}
-.summary-val{font-size:14px;font-weight:800;}
-.reset-btn{display:block;margin:0 16px 0;padding:17px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);border-radius:18px;color:#f87171;font-size:14px;font-weight:700;text-align:center;cursor:pointer;transition:all 0.2s;}
-.diet-card{margin:0 16px 14px;background:var(--card);border:1px solid var(--border-med);border-radius:24px;padding:24px;backdrop-filter:blur(16px);position:relative;overflow:hidden;}
-.diet-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)}
-.diet-label{font-size:10px;color:var(--text-muted);font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
-.notif-card{margin:0 16px 8px;display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--border-med);border-radius:20px;padding:18px 20px;cursor:pointer;transition:all 0.25s cubic-bezier(0.16,1,0.3,1);position:relative;overflow:hidden;}
-.notif-card:hover{border-color:var(--border-strong);transform:translateY(-1px)}
-html,body{height:100%;overflow:hidden}
-body{display:flex;flex-direction:column;}
-.page{display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-.page.active{display:flex;flex-direction:column;animation:fadeUp 0.4s cubic-bezier(0.16,1,0.3,1)}
-.nav{flex-shrink:0;background:rgba(6,6,8,0.98);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-top:1px solid var(--border-med);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);position:relative;}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;color:var(--text-muted);font-size:10px;font-weight:700;border:none;background:none;transition:all 0.2s;}
-.nav-btn.active{color:var(--accent)}
-.nav-btn svg{width:22px;height:22px;transition:transform 0.2s}
-.nav-btn.active svg{transform:scale(1.1)}
-.nav-indicator{position:absolute;top:0;height:2px;background:var(--accent);border-radius:0 0 3px 3px;transition:left 0.3s cubic-bezier(0.34,1.56,0.64,1);width:33.33%;}
-input{color-scheme:dark}
-input:focus{border-color:rgba(249,115,22,0.5)!important;box-shadow:0 0 0 3px rgba(249,115,22,0.08)!important;outline:none}
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --dark: #0f0f0f;
+    --charcoal: #1c1c1c;
+    --card: #242424;
+    --accent: #c8a96e;
+    --accent2: #a07840;
+    --light: #f5f0e8;
+    --muted: #9a9a9a;
+    --white: #ffffff;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--dark); color: var(--white); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(15,15,15,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(200,169,110,0.15);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 6%; height: 68px;
+  }
+  .logo { font-size: 1.3rem; font-weight: 700; color: var(--accent); letter-spacing: 0.02em; }
+  .logo span { color: var(--white); }
+  .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.9rem; letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta { background: var(--accent); color: var(--dark); padding: 0.5rem 1.3rem; border-radius: 4px; font-weight: 600; font-size: 0.85rem; text-decoration: none; transition: background 0.2s; letter-spacing: 0.03em; }
+  .nav-cta:hover { background: var(--accent2); color: var(--white); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1208 50%, #0f0f0f 100%);
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 120px 6% 80px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 60%, rgba(200,169,110,0.08) 0%, transparent 70%);
+  }
+  .hero-badge {
+    display: inline-block; border: 1px solid rgba(200,169,110,0.4);
+    color: var(--accent); font-size: 0.75rem; letter-spacing: 0.12em;
+    text-transform: uppercase; padding: 0.4rem 1rem; border-radius: 20px;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-size: clamp(2.8rem, 6vw, 5rem); font-weight: 800;
+    line-height: 1.1; margin-bottom: 1.2rem; letter-spacing: -0.02em;
+  }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p {
+    font-size: 1.15rem; color: var(--muted); max-width: 540px;
+    margin: 0 auto 2.5rem; line-height: 1.7;
+  }
+  .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--accent); color: var(--dark); padding: 0.85rem 2rem;
+    border-radius: 5px; font-weight: 700; font-size: 1rem; text-decoration: none;
+    transition: all 0.2s; letter-spacing: 0.02em;
+  }
+  .btn-primary:hover { background: var(--accent2); color: var(--white); transform: translateY(-2px); }
+  .btn-outline {
+    border: 1.5px solid rgba(200,169,110,0.5); color: var(--accent);
+    padding: 0.85rem 2rem; border-radius: 5px; font-weight: 600;
+    font-size: 1rem; text-decoration: none; transition: all 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--accent); background: rgba(200,169,110,0.08); }
+
+  /* STATS BAR */
+  .stats {
+    background: var(--charcoal); border-top: 1px solid rgba(200,169,110,0.1);
+    border-bottom: 1px solid rgba(200,169,110,0.1);
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 0;
+  }
+  .stat {
+    padding: 2rem 3.5rem; text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num { font-size: 2rem; font-weight: 800; color: var(--accent); }
+  .stat-label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.2rem; }
+
+  /* SECTION COMMON */
+  section { padding: 90px 6%; }
+  .section-label {
+    font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.8rem;
+  }
+  .section-title { font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 800; margin-bottom: 1rem; }
+  .section-sub { color: var(--muted); font-size: 1rem; line-height: 1.7; max-width: 540px; }
+
+  /* SERVICES */
+  #services { background: var(--dark); }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5px; margin-top: 3.5rem;
+    border: 1.5px solid rgba(200,169,110,0.12); border-radius: 10px; overflow: hidden;
+  }
+  .service-card {
+    background: var(--card); padding: 2.5rem;
+    transition: background 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: var(--accent); transform: scaleX(0);
+    transition: transform 0.3s; transform-origin: left;
+  }
+  .service-card:hover { background: #2a2a2a; }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-icon { font-size: 2.2rem; margin-bottom: 1.2rem; }
+  .service-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .service-card p { color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
+
+  /* WHY US */
+  #why { background: var(--charcoal); }
+  .why-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: center; margin-top: 1rem;
+  }
+  .why-features { margin-top: 2rem; display: flex; flex-direction: column; gap: 1.5rem; }
+  .why-item { display: flex; gap: 1rem; align-items: flex-start; }
+  .why-icon {
+    width: 42px; height: 42px; border-radius: 8px;
+    background: rgba(200,169,110,0.12); border: 1px solid rgba(200,169,110,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+  }
+  .why-item h4 { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .why-item p { color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+  .why-visual {
+    background: linear-gradient(145deg, #1e1608, #2a1f0a);
+    border: 1px solid rgba(200,169,110,0.2); border-radius: 12px;
+    padding: 3rem; text-align: center; position: relative; overflow: hidden;
+  }
+  .why-visual-emoji { font-size: 5rem; display: block; margin-bottom: 1rem; }
+  .why-visual h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--accent); }
+  .why-visual p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+
+  /* PROCESS */
+  #process { background: var(--dark); }
+  .process-steps {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem; margin-top: 3.5rem;
+  }
+  .step {
+    background: var(--card); border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 10px; padding: 2rem; position: relative;
+    transition: border-color 0.2s;
+  }
+  .step:hover { border-color: rgba(200,169,110,0.3); }
+  .step-num {
+    font-size: 2.8rem; font-weight: 900; color: rgba(200,169,110,0.15);
+    line-height: 1; margin-bottom: 1rem;
+  }
+  .step h4 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .step p { color: var(--muted); font-size: 0.87rem; line-height: 1.6; }
+
+  /* TESTIMONIALS */
+  #testimonials { background: var(--charcoal); }
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem; margin-top: 3.5rem;
+  }
+  .testimonial {
+    background: var(--card); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px; padding: 2rem;
+  }
+  .stars { color: var(--accent); font-size: 1rem; margin-bottom: 1rem; letter-spacing: 2px; }
+  .testimonial p { color: #ccc; font-size: 0.92rem; line-height: 1.7; font-style: italic; margin-bottom: 1.2rem; }
+  .reviewer { font-weight: 700; font-size: 0.88rem; }
+  .reviewer span { color: var(--muted); font-weight: 400; }
+
+  /* CONTACT */
+  #contact { background: var(--dark); }
+  .contact-wrap {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; margin-top: 3rem; align-items: start;
+  }
+  .contact-info { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1.5rem; }
+  .contact-item { display: flex; gap: 1rem; align-items: flex-start; }
+  .contact-icon {
+    width: 44px; height: 44px; background: rgba(200,169,110,0.1);
+    border: 1px solid rgba(200,169,110,0.2); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;
+  }
+  .contact-item h4 { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.2rem; }
+  .contact-item p { font-size: 0.95rem; font-weight: 600; }
+  form { display: flex; flex-direction: column; gap: 1rem; }
+  form input, form textarea, form select {
+    background: var(--card); border: 1px solid rgba(255,255,255,0.08);
+    color: var(--white); padding: 0.85rem 1rem; border-radius: 6px;
+    font-size: 0.95rem; font-family: inherit;
+    transition: border-color 0.2s; outline: none; width: 100%;
+  }
+  form input:focus, form textarea:focus, form select:focus { border-color: var(--accent); }
+  form input::placeholder, form textarea::placeholder { color: var(--muted); }
+  form select option { background: var(--card); }
+  form textarea { resize: vertical; min-height: 120px; }
+  form button {
+    background: var(--accent); color: var(--dark); border: none;
+    padding: 1rem; border-radius: 6px; font-weight: 700; font-size: 1rem;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.03em;
+  }
+  form button:hover { background: var(--accent2); color: var(--white); }
+
+  /* FOOTER */
+  footer {
+    background: #080808; border-top: 1px solid rgba(200,169,110,0.1);
+    padding: 2rem 6%; display: flex; justify-content: space-between;
+    align-items: center; flex-wrap: wrap; gap: 1rem;
+  }
+  footer p { color: var(--muted); font-size: 0.85rem; }
+  .footer-logo { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .why-grid, .contact-wrap { grid-template-columns: 1fr; }
+    .stat { padding: 1.5rem 2rem; }
+  }
 </style>
 </head>
 <body>
 
-<div id="page-today" class="page active">
-  <div class="header">
-    <div class="header-top">
-      <div><h1>Daily Tracker</h1><div class="date" id="today-date"></div></div>
-    </div>
-    <div class="score-pill"><span class="dot" id="score-dot"></span><span id="header-score"></span></div>
-  </div>
-  <div class="quote-card">
-    <div class="card-label" style="color:var(--accent)"><span class="label-dot" style="background:var(--accent)"></span>Daily Motivation</div>
-    <div class="quote-text" id="daily-quote">Loading...</div>
-  </div>
-  <div class="scripture-card">
-    <div class="card-label" style="color:#60a5fa"><span class="label-dot" style="background:#60a5fa"></span>Scripture of the Day</div>
-    <div class="scripture-text" id="scripture-text"></div>
-    <div class="scripture-ref" id="scripture-ref"></div>
-  </div>
-  <div class="progress-section">
-    <div class="progress-card">
-      <svg width="0" height="0" style="position:absolute">
-        <defs>
-          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#f97316"/>
-            <stop offset="100%" style="stop-color:#fb923c"/>
-          </linearGradient>
-        </defs>
-      </svg>
-      <div class="ring-wrap">
-        <svg viewBox="0 0 96 96" width="96" height="96">
-          <circle class="ring-bg" cx="48" cy="48" r="40"/>
-          <circle class="ring-track" cx="48" cy="48" r="40" stroke-dasharray="251.2" stroke-dashoffset="0"/>
-          <circle class="ring-fill" id="ring" cx="48" cy="48" r="40" stroke-dasharray="251.2" stroke-dashoffset="251.2"/>
-        </svg>
-        <div class="ring-text"><span class="ring-pct" id="ring-pct">0%</span><span class="ring-label">TODAY</span></div>
-      </div>
-      <div class="progress-stats">
-        <h3 id="prog-fraction">0 / 0</h3>
-        <p>tasks completed</p>
-        <div class="grade" id="grade-badge" style="display:none"></div>
-      </div>
-      <!-- Step Counter -->
-      <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <div style="position:relative;width:80px;height:80px;">
-          <svg viewBox="0 0 80 80" width="80" height="80" style="transform:rotate(-90deg)">
-            <circle fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="6" cx="40" cy="40" r="34"/>
-            <circle id="step-ring" fill="none" stroke="#3b82f6" stroke-width="6" stroke-linecap="round" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="213.6" style="transition:stroke-dashoffset 0.5s ease"/>
-          </svg>
-          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-            <span id="step-count" style="font-size:16px;font-weight:800;letter-spacing:-0.5px;color:#60a5fa">0</span>
-            <span style="font-size:8px;color:var(--text-muted);font-weight:700;letter-spacing:0.5px">STEPS</span>
-          </div>
-        </div>
-        <div id="step-btn" onclick="toggleStepTracking()" style="font-size:10px;font-weight:800;letter-spacing:0.4px;padding:6px 12px;border-radius:10px;cursor:pointer;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.25);color:#60a5fa;transition:all 0.2s;">START</div>
-        <div style="font-size:9px;color:var(--text-muted);font-weight:600;">Goal: 8k</div>
-      </div>
-    </div>
-  </div>
-  <div id="tasks-container"></div>
-  <div style="padding:4px 16px 8px">
-    <div class="notif-card" id="notif-toggle" onclick="toggleNotifications()">
-      <div style="width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,rgba(249,115,22,0.2),rgba(249,115,22,0.05));border:1px solid rgba(249,115,22,0.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🔔</div>
-      <div style="flex:1"><div style="font-size:14px;font-weight:700;">Daily Reminders</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px;font-weight:500">8 AM · 2 PM · 8 PM CST</div></div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <div id="notif-dot" style="width:8px;height:8px;border-radius:50%;background:var(--text-muted);transition:all 0.3s"></div>
-        <div id="notif-label" style="font-size:12px;font-weight:800;color:var(--text-muted);">OFF</div>
-      </div>
-    </div>
-    <div id="notif-status" style="display:none;margin-top:10px;padding:14px 16px;border-radius:14px;font-size:12px;font-weight:500;line-height:1.5"></div>
-  </div>
-</div>
-
-<div id="page-diet" class="page">
-  <div class="header"><h1>Calories</h1><div class="date" id="diet-date"></div></div>
-  <div style="height:16px"></div>
-  <div id="diet-container"></div>
-</div>
-
-<div id="page-stats" class="page">
-  <div class="header"><h1>Weekly Stats</h1><div class="date" id="stats-date"></div></div>
-  <div style="height:16px"></div>
-  <div class="score-grid" id="score-grid"></div>
-  <div style="height:14px"></div>
-  <div class="weekly-card"><h3>This Week</h3><div class="week-bars" id="week-bars"></div></div>
-  <div class="summary-card"><h3>Weekly Summary</h3><div id="weekly-summary"></div></div>
-  <div style="height:8px"></div>
-  <div class="reset-btn" onclick="resetDay()">Reset Today</div>
-  <div style="height:16px"></div>
-</div>
-
-<nav class="nav">
-  <div class="nav-indicator" id="nav-indicator" style="left:0"></div>
-  <button class="nav-btn active" id="nav-today" onclick="showPage('today',this,0)">
-    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Today
-  </button>
-  <button class="nav-btn" id="nav-diet" onclick="showPage('diet',this,1)">
-    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="2" x2="6" y2="8"/><line x1="10" y1="2" x2="10" y2="8"/><line x1="14" y1="2" x2="14" y2="8"/></svg>Calories
-  </button>
-  <button class="nav-btn" id="nav-stats" onclick="showPage('stats',this,2)">
-    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Stats
-  </button>
+<!-- NAV -->
+<nav>
+  <div class="logo">Johnny B's <span>Decking</span></div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Get a Free Quote</a>
 </nav>
 
+<!-- HERO -->
+<section class="hero">
+  <div style="position:relative;z-index:1;">
+    <div class="hero-badge">⚒ Craftsmanship You Can Stand On</div>
+    <h1>Outdoor Spaces<br><em>Built to Last</em></h1>
+    <p>From custom deck builds to stunning pergolas and railings — Johnny B's brings precision craftsmanship and clean, modern design to every project.</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-primary">Get a Free Quote</a>
+      <a href="#services" class="btn-outline">Our Services</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-num">500+</div><div class="stat-label">Decks Built</div></div>
+  <div class="stat"><div class="stat-num">15+</div><div class="stat-label">Years Experience</div></div>
+  <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Licensed & Insured</div></div>
+  <div class="stat"><div class="stat-num">5★</div><div class="stat-label">Avg. Rating</div></div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-label">What We Do</div>
+  <h2 class="section-title">Our Services</h2>
+  <p class="section-sub">Whether you're starting fresh or restoring what you've got, we deliver quality work on time and on budget.</p>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🏗️</div>
+      <h3>Deck Design & Build</h3>
+      <p>Custom deck construction from the ground up. We work with your space, budget, and vision to design a deck that fits your home and lifestyle perfectly.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔧</div>
+      <h3>Deck Repair & Restoration</h3>
+      <p>Boards warping? Structure shifting? We diagnose and fix the problem — from single board replacements to full structural overhauls and refinishing.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🌿</div>
+      <h3>Custom Railings & Pergolas</h3>
+      <p>Elevate your outdoor space with custom railing systems and pergola structures. Clean lines, quality materials, built to complement your home's architecture.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="why-grid">
+    <div>
+      <div class="section-label">Why Choose Us</div>
+      <h2 class="section-title">Built Different.<br>Built Right.</h2>
+      <div class="why-features">
+        <div class="why-item">
+          <div class="why-icon">🏅</div>
+          <div>
+            <h4>Licensed & Fully Insured</h4>
+            <p>Every job is covered. We carry full liability and workers' comp so you never have to worry.</p>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-icon">📐</div>
+          <div>
+            <h4>Precision Craftsmanship</h4>
+            <p>We don't cut corners — literally. Every cut, every joint, every fastener is done to last decades.</p>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-icon">💬</div>
+          <div>
+            <h4>Clear Communication</h4>
+            <p>You'll always know where your project stands. No surprises on timeline or price.</p>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-icon">🤝</div>
+          <div>
+            <h4>Local & Trusted</h4>
+            <p>We're a local company with a reputation to protect. Your neighbors know our work.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="why-visual">
+      <span class="why-visual-emoji">🪵</span>
+      <h3>Free Estimates</h3>
+      <p>No pressure. No commitment. We'll come out, assess your space, and give you a detailed quote within 24 hours.</p>
+      <br>
+      <a href="#contact" class="btn-primary" style="display:inline-block;">Schedule a Visit</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="section-label">How It Works</div>
+  <h2 class="section-title">Simple, Start to Finish</h2>
+  <p class="section-sub">We've streamlined our process so you know exactly what to expect at every step.</p>
+  <div class="process-steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h4>Free Consultation</h4>
+      <p>We visit your property, listen to your goals, and assess the space. Zero pressure, completely free.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h4>Custom Quote</h4>
+      <p>You'll receive a detailed, itemized quote within 24 hours. No vague estimates — just clear numbers.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h4>Design & Approval</h4>
+      <p>We finalize the design together, select materials, and confirm the plan before a single nail is driven.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <h4>Build & Deliver</h4>
+      <p>Our crew shows up on time and builds to spec. We clean up after ourselves and walk you through the final product.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="section-label">Customer Reviews</div>
+  <h2 class="section-title">What Homeowners Say</h2>
+  <div class="testimonials-grid">
+    <div class="testimonial">
+      <div class="stars">★★★★★</div>
+      <p>"Johnny B's built us a beautiful two-level deck last summer. The crew was professional, fast, and the quality is outstanding. We get compliments from every neighbor."</p>
+      <div class="reviewer">Mike T. <span>— Homeowner</span></div>
+    </div>
+    <div class="testimonial">
+      <div class="stars">★★★★★</div>
+      <p>"They repaired our rotting deck in two days. Honest pricing, no upselling, and the work looks better than when it was first built. Highly recommend."</p>
+      <div class="reviewer">Sarah K. <span>— Homeowner</span></div>
+    </div>
+    <div class="testimonial">
+      <div class="stars">★★★★★</div>
+      <p>"The custom pergola they built transformed our backyard. The design process was collaborative and they nailed exactly what we had in mind. Worth every penny."</p>
+      <div class="reviewer">Dave & Lisa R. <span>— Homeowners</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">Get In Touch</div>
+  <h2 class="section-title">Request a Free Quote</h2>
+  <div class="contact-wrap">
+    <div>
+      <p class="section-sub">Ready to build something great? Fill out the form and we'll get back to you within one business day.</p>
+      <div class="contact-info">
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div><h4>Phone</h4><p>(555) 000-0000</p></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📧</div>
+          <div><h4>Email</h4><p>info@johnnybsdecking.com</p></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div><h4>Service Area</h4><p>Your City & Surrounding Areas</p></div>
+        </div>
+      </div>
+    </div>
+    <form onsubmit="handleSubmit(event)">
+      <input type="text" placeholder="Your Name" required />
+      <input type="tel" placeholder="Phone Number" />
+      <input type="email" placeholder="Email Address" required />
+      <select>
+        <option value="" disabled selected>Select a Service</option>
+        <option>Deck Design & Build</option>
+        <option>Deck Repair & Restoration</option>
+        <option>Custom Railings & Pergolas</option>
+        <option>Not Sure Yet</option>
+      </select>
+      <textarea placeholder="Tell us a bit about your project..."></textarea>
+      <button type="submit">Send My Request →</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Johnny B's Decking Co.</div>
+  <p>© 2025 Johnny B's Decking Company. All rights reserved.</p>
+  <p style="color:var(--muted);font-size:0.8rem;">Licensed & Insured</p>
+</footer>
+
 <script>
-// ── CONSTANTS ──
-var CAL_GOAL = 2300;
-var STEP_GOAL = 8000;
-
-var QUOTES = ["The secret of getting ahead is getting started.","Push yourself because no one else is going to do it for you.","Success is the sum of small efforts repeated day in and day out.","The body achieves what the mind believes.","Wake up with determination. Go to bed with satisfaction.","Do something today that your future self will thank you for.","It never gets easier. You just get stronger.","Discipline is choosing between what you want now and what you want most.","You don't have to be extreme. Just be consistent.","Your only competition is who you were yesterday.","Small daily improvements lead to stunning results.","The pain you feel today will be the strength you feel tomorrow.","Great things never come from comfort zones.","Be stronger than your excuses.","One day or day one. You decide.","Strive for progress, not perfection.","Results happen over time, not overnight. Work hard, stay consistent.","You are one decision away from a completely different life.","Show up even when you don't feel like it.","Hard work beats talent when talent doesn't work hard."];
-
-var TASKS = [
-  {id:"t1",time:"4:30 AM",section:"Wake Up Protocol",emoji:"🌅",title:"Alarm up — no phone scrolling",sub:"First 15 min phone-free. No exceptions.",tag:"mindset"},
-  {id:"t2",time:"4:30 AM",section:"Wake Up Protocol",emoji:"🌅",title:"500ml water + Hydrate Powder",sub:"Replenish electrolytes after overnight fast",tag:"nutrition"},
-  {id:"t4",time:"5:00 AM",section:"Workout",emoji:"🏋️",title:"Complete workout session",sub:"Push hard. Rate intensity 1-10 after.",tag:"fitness"},
-  {id:"t6",time:"6:00 AM",section:"Recovery Stack",emoji:"🧊",title:"Post-workout protein shake",sub:"40-50g whey + fast carb (banana or dextrose)",tag:"nutrition"},
-  {id:"t6b",time:"6:00 AM",section:"Recovery Stack",emoji:"🧊",title:"Infrared sauna at 140-160F",sub:"Listen to a podcast, audiobook, or breathe deeply",tag:"recovery"},
-  {id:"t7",time:"6:00 AM",section:"Recovery Stack",emoji:"🧊",title:"Drink 250ml water inside sauna",sub:"Stay hydrated during heat exposure",tag:"nutrition"},
-  {id:"t8",time:"6:00 AM",section:"Recovery Stack",emoji:"🧊",title:"Cold tub — 3-5 min at 45-55F",sub:"Controlled breathing. Do not fight the cold.",tag:"recovery"},
-  {id:"t8b",time:"8:00 AM",section:"Work Block",emoji:"☀️",title:"Read daily devotion",sub:"Start the day grounded — faith before the grind",tag:"mindset"},
-  {id:"t9",time:"8:00 AM",section:"Work Block",emoji:"☀️",title:"500ml water by 10 AM",sub:"Dehydration kills cognitive function and energy",tag:"energy"},
-  {id:"t10",time:"8:00 AM",section:"Work Block",emoji:"☀️",title:"Sunlight exposure today",sub:"Even 5 min outside in Minneapolis winter counts",tag:"energy"},
-  {id:"t11",time:"12:00 PM",section:"Lunch",emoji:"🥗",title:"Eat a healthy lunch",sub:"Lean protein, veggies, whole foods — keep it clean",tag:"nutrition"},
-  {id:"t12",time:"12:00 PM",section:"Lunch",emoji:"🥗",title:"Take supplements over lunch",sub:"Vitamin D3, Creatine, Fish Oil, Magnesium",tag:"nutrition"},
-  {id:"t13",time:"2:00 PM",section:"Afternoon Energy",emoji:"🌆",title:"No caffeine after 1 PM",sub:"Protects your 4:30 AM wake-up sleep quality",tag:"energy"},
-  {id:"t14",time:"2:00 PM",section:"Afternoon Energy",emoji:"🌆",title:"Drink 500ml water this afternoon",sub:"Stay ahead of dehydration before the evening",tag:"energy"},
-  {id:"t16",time:"6:30 PM",section:"Dinner",emoji:"🍽️",title:"Dinner by 7:00 PM — hard cutoff",sub:"Hit 50-60g protein. Stop eating after.",tag:"nutrition"},
-  {id:"t16b",time:"6:30 PM",section:"Dinner",emoji:"🍽️",title:"No dessert after dinner",sub:"Keep it clean after 7 PM — nothing sweet.",tag:"nutrition"},
-  {id:"t16c",time:"7:00 PM",section:"Dinner",emoji:"🍽️",title:"Hit 6,000-8,000 steps today",sub:"Check your phone or watch — get a walk in after dinner if needed",tag:"fitness"},
-  {id:"t17",time:"7:30 PM",section:"Wind-Down",emoji:"🌙",title:"No screens by 9:00 PM",sub:"Read, stretch, or light mobility instead",tag:"mindset"},
-  {id:"t18",time:"7:30 PM",section:"Wind-Down",emoji:"🌙",title:"Tomorrow prep — 10 min",sub:"Pre-log meals, set out gym clothes, review workout",tag:"mindset"},
-  {id:"t19",time:"9:00 PM",section:"Wind-Down",emoji:"🌙",title:"Read 10-20 minutes before bed",sub:"Wind the mind down naturally — no screens",tag:"mindset"},
-  {id:"t20",time:"9:30 PM",section:"Wind-Down",emoji:"🌙",title:"Lights out by 9:30 PM",sub:"7+ hrs before 4:30 AM. Sleep is your #1 performance tool.",tag:"recovery"}
-];
-
-// ── STATE ──
-var state = {};
-try { state = JSON.parse(localStorage.getItem("trackerState") || "{}"); } catch(e) { state = {}; }
-
-function todayKey() { return new Date().toISOString().split("T")[0]; }
-function getToday() { var k=todayKey(); if(!state[k]) state[k]={tasks:{},habits:{}}; return state[k]; }
-function save() { try { localStorage.setItem("trackerState", JSON.stringify(state)); } catch(e) {} }
-
-function calcScore() {
-  var d=getToday(), tDone=0;
-  for (var k in d.tasks) { if (d.tasks[k]) tDone++; }
-  return {tDone:tDone, tTotal:TASKS.length};
-}
-
-function updateHeader() {
-  var s=calcScore(), pct=s.tTotal>0?Math.round((s.tDone/s.tTotal)*100):0;
-  var el=document.getElementById("header-score"); if(el) el.textContent=s.tDone+"/"+s.tTotal+" tasks";
-  var rp=document.getElementById("ring-pct"); if(rp) rp.textContent=pct+"%";
-  var pf=document.getElementById("prog-fraction"); if(pf) pf.textContent=s.tDone+" / "+s.tTotal;
-  var ring=document.getElementById("ring"); if(ring) ring.style.strokeDashoffset=251.2-(251.2*pct/100);
-  var dot=document.getElementById("score-dot"), badge=document.getElementById("grade-badge");
-  if(pct>=90){if(dot)dot.style.background="#22c55e";if(badge){badge.className="grade grade-elite";badge.textContent="Elite Day 🏆";badge.style.display="inline-flex";}}
-  else if(pct>=75){if(dot)dot.style.background="#22c55e";if(badge){badge.className="grade grade-elite";badge.textContent="Victory! ✅";badge.style.display="inline-flex";}}
-  else if(pct>=60){if(dot)dot.style.background="#eab308";if(badge){badge.className="grade grade-ok";badge.textContent="Good Start 👍";badge.style.display="inline-flex";}}
-  else{if(dot)dot.style.background="#ef4444";if(badge)badge.style.display="none";}
-  var existing=document.getElementById("victory-banner");
-  if(pct>=75){
-    if(!existing){
-      var b=document.createElement("div");b.id="victory-banner";b.className="victory-banner";
-      b.innerHTML="<div style='font-size:42px;margin-bottom:10px'>🏆</div><div style='font-size:22px;font-weight:800;color:#4ade80;'>Victory Day!</div><div style='font-size:13px;color:#86efac;margin-top:8px;font-weight:500'>You hit 75%+ today. That is a win.</div>";
-      var ps=document.querySelector(".progress-section");if(ps&&ps.parentNode)ps.parentNode.insertBefore(b,ps.nextSibling);
-    }
-  } else { if(existing) existing.remove(); }
-  var wd={}; try{wd=JSON.parse(localStorage.getItem("weekData")||"{}");}catch(e){}
-  wd[todayKey()]=pct; try{localStorage.setItem("weekData",JSON.stringify(wd));}catch(e){}
-}
-
-function renderTasks() {
-  var d=getToday(), container=document.getElementById("tasks-container"); if(!container) return;
-  var html="", lastSection="";
-  for (var i=0;i<TASKS.length;i++) {
-    var t=TASKS[i];
-    if(t.section!==lastSection){
-      if(lastSection) html+="</div>";
-      lastSection=t.section;
-      html+="<div class='section'><div class='section-header'><div class='section-icon'>"+t.emoji+"</div><h2>"+t.section+"</h2><span class='section-time'>"+t.time+"</span></div>";
-    }
-    var done=d.tasks[t.id]?true:false;
-    html+="<div class='task "+(done?"done":"")+"' onclick='toggleTask(\""+t.id+"\")'>";
-    html+="<div class='checkbox'><svg width='12' height='10' fill='none' stroke='white' stroke-width='2.5' viewBox='0 0 12 10'><polyline points='1,5 4,8 11,1'/></svg></div>";
-    html+="<div class='task-content'><div class='task-title'>"+t.title+"</div><div class='task-sub'>"+t.sub+"</div><span class='task-tag tag-"+t.tag+"'>"+t.tag+"</span></div></div>";
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.textContent = '✓ Request Sent!';
+    btn.style.background = '#4caf50';
+    btn.style.color = '#fff';
+    setTimeout(() => {
+      btn.textContent = 'Send My Request →';
+      btn.style.background = '';
+      btn.style.color = '';
+      e.target.reset();
+    }, 3000);
   }
-  if(lastSection) html+="</div>";
-  container.innerHTML=html;
-}
-
-function toggleTask(id) { var d=getToday(); d.tasks[id]=!d.tasks[id]; save(); renderTasks(); updateHeader(); }
-
-// ── CALORIE TRACKING ──
-function getCalData() { var d={}; try{d=JSON.parse(localStorage.getItem("calData")||"{}");}catch(e){} return d; }
-function saveCalData(d) { try{localStorage.setItem("calData",JSON.stringify(d));}catch(e){} }
-function getTimeStr() { var now=new Date(),h=now.getHours(),m=now.getMinutes(),ap=h>=12?"PM":"AM"; h=h%12||12; return h+":"+(m<10?"0":"")+m+" "+ap; }
-
-function addMealEntry(name, cal) {
-  var d=getCalData(); if(!d[todayKey()]) d[todayKey()]=[];
-  d[todayKey()].push({name:name,cal:cal,time:getTimeStr()});
-  saveCalData(d); renderDiet();
-}
-function removeMeal(idx) { var d=getCalData(); if(d[todayKey()]){d[todayKey()].splice(idx,1);saveCalData(d);} renderDiet(); }
-function addManualMeal() {
-  var n=document.getElementById("meal-name"), c=document.getElementById("meal-cal"); if(!n||!c) return;
-  var name=n.value.trim(), cal=parseInt(c.value);
-  if(!name||!cal||cal<=0){alert("Enter a meal name and calories.");return;}
-  n.value=""; c.value=""; addMealEntry(name,cal);
-}
-
-function renderDiet() {
-  try {
-    var container=document.getElementById("diet-container"); if(!container) return;
-    var logs=(getCalData()[todayKey()]||[]);
-    var total=0;
-    for(var i=0;i<logs.length;i++) total+=Number(logs[i].cal)||0;
-    var rem=CAL_GOAL-total, pct=Math.min(100,Math.round((total/CAL_GOAL)*100));
-    var rc=pct>=100?"#ef4444":pct>=85?"#eab308":"#22c55e";
-    var circ=2*Math.PI*41, off=circ-(circ*pct/100);
-    var html="";
-
-    // Ring Card
-    html+="<div class='diet-card' style='display:flex;align-items:center;gap:24px;'>";
-    html+="<div style='position:relative;width:110px;height:110px;flex-shrink:0;'>";
-    html+="<svg viewBox='0 0 100 100' width='110' height='110' style='transform:rotate(-90deg)'>";
-    html+="<circle fill='none' stroke='rgba(255,255,255,0.05)' stroke-width='8' cx='50' cy='50' r='41'/>";
-    html+="<circle fill='none' stroke='"+rc+"' stroke-width='8' stroke-linecap='round' cx='50' cy='50' r='41' stroke-dasharray='"+circ+"' stroke-dashoffset='"+off+"'/>";
-    html+="</svg>";
-    html+="<div style='position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;'>";
-    html+="<div style='font-size:22px;font-weight:800;color:"+rc+";'>"+pct+"%</div>";
-    html+="<div style='font-size:9px;color:var(--text-muted);font-weight:700;letter-spacing:0.8px;'>OF GOAL</div>";
-    html+="</div></div>";
-    html+="<div style='flex:1;'>";
-    html+="<div style='font-size:42px;font-weight:800;letter-spacing:-2px;line-height:1;'>"+total+"</div>";
-    html+="<div style='font-size:13px;color:var(--text-muted);margin-top:4px;font-weight:500;'>of "+CAL_GOAL+" cal goal</div>";
-    if(rem>0) html+="<div style='margin-top:8px;font-size:13px;font-weight:700;color:#4ade80;'>"+rem+" cal remaining</div>";
-    else html+="<div style='margin-top:8px;font-size:13px;font-weight:700;color:#f87171;'>+"+Math.abs(rem)+" over goal</div>";
-    html+="</div></div>";
-
-    // Manual Entry Card
-    html+="<div class='diet-card'>";
-    html+="<div class='diet-label'>➕ Add Meal</div>";
-    html+="<input id='meal-name' type='text' placeholder='Meal name' style='width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border-med);border-radius:13px;padding:13px 16px;color:var(--text);font-size:14px;margin-bottom:10px;font-weight:500;'/>";
-    html+="<input id='meal-cal' type='number' placeholder='Calories' style='width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border-med);border-radius:13px;padding:13px 16px;color:var(--text);font-size:14px;margin-bottom:14px;font-weight:500;'/>";
-    html+="<div onclick='addManualMeal()' style='background:linear-gradient(135deg,rgba(249,115,22,0.9),rgba(249,115,22,0.75));color:white;border-radius:13px;padding:15px;text-align:center;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 4px 20px rgba(249,115,22,0.25);'>+ Add Meal</div>";
-    html+="</div>";
-
-    // Log Card
-    html+="<div class='diet-card'>";
-    html+="<div class='diet-label'>Today's Log</div>";
-    if(logs.length===0){
-      html+="<div style='font-size:13px;color:var(--text-muted);text-align:center;padding:24px 0;font-weight:500;'>No meals logged yet</div>";
-    } else {
-      for(var l=0;l<logs.length;l++){
-        var log=logs[l];
-        html+="<div style='display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--border);'>";
-        html+="<div style='flex:1;min-width:0;'>";
-        html+="<div style='font-size:14px;font-weight:600;'>"+log.name+"</div>";
-        html+="<div style='font-size:11px;color:var(--text-muted);margin-top:3px;'>"+log.time+"</div>";
-        html+="</div>";
-        html+="<div style='display:flex;align-items:center;gap:14px;flex-shrink:0;'>";
-        html+="<div style='font-size:16px;font-weight:800;color:var(--accent);'>"+log.cal+"</div>";
-        html+="<div onclick='removeMeal("+l+")' style='color:rgba(248,113,113,0.5);font-size:22px;cursor:pointer;line-height:1;'>×</div>";
-        html+="</div></div>";
-      }
-    }
-    html+="</div><div style='height:16px;'></div>";
-    container.innerHTML=html;
-  } catch(err) {
-    var c=document.getElementById("diet-container");
-    if(c) c.innerHTML="<div style='padding:24px;color:#f87171;font-size:13px;'>Error: "+err.message+"</div>";
-  }
-}
-
-// ── STATS ──
-function renderStats() {
-  var s=calcScore(), pct=s.tTotal>0?Math.round((s.tDone/s.tTotal)*100):0;
-  var sg=document.getElementById("score-grid");
-  if(sg) sg.innerHTML=
-    "<div class='score-card'><div class='score-card-icon'>🔥</div><div class='score-card-label'>Today</div><div class='score-card-val' style='color:var(--accent)'>"+pct+"%</div><div class='score-card-sub'>completion rate</div></div>"+
-    "<div class='score-card'><div class='score-card-icon'>✅</div><div class='score-card-label'>Tasks Done</div><div class='score-card-val'>"+s.tDone+"</div><div class='score-card-sub'>of "+s.tTotal+" total</div></div>"+
-    "<div class='score-card'><div class='score-card-icon'>⚡</div><div class='score-card-label'>Streak</div><div class='score-card-val'>"+calcStreak()+"</div><div class='score-card-sub'>days in a row</div></div>"+
-    "<div class='score-card'><div class='score-card-icon'>🏆</div><div class='score-card-label'>Victories</div><div class='score-card-val' style='color:#4ade80'>"+calcAllVictories()+"</div><div class='score-card-sub'>days at 75%+</div></div>";
-  renderWeekBars(); renderWeeklySummary();
-}
-
-function calcStreak() {
-  var wd={}; try{wd=JSON.parse(localStorage.getItem("weekData")||"{}");}catch(e){}
-  var streak=0;
-  for(var i=0;i<365;i++){var d=new Date();d.setDate(d.getDate()-i);var k=d.toISOString().split("T")[0];if(wd[k]&&wd[k]>=60)streak++;else break;}
-  return streak;
-}
-function calcAllVictories() { var wd={}; try{wd=JSON.parse(localStorage.getItem("weekData")||"{}");}catch(e){} var c=0; for(var k in wd){if(wd[k]>=75)c++;} return c; }
-
-function renderWeekBars() {
-  var wd={}; try{wd=JSON.parse(localStorage.getItem("weekData")||"{}");}catch(e){}
-  var days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"], todayStr=new Date().toISOString().split("T")[0], html="";
-  for(var i=6;i>=0;i--){
-    var d=new Date(); d.setDate(d.getDate()-i);
-    var k=d.toISOString().split("T")[0], p=wd[k]||0, isT=k===todayStr;
-    html+="<div class='week-bar-wrap "+(isT?"today":"")+"'><div class='week-bar-bg'><div class='week-bar-fill' style='height:"+p+"%;background:"+(isT?"linear-gradient(180deg,#fb923c,#f97316)":"rgba(59,130,246,0.5)")+";'></div></div><div class='week-bar-day'>"+days[d.getDay()]+"</div></div>";
-  }
-  var wb=document.getElementById("week-bars"); if(wb) wb.innerHTML=html;
-}
-
-function renderWeeklySummary() {
-  var wd={}; try{wd=JSON.parse(localStorage.getItem("weekData")||"{}");}catch(e){}
-  var days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"], last7=[];
-  for(var i=6;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);var k=d.toISOString().split("T")[0];last7.push({day:days[d.getDay()],pct:wd[k]||0});}
-  var total=0,victories=0,best=0,bestDay="--";
-  for(var i=0;i<last7.length;i++){total+=last7[i].pct;if(last7[i].pct>=75)victories++;if(last7[i].pct>best){best=last7[i].pct;bestDay=last7[i].day;}}
-  var avg=Math.round(total/7), f=0, s2=0;
-  for(var i=0;i<3;i++)f+=last7[i].pct;
-  for(var i=3;i<7;i++)s2+=last7[i].pct;
-  var imp=s2>=f;
-  var el=document.getElementById("weekly-summary"); if(!el) return;
-  el.innerHTML=
-    "<div class='summary-row'><span class='summary-label'>Best day this week</span><span class='summary-val'>"+bestDay+" ("+best+"%)</span></div>"+
-    "<div class='summary-row'><span class='summary-label'>Victories this week</span><span class='summary-val' style='color:#4ade80'>"+victories+" / 7</span></div>"+
-    "<div class='summary-row'><span class='summary-label'>Avg completion</span><span class='summary-val'>"+avg+"%</span></div>"+
-    "<div class='summary-row'><span class='summary-label'>Trend</span><span class='summary-val' style='color:"+(imp?"#4ade80":"#f87171")+"'>"+(imp?"↑ Improving":"↓ Needs focus")+"</span></div>"+
-    "<div class='summary-row'><span class='summary-label'>All-time victories</span><span class='summary-val' style='color:var(--accent)'>"+calcAllVictories()+" days</span></div>";
-}
-
-// ── STEP TRACKING ──
-var stepCount=0, stepTracking=false;
-var lastAccel={x:0,y:0,z:0}, lastStepTime=0;
-var stepThreshold=12, minStepInterval=250;
-var wakeLock=null;
-
-async function requestWakeLock(){
-  if(!("wakeLock" in navigator)) return;
-  try { wakeLock=await navigator.wakeLock.request("screen"); wakeLock.addEventListener("release",function(){wakeLock=null;}); } catch(e) {}
-}
-function releaseWakeLock(){ if(wakeLock){wakeLock.release();wakeLock=null;} }
-document.addEventListener("visibilitychange",function(){ if(document.visibilityState==="visible"&&stepTracking) requestWakeLock(); });
-
-function toggleStepTracking(){ stepTracking ? stopStepTracking() : startStepTracking(); }
-
-function startStepTracking(){
-  if(typeof DeviceMotionEvent==="undefined"){alert("Motion tracking not supported.");return;}
-  if(typeof DeviceMotionEvent.requestPermission==="function"){
-    DeviceMotionEvent.requestPermission().then(function(p){ if(p==="granted") beginTracking(); else alert("Motion permission denied."); }).catch(function(){beginTracking();});
-  } else { beginTracking(); }
-}
-
-function beginTracking(){
-  stepTracking=true;
-  window.addEventListener("devicemotion",handleMotion);
-  requestWakeLock();
-  var btn=document.getElementById("step-btn");
-  if(btn){btn.textContent="STOP";btn.style.background="rgba(239,68,68,0.12)";btn.style.borderColor="rgba(239,68,68,0.25)";btn.style.color="#f87171";}
-}
-
-function stopStepTracking(){
-  stepTracking=false;
-  window.removeEventListener("devicemotion",handleMotion);
-  releaseWakeLock();
-  var btn=document.getElementById("step-btn");
-  if(btn){btn.textContent="START";btn.style.background="rgba(59,130,246,0.12)";btn.style.borderColor="rgba(59,130,246,0.25)";btn.style.color="#60a5fa";}
-}
-
-function handleMotion(e){
-  var acc=e.accelerationIncludingGravity; if(!acc) return;
-  var x=acc.x||0,y=acc.y||0,z=acc.z||0;
-  var mag=Math.sqrt(x*x+y*y+z*z);
-  var prev=Math.sqrt(lastAccel.x*lastAccel.x+lastAccel.y*lastAccel.y+lastAccel.z*lastAccel.z);
-  var delta=Math.abs(mag-prev), now=Date.now();
-  if(delta>stepThreshold&&(now-lastStepTime)>minStepInterval){
-    stepCount++; lastStepTime=now; updateStepUI();
-    try{localStorage.setItem("stepCount_"+todayKey(),stepCount);}catch(e){}
-    if(stepCount>=6000){var d=getToday();if(!d.tasks["t16c"]){d.tasks["t16c"]=true;save();renderTasks();updateHeader();}}
-  }
-  lastAccel={x:x,y:y,z:z};
-}
-
-function updateStepUI(){
-  var el=document.getElementById("step-count");
-  if(el) el.textContent=stepCount>=1000?(stepCount/1000).toFixed(1)+"k":stepCount;
-  var ring=document.getElementById("step-ring");
-  if(ring){
-    var pct=Math.min(1,stepCount/STEP_GOAL), circ=213.6;
-    ring.style.strokeDashoffset=circ-(circ*pct);
-    ring.style.stroke=pct>=1?"#22c55e":pct>=0.75?"#f97316":"#3b82f6";
-  }
-}
-
-// ── NOTIFICATIONS ──
-var REMINDERS=[
-  {hour:8,min:0,title:"🌅 Morning Check-In",body:"Devotion done? Water in? Sunlight? Let's get the day started right."},
-  {hour:14,min:0,title:"🌆 Afternoon Check-In",body:"No caffeine. Drink water. Check your step count."},
-  {hour:20,min:0,title:"🌙 Evening Check-In",body:"Wind-down time. No screens soon. Prep for tomorrow."},
-];
-var notifPermission=typeof Notification!=="undefined"&&Notification.permission==="granted";
-var scheduledTimers=[];
-
-function scheduleReminders(){
-  scheduledTimers.forEach(function(t){clearTimeout(t);}); scheduledTimers=[];
-  if(!notifPermission) return;
-  var now=new Date();
-  REMINDERS.forEach(function(r){
-    var target=new Date(); target.setHours(r.hour,r.min,0,0);
-    var ms=target-now;
-    if(ms>0) scheduledTimers.push(setTimeout(function(){new Notification(r.title,{body:r.body});},ms));
-  });
-}
-
-function toggleNotifications(){
-  var enabled=localStorage.getItem("notifsEnabled")==="true"&&notifPermission;
-  var statusEl=document.getElementById("notif-status");
-  if(enabled){localStorage.setItem("notifsEnabled","false");scheduledTimers.forEach(function(t){clearTimeout(t);});scheduledTimers=[];if(statusEl)statusEl.style.display="none";updateNotifUI();return;}
-  if(typeof Notification==="undefined"){showNotifStatus("Notifications not supported.","error");return;}
-  if(Notification.permission==="denied"){showNotifStatus("Notifications blocked. Enable in browser settings.","error");return;}
-  Notification.requestPermission().then(function(perm){
-    if(perm==="granted"){notifPermission=true;localStorage.setItem("notifsEnabled","true");scheduleReminders();updateNotifUI();showNotifStatus("✓ Reminders set for 8 AM, 2 PM, and 8 PM CST.","success");}
-    else{showNotifStatus("Permission denied.","error");}
-  });
-}
-
-function showNotifStatus(msg,type){
-  var el=document.getElementById("notif-status"); if(!el) return;
-  el.style.display="block";
-  if(type==="success"){el.style.background="rgba(34,197,94,0.07)";el.style.border="1px solid rgba(34,197,94,0.2)";el.style.color="#4ade80";}
-  else{el.style.background="rgba(239,68,68,0.07)";el.style.border="1px solid rgba(239,68,68,0.2)";el.style.color="#f87171";}
-  el.textContent=msg;
-}
-
-function updateNotifUI(){
-  var enabled=localStorage.getItem("notifsEnabled")==="true"&&notifPermission;
-  var btn=document.getElementById("notif-toggle"),dot=document.getElementById("notif-dot"),label=document.getElementById("notif-label");
-  if(btn){btn.style.borderColor=enabled?"rgba(34,197,94,0.3)":"var(--border-med)";btn.style.background=enabled?"rgba(34,197,94,0.07)":"var(--card)";}
-  if(dot){dot.style.background=enabled?"#22c55e":"var(--text-muted)";dot.style.boxShadow=enabled?"0 0 8px #22c55e":"none";}
-  if(label){label.textContent=enabled?"ON":"OFF";label.style.color=enabled?"#4ade80":"var(--text-muted)";}
-}
-
-// ── MISC ──
-function resetDay(){
-  if(confirm("Reset today? This cannot be undone.")){var k=todayKey();state[k]={tasks:{},habits:{}};save();renderTasks();updateHeader();}
-}
-
-function setDates(){
-  var str=new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
-  ["today-date","diet-date","stats-date"].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=str;});
-}
-
-function showPage(name,btn,idx){
-  document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");});
-  document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.remove("active");});
-  document.getElementById("page-"+name).classList.add("active");
-  btn.classList.add("active");
-  var ind=document.getElementById("nav-indicator"); if(ind) ind.style.left=(idx*33.33)+"%";
-  if(name==="stats") renderStats();
-  if(name==="diet") renderDiet();
-}
-
-function renderQuote(){
-  var el=document.getElementById("daily-quote"); if(!el) return;
-  var idx=new Date().getDate()%QUOTES.length;
-  el.textContent='"'+QUOTES[idx]+'"';
-}
-
-function renderScripture(){
-  var textEl=document.getElementById("scripture-text"),refEl=document.getElementById("scripture-ref"); if(!textEl||!refEl) return;
-  var verses=[
-    {t:"Haven't I commanded you? Be strong and courageous. Don't be afraid. Don't be dismayed, for the Lord your God is with you wherever you go.",r:"— Joshua 1:9"},
-    {t:"I can do all things through Christ who strengthens me.",r:"— Philippians 4:13"},
-    {t:"Trust in the Lord with all your heart and lean not on your own understanding.",r:"— Proverbs 3:5-6"},
-    {t:"For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you.",r:"— Jeremiah 29:11"},
-    {t:"And we know that in all things God works for the good of those who love him.",r:"— Romans 8:28"},
-    {t:"The Lord is my shepherd, I lack nothing.",r:"— Psalm 23:1"},
-    {t:"But those who hope in the Lord will renew their strength. They will soar on wings like eagles.",r:"— Isaiah 40:31"},
-    {t:"But seek first his kingdom and his righteousness, and all these things will be given to you as well.",r:"— Matthew 6:33"},
-    {t:"God is our refuge and strength, an ever-present help in trouble.",r:"— Psalm 46:1"},
-    {t:"Take heart! I have overcome the world.",r:"— John 16:33"},
-    {t:"Do not conform to the pattern of this world, but be transformed by the renewing of your mind.",r:"— Romans 12:2"},
-    {t:"The Lord is my strength and my shield; my heart trusts in him, and he helps me.",r:"— Psalm 28:7"},
-    {t:"Do not be anxious about anything, but in every situation, present your requests to God.",r:"— Philippians 4:6-7"},
-    {t:"Finally, be strong in the Lord and in his mighty power.",r:"— Ephesians 6:10"},
-    {t:"For God has not given us a spirit of fear, but of power and of love and of a sound mind.",r:"— 2 Timothy 1:7"},
-    {t:"Now faith is confidence in what we hope for and assurance about what we do not see.",r:"— Hebrews 11:1"},
-    {t:"Whatever you do, work at it with all your heart, as working for the Lord.",r:"— Colossians 3:23"},
-    {t:"God is faithful; he will not let you be tempted beyond what you can bear.",r:"— 1 Corinthians 10:13"},
-    {t:"He who dwells in the shelter of the Most High will rest in the shadow of the Almighty.",r:"— Psalm 91:1"},
-    {t:"Consider it pure joy whenever you face trials, because the testing of your faith produces perseverance.",r:"— James 1:2-3"},
-  ];
-  var idx=new Date().getDate()%verses.length;
-  textEl.textContent=verses[idx].t; refEl.textContent=verses[idx].r;
-}
-
-// ── INIT ──
-var lastKey=""; try{lastKey=localStorage.getItem("lastActiveDay")||"";}catch(e){}
-if(lastKey&&lastKey!==todayKey()){if(!state[todayKey()])state[todayKey()]={tasks:{},habits:{}};save();}
-try{localStorage.setItem("lastActiveDay",todayKey());}catch(e){}
-
-try{var saved=localStorage.getItem("stepCount_"+todayKey());if(saved){stepCount=parseInt(saved)||0;setTimeout(updateStepUI,100);}}catch(e){}
-
-if(localStorage.getItem("notifsEnabled")==="true"&&notifPermission) scheduleReminders();
-
-setDates(); renderQuote(); renderScripture(); renderTasks(); updateHeader();
-setTimeout(updateNotifUI,50);
 </script>
 </body>
 </html>
