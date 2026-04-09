@@ -608,6 +608,26 @@
 
 
 <script>
+// Mobile menu toggle function
+function toggleMenu() {
+  var menu = document.getElementById('mobileMenu');
+  var overlay = document.getElementById('menuOverlay');
+  var hamburger = document.getElementById('hamburgerBtn');
+  
+  menu.classList.toggle('open');
+  overlay.classList.toggle('open');
+  hamburger.classList.toggle('open');
+  
+  // Prevent body scroll when menu is open
+  if (menu.classList.contains('open')) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = '';
+  }
+}
+</script>
+
+<script>
 (function(){
   var showing = 'before';
   window.flipGarage = function() {
